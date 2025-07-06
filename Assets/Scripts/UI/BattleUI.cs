@@ -140,7 +140,7 @@ namespace Assets.Scripts.UI
         private void HandleActorTurnStarted(IBattleActor actor)
         {
             currentActorOnTurn = actor;
-            turnInfoText.text = $"{actor.ActorName}'s Turn!";
+            turnInfoText.text = $"{actor.DisplayName}'s Turn!";
 
             if (actor.IsPlayerControlled)
             {
@@ -232,6 +232,7 @@ namespace Assets.Scripts.UI
         {
             Debug.Log($"BattleUI received Battle Ended: {(playerWon ? "Win" : "Loss")}");
             playerActionPanel.SetActive(false); // Hide action panel
+            enemyAreaPanel.SetActive(false); // Hide enemy info
             targetSelectionPanel.SetActive(false); // Hide target panel
 
             battleResultText.text = playerWon ? "VICTORY!" : "DEFEAT!";

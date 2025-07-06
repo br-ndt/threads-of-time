@@ -171,6 +171,8 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log("<color=orange>--- Battle Loop Started ---</color>");
 
+        GetComponent<AudioSource>().Play();
+
         while (CheckBattleEndConditions() == BattleEndResult.None)
         {
             CurrentBattleState = BattleState.CalculatingTurnOrder;
@@ -221,6 +223,7 @@ public class BattleManager : MonoBehaviour
         // Battle has ended
         BattleEndResult result = CheckBattleEndConditions();
         bool playerWon = result == BattleEndResult.PlayersWin;
+        GetComponent<AudioSource>().Stop();
         battleEndEvent.Raise(playerWon); // Announce battle outcome
         Debug.Log($"<color=orange>--- Battle Ended: {(playerWon ? "VICTORY" : "DEFEAT")} ---</color>");
     }
