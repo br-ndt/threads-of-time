@@ -1,0 +1,114 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &841406981154081762
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9218314610204072924}
+  - component: {fileID: 8679715264686057980}
+  - component: {fileID: 4613432302063507675}
+  - component: {fileID: 846164335703379832}
+  - component: {fileID: 1937148133319064177}
+  m_Layer: 0
+  m_Name: MonsterZ
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9218314610204072924
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841406981154081762}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 735, y: 359.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8679715264686057980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841406981154081762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e0753909d780545b48086b2a63106c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentSpeed: 5
+  targetOverride: {fileID: 0}
+  _resistance: {fileID: 0}
+--- !u!114 &4613432302063507675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841406981154081762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d683212d2a1817248a541f8448adfced, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 10
+  healthChangeEvent: {fileID: 11400000, guid: 2d96fb58e4180994496dd7e8356781e1, type: 2}
+--- !u!114 &846164335703379832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841406981154081762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 095c0621c6262e840bbff257d67fec24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatCalculationEvent: {fileID: 11400000, guid: 339caab3ef75cb9418c45d43ffa25460, type: 2}
+  flatResistanceModifiers:
+    keys: 
+    values: []
+    defaultValue: 0
+  multResistanceModifiers:
+    keys: 01000000
+    values:
+    - 0.5
+    defaultValue: 1
+  overallResistanceMultiplier: 1
+  overallResistanceValue: 0
+  dodgeChanceModifier: 0.05
+--- !u!114 &1937148133319064177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 841406981154081762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34f55f9c843e8b247b79e54bf2840943, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  combatCalculationEvent: {fileID: 11400000, guid: 8b16f38731f303b4b914bafbb9acf714, type: 2}
+  criticalChanceBonus: 0.05
+  overallDamageMultiplier: 1.1
+  flatDamageModifiers:
+    keys: 
+    values: []
+    defaultValue: 0
+  multDamageModifiers:
+    keys: 
+    values: []
+    defaultValue: 0
