@@ -1,6 +1,7 @@
 using UnityEngine;
 using Assets.Scripts.Events;
-using System.Collections.Generic; // For CombatCalculationEvent
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Assets.Scripts.Combat
 {

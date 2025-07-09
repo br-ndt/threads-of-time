@@ -17,6 +17,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField]
     private ActorTurnEvent actorTurnEvent; // Raises when an actor's turn begins
     [SerializeField]
+    private AvailableAttacksEvent availableAttacksEvent; // Raises on a player's turn, to inform the UI of available player attacks
+    [SerializeField]
     private AvailableTargetsEvent availableTargetsEvent; // Raises on a player's turn, to inform the UI of available enemy targets
     [SerializeField]
     private PlayerActionChosenEvent playerActionChosenEvent; // Listens for player's chosen action
@@ -44,7 +46,7 @@ public class BattleManager : MonoBehaviour
     private PlayerAction playerChosenAction; // Stores the action chosen by the player
 
     // Reference to the CombatManager for performing attacks
-    private Assets.Scripts.Combat.CombatManager combatCalculator;
+    private CombatManager combatCalculator;
 
 
     private void Awake()
@@ -196,6 +198,7 @@ public class BattleManager : MonoBehaviour
                 {
                     CurrentBattleState = BattleState.PlayerTurn;
                     Debug.Log($"<color=green>Waiting for {currentActor.ActorName}'s input...</color>");
+                    availableAttacksEvent.Raise((currentActor as PlayerBattleActor).Attacks);
                     availableTargetsEvent.Raise(enemyActors.Where(e => e.IsAlive).ToList());
                     playerChosenAction = new PlayerAction(PlayerAction.PlayerActionType.None); // Reset action
 
@@ -216,7 +219,7 @@ public class BattleManager : MonoBehaviour
                 // Remove defeated actors from active list
                 activeActors.RemoveAll(actor => !actor.IsAlive);
                 enemyActors.RemoveAll(actor => !actor.IsAlive || actor.IsPlayerControlled);
-                playerActors.RemoveAll(actor => !actor.IsAlive || !actor.IsPlayerControlled);
+                playerActors.RemoveAll(actor => !actor.IsPlayerControlled);
             }
         }
 

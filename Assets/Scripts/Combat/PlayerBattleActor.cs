@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Assets.Scripts.Configs;
 using UnityEngine;
 
@@ -24,6 +25,7 @@ namespace Assets.Scripts.Combat
         public bool IsAlive => Health.IsAlive;
 
         public Sprite Avatar => _heroConfig.avatar;
+        public List<AttackDefinition> Attacks => _heroConfig.attacks;
 
         void Awake()
         {

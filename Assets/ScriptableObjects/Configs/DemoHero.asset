@@ -16,6 +16,7 @@ MonoBehaviour:
   avatar: {fileID: 21300000, guid: b2a14d812c41297409a1a2e4ff73b567, type: 3}
   attacks:
   - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}
+  - {fileID: 11400000, guid: 246d58a879f19b44690bdf3165a31b8a, type: 2}
   maxHealth: 10
   baseSpeed: 10
   flatDamageModifiers:

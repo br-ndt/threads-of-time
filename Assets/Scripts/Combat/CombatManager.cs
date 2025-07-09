@@ -11,30 +11,12 @@ namespace Assets.Scripts.Combat
     public class CombatManager : MonoBehaviour
     {
         [Header("Event Channel")]
-        [SerializeField] private CombatCalculationEvent attackCalculationEvent; // Assign the CombatCalculationEvent SO
-        [SerializeField] private CombatCalculationEvent defendCalculationEvent; // Assign the CombatCalculationEvent SO
+        [SerializeField] private CombatCalculationEvent attackCalculationEvent;
+        [SerializeField] private CombatCalculationEvent defendCalculationEvent;
 
         [Header("Debug References")]
         [SerializeField] private GameObject characterA; // Assign Character A in Inspector
         [SerializeField] private GameObject monsterZ;   // Assign Monster Z in Inspector
-        [SerializeField] public AttackDefinition demoAttackDefinition;
-
-        private void Update()
-        {
-            // Example: Trigger an attack when 'A' is pressed (for testing)
-            if (Input.GetKeyDown(KeyCode.A) && GameStateMachine.Instance != null && GameStateMachine.Instance.CurrentState == GameState.Battle)
-            {
-                if (characterA != null && monsterZ != null && attackCalculationEvent != null && defendCalculationEvent != null)
-                {
-                    Debug.Log("--- Initiating Poison Arrow Attack ---");
-                    PerformAttack(characterA, monsterZ, demoAttackDefinition);
-                }
-                else
-                {
-                    Debug.LogWarning("Missing references for CombatManager to perform attack!");
-                }
-            }
-        }
 
         /// <summary>
         /// Initiates an attack calculation and applies its effects.

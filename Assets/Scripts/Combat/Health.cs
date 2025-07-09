@@ -55,6 +55,7 @@ namespace Assets.Scripts.Combat
             {
                 Debug.Log($"{gameObject.name} has been defeated!");
                 // You'd trigger death animations, effects, disable actor, etc.
+                gameObject.SetActive(false);
             }
         }
 
