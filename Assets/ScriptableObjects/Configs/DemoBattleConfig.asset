@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemies:
   - {fileID: 11400000, guid: 58bd93717465a5f4a874168dbd50e41f, type: 2}
-  - {fileID: 11400000, guid: 686a4467649510b4983daf951f442591, type: 2}
+  - {fileID: 11400000, guid: e4f734b1aed5ff2428627211263bc453, type: 2}
   - {fileID: 11400000, guid: 686a4467649510b4983daf951f442591, type: 2}
   battleBackgroundSceneName: ATranquilForest
   battleMusicID: Battle1

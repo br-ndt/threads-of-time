@@ -9,19 +9,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1006739e94d1cc5498693ccd99b66396, type: 3}
-  m_Name: DemoHero
+  m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
+  m_Name: Ergslime
   m_EditorClassIdentifier: 
-  heroName: Hero
-  avatar: {fileID: 21300000, guid: b2a14d812c41297409a1a2e4ff73b567, type: 3}
+  enemyName: Ergslime
+  avatar: {fileID: 21300000, guid: 5f40987f446206b4fb0993062fed339b, type: 3}
   attacks:
-  - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}
-  - {fileID: 11400000, guid: 246d58a879f19b44690bdf3165a31b8a, type: 2}
-  maxHealth: 20
-  baseSpeed: 10
+  - {fileID: 11400000, guid: a6a719321a55eb64e9641c185c2c8ace, type: 2}
+  maxHealth: 15
+  baseSpeed: 2
   flatDamageModifiers:
-    keys: 
-    values: []
+    keys: 01000000
+    values:
+    - 1
     defaultValue: 0
   damageMultipliers:
     keys: 
@@ -32,6 +32,7 @@ MonoBehaviour:
     values: []
     defaultValue: 0
   resistanceMultipliers:
-    keys: 
-    values: []
+    keys: 01000000
+    values:
+    - 0.8
     defaultValue: 0

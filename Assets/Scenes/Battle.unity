@@ -2448,7 +2448,6 @@ MonoBehaviour:
   defendCalculationEvent: {fileID: 11400000, guid: 339caab3ef75cb9418c45d43ffa25460, type: 2}
   characterA: {fileID: 4634150142841713385, guid: 2fef18908ae185a4490e4b2d00a64492, type: 3}
   monsterZ: {fileID: 841406981154081762, guid: 064cfb1600550b648add72ee9f347639, type: 3}
-  demoAttackDefinition: {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}
 --- !u!82 &1595353084
 AudioSource:
   m_ObjectHideFlags: 0

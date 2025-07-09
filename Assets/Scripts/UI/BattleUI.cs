@@ -6,6 +6,7 @@ using Assets.Scripts.States;
 using TMPro;
 using Assets.Scripts.Configs;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Assets.Scripts.UI
 {
@@ -199,7 +200,10 @@ namespace Assets.Scripts.UI
                 Image healthImg = infoPanelGO.transform.Find("Health").GetComponent<Image>();
                 TMP_Text healthText = healthImg.GetComponentInChildren<TMP_Text>();
 
-                if (healthImg != null) healthImg.fillAmount = currentHealth / maxHealth;
+                float targetFill = currentHealth / maxHealth;
+
+                if (healthImg != null) StartCoroutine(SmoothFill(healthImg, targetFill, 5f));
+
                 if (healthText != null) healthText.text = $"{currentHealth:F0}/{maxHealth:F0}";
 
                 // Hide panel if actor is defeated
@@ -209,6 +213,16 @@ namespace Assets.Scripts.UI
             {
                 Debug.LogWarning($"Could not find info panel for {actor.DisplayName}");
             }
+        }
+
+        private IEnumerator SmoothFill(Image img, float targetFill, float speed)
+        {
+            while (!Mathf.Approximately(img.fillAmount, targetFill))
+            {
+                img.fillAmount = Mathf.MoveTowards(img.fillAmount, targetFill, speed * Time.deltaTime);
+                yield return null;
+            }
+            img.fillAmount = targetFill;
         }
 
         private void HandleBattleStarted(List<IBattleActor> actors)
