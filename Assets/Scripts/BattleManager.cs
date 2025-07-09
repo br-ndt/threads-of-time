@@ -32,7 +32,7 @@ public class BattleManager : MonoBehaviour
     public GameObject playerCharacterPrefab; // Assign a player character prefab for instantiation
     public Transform[] playerSpawnPoints; // Assign empty transforms in your scene
     public Transform[] enemySpawnPoints; // Assign empty transforms in your scene
-    [SerializeField] private HeroConfig demoHeroConfig;
+    [SerializeField] private HeroConfig[] demoHeroConfigs;
 
     private BattleConfig currentBattleConfig;
 
@@ -131,17 +131,21 @@ public class BattleManager : MonoBehaviour
 
         // 1. Instantiate Player Characters (from BattleConfig or a default party)
         // For simplicity, let's just add one predefined player actor for now
-        GameObject playerGO = Instantiate(playerCharacterPrefab, playerSpawnPoints[0].position, Quaternion.identity);
-        if (playerGO.TryGetComponent<PlayerBattleActor>(out var playerActor))
+        for (int i = 0; i < demoHeroConfigs.Length; i++)
         {
-            playerActor.Initialize(demoHeroConfig);
-            activeActors.Add(playerActor);
-            playerActors.Add(playerActor);
-            Debug.Log($"Spawned Player: {playerActor.ActorName}");
-        }
-        else
-        {
-            Debug.LogError("PlayerCharacterPrefab does not have a PlayerBattleActor component!");
+            GameObject playerGO = Instantiate(playerCharacterPrefab, playerSpawnPoints[i].position, Quaternion.identity);
+            if (playerGO.TryGetComponent<PlayerBattleActor>(out var playerActor))
+            {
+                playerActor.Initialize(demoHeroConfigs[i]);
+                activeActors.Add(playerActor);
+                playerActors.Add(playerActor);
+                Debug.Log($"Spawned Player: {playerActor.ActorName}");
+            }
+            else
+            {
+                Debug.LogError("PlayerCharacterPrefab does not have a PlayerBattleActor component!");
+            }
+
         }
 
         // 2. Instantiate Enemies based on BattleConfig

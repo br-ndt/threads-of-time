@@ -87,7 +87,7 @@ MonoBehaviour:
     values:
     - 0.5
     defaultValue: 1
-  overallResistanceMultiplier: 1
+  overallResistanceMultiplier: 0
   overallResistanceValue: 0
   dodgeChanceModifier: 0.05
 --- !u!114 &1937148133319064177
