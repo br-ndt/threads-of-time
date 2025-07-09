@@ -18,6 +18,7 @@ namespace Assets.Scripts.Combat
         public int _currentSpeed = 5; // For turn order
         [Header("Battle Stats")]
         private HeroConfig _heroConfig;
+        public Resistance Resistance { get; private set; }
         public Health Health { get; private set; }
 
         public int CurrentSpeed => _currentSpeed;
@@ -30,6 +31,7 @@ namespace Assets.Scripts.Combat
         void Awake()
         {
             Health = GetComponent<Health>();
+            Resistance = GetComponent<Resistance>();
         }
 
         /// <summary>
@@ -44,6 +46,7 @@ namespace Assets.Scripts.Combat
 
             // Set base stats from config
             Health.Initialize(config.maxHealth);
+            Resistance.Initialize(config.flatResistances, config.resistanceMultipliers);
             _currentSpeed = config.baseSpeed;
 
             // Initialize resistance component with data from config

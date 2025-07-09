@@ -17,9 +17,9 @@ namespace Assets.Scripts.Configs
         [Header("Stats")]
         public int maxHealth = 10;
         public int baseSpeed = 10;
-        [SerializeField] DamageFloatDictionary flatDamageModifiers = new();
-        [SerializeField] DamageFloatDictionary damageMultipliers = new();
-        [SerializeField] DamageFloatDictionary flatResistances = new();
-        [SerializeField] DamageFloatDictionary resistanceMultipliers = new();
+        [SerializeField] public DamageFloatDictionary flatDamageModifiers = new();
+        [SerializeField] public DamageFloatDictionary damageMultipliers = new();
+        [SerializeField] public DamageFloatDictionary flatResistances = new();
+        [SerializeField] public DamageFloatDictionary resistanceMultipliers = new();
     }
 }

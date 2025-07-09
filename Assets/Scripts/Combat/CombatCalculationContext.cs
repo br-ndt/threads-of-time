@@ -52,16 +52,13 @@ namespace Assets.Scripts.Combat
             // Damage Calculation Order: base damage * % mod
             foreach (KeyValuePair<DamageType, float> damageEntry in Definition.baseDamageByType)
             {
+                float damage = Definition.damageRangeByType.Keys.Contains(damageEntry.Key) ? UnityEngine.Random.Range(damageEntry.Value, Definition.damageRangeByType[damageEntry.Key]) : damageEntry.Value;
+                float multi = damageEntry.Key != DamageType.STRUE ? Definition.damageModifierByType[damageEntry.Key] : 1;
+
                 Debug.Log($"Base {damageEntry.Key} Damage: {damageEntry.Value:F2}");
-                Debug.Log($"{damageEntry.Key} Damage Multi: {Definition.damageModifierByType[damageEntry.Key] * 100}%");
-                if (Definition.damageRangeByType.Keys.Contains(damageEntry.Key))
-                {
-                    FinalDamage += UnityEngine.Random.Range(damageEntry.Value, Definition.damageRangeByType[damageEntry.Key]);
-                }
-                else
-                {
-                    FinalDamage += damageEntry.Value * Definition.damageModifierByType[damageEntry.Key];
-                }
+                Debug.Log($"{damageEntry.Key} Damage Multi: {multi * 100}%");
+                Debug.Log($"Pre-Resistance {damageEntry.Key} Damage: {damage * multi}");
+                FinalDamage += damage * multi;
             }
             if (IsCriticalHit)
             {
@@ -70,10 +67,11 @@ namespace Assets.Scripts.Combat
                 Debug.Log("CRITICAL HIT!");
             }
             Debug.Log($"Flat Resistance: {Definition.overallResistanceValue:F2}");
-            Debug.Log($"Mult Resistance: {Definition.overallResistanceMultiplier * 100}%");
+            Debug.Log($"Resistance Multi: {Definition.overallResistanceMultiplier * 100}%");
             FinalDamage -= Definition.overallResistanceValue;
-            FinalDamage *= 1 - Definition.overallResistanceMultiplier;
+            FinalDamage *= Math.Clamp(1 - Definition.overallResistanceMultiplier, 0, FinalDamage);
             FinalDamage = (float)Math.Floor(FinalDamage);
+            Debug.Log($"Final Damage: {FinalDamage}");
         }
     }
 }

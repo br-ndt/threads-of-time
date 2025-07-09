@@ -9,7 +9,7 @@ using UnityEngine;
 // For K, Enum, string, int, float, bool, etc., are generally serializable.
 // For V, float, int, string, Vector3, etc., are generally serializable.
 [Serializable]
-public class SerializableDictionary<K, V> : IEnumerable<KeyValuePair<K, V>>
+public class SerializableDictionary<K, V> : ISerializationCallbackReceiver, IEnumerable<KeyValuePair<K, V>>
 {
     // Use private fields with SerializeField attribute to make them visible and editable in the Unity Inspector.
     // Unity's serialization system works by saving the public fields and fields marked with [SerializeField].
@@ -29,6 +29,61 @@ public class SerializableDictionary<K, V> : IEnumerable<KeyValuePair<K, V>>
                 keys.Add(entry.Key);
                 values.Add(entry.Value);
             }
+        }
+    }
+
+    // OnBeforeSerialize is generally used to sync a runtime dictionary back to the serialized lists.
+    // For this version of the class, where operations happen directly on keys/values lists,
+    // this method is usually not strictly necessary for correctness, but can be used for validation
+    // or ensuring unique keys before serialization.
+    public void OnBeforeSerialize()
+    {
+        // Optional: You could add logic here to ensure no duplicate keys exist
+        // in 'keys' list before serialization, if your other methods allow them.
+        // However, the OnAfterDeserialize logic ensures uniqueness upon load.
+    }
+
+    /// <summary>
+    /// Called after Unity deserializes the object.
+    /// Reconstructs the dictionary, handles duplicates, and auto-populates for enum keys.
+    /// </summary>
+    public void OnAfterDeserialize()
+    {
+        // 1. Create a temporary standard Dictionary from the loaded lists.
+        // This is done to easily handle duplicate keys by taking the last value for a given key,
+        // and to efficiently check for missing enum values.
+        var tempDict = new Dictionary<K, V>();
+        for (int i = 0; i < Math.Min(keys.Count, values.Count); i++)
+        {
+            if (keys[i] == null) // Handle potential null keys if K is a reference type and list gets corrupted
+            {
+                Debug.LogWarning($"Null key found during deserialization of SerializableDictionary at index {i}. Skipping entry.");
+                continue;
+            }
+            tempDict[keys[i]] = values[i]; // Using indexer handles add/update for duplicates
+        }
+
+        // 2. Auto-populate for enum types with defaultValue
+        if (typeof(K).IsEnum) // Check if K is an enum type
+        {
+            foreach (K enumValue in Enum.GetValues(typeof(K))) // Iterate through all enum values
+            {
+                if (!tempDict.ContainsKey(enumValue)) // If the enum value is not already in the loaded data
+                {
+                    tempDict.Add(enumValue, defaultValue); // Add it with the predefined defaultValue
+                }
+            }
+        }
+
+        // 3. Clear original serialized lists and repopulate them from the now complete and unique temporary dictionary.
+        // This ensures the serialized lists 'keys' and 'values' accurately reflect the desired state
+        // (including auto-populated enum values) for the next time Unity saves the asset.
+        keys.Clear();
+        values.Clear();
+        foreach (KeyValuePair<K, V> pair in tempDict)
+        {
+            keys.Add(pair.Key);
+            values.Add(pair.Value);
         }
     }
 
