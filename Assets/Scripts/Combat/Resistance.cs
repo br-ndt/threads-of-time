@@ -1,7 +1,8 @@
 using UnityEngine;
 using Assets.Scripts.Events;
 using System.Collections.Generic;
-using System; // For CombatCalculationEvent
+using System;
+using System.Linq; // For CombatCalculationEvent
 
 namespace Assets.Scripts.Combat
 {
@@ -13,13 +14,14 @@ namespace Assets.Scripts.Combat
         [Header("Event Channel")]
         [SerializeField] private CombatCalculationEvent combatCalculationEvent; // Assign the CombatCalculationEvent
 
+        [Header("Stats")]
         [SerializeField] private DamageFloatDictionary flatResistanceModifiers;
         [SerializeField] private DamageFloatDictionary multResistanceModifiers;
-        [SerializeField] private float overallResistanceMultiplier = 0.0f;
-        [SerializeField] private float overallResistanceValue = 0f;
+        [SerializeField] private float overallResistanceValue = 1f; // -1 damage after type-specific resistances
+        [SerializeField] private float overallResistanceMultiplier = 0.1f; // -10% damage
         [SerializeField] private float dodgeChanceModifier = 0.05f;
         private bool initialized = false;
-        
+
         public void Initialize(DamageFloatDictionary flatResistances, DamageFloatDictionary resistanceMultipliers)
         {
             Debug.Log(flatResistances);
@@ -57,19 +59,30 @@ namespace Assets.Scripts.Combat
                 foreach (KeyValuePair<DamageType, float> modifierEntry in flatResistanceModifiers)
                 {
                     Debug.Log($"{modifierEntry.Key} Flat Resistance: {modifierEntry.Value:F2}");
-                    context.Definition.baseDamageByType[modifierEntry.Key] -= modifierEntry.Value;
+                    if (context.Definition.baseDamageModifierByType.Keys.Contains(modifierEntry.Key))
+                    {
+                        context.Definition.baseDamageModifierByType[modifierEntry.Key] -= modifierEntry.Value;
+                    }
+                    else
+                    {
+                        context.Definition.baseDamageModifierByType[modifierEntry.Key] = -modifierEntry.Value;
+                    }
                 }
                 foreach (KeyValuePair<DamageType, float> modifierEntry in multResistanceModifiers)
                 {
                     Debug.Log($"{modifierEntry.Key} Mult Resistance: {modifierEntry.Value * 100}%");
-                    context.Definition.damageModifierByType[modifierEntry.Key] -= modifierEntry.Value;
+                    if (context.Definition.damageMultiplierByType.Keys.Contains(modifierEntry.Key))
+                    {
+                        context.Definition.damageMultiplierByType[modifierEntry.Key] -= modifierEntry.Value;
+                    }
+                    else
+                    {
+                        context.Definition.damageMultiplierByType[modifierEntry.Key] = 1 - modifierEntry.Value;
+                    }
                 }
                 context.Definition.dodgeChance += dodgeChanceModifier;
-                context.Definition.overallResistanceValue += overallResistanceValue;
-                if (overallResistanceMultiplier != 0)
-                {
-                    context.Definition.overallResistanceMultiplier += overallResistanceMultiplier;
-                }
+                context.Definition.overallResistanceModifier += overallResistanceValue;
+                context.Definition.overallResistanceMultiplier += overallResistanceMultiplier;
             }
         }
     }

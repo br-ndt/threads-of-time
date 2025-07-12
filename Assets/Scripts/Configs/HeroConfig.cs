@@ -11,7 +11,10 @@ namespace Assets.Scripts.Configs
     public class HeroConfig : GameConfig
     {
         public string heroName = "Hero";
+        [Tooltip("For battle and cutscenes(?)")]
         public Sprite avatar;
+        [Tooltip("This should only be the mesh, materials, and textures required for rendering (check Assets/Models).")]
+        public GameObject modelPrefab;
         [Header("Attribs")]
         public List<AttackDefinition> attacks = new();
         [Header("Stats")]

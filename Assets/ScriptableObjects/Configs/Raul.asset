@@ -10,16 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1006739e94d1cc5498693ccd99b66396, type: 3}
-  m_Name: Dennis
+  m_Name: Raul
   m_EditorClassIdentifier: 
-  heroName: Dennis
-  avatar: {fileID: 21300000, guid: b2a14d812c41297409a1a2e4ff73b567, type: 3}
-  modelPrefab: {fileID: 919132149155446097, guid: 714a9b5e1e57f8c459e45fc99eb0abdb, type: 3}
+  heroName: Raul
+  avatar: {fileID: 21300000, guid: c1c6c7a5f7325c649806e70ba62a0fd8, type: 3}
+  modelPrefab: {fileID: 919132149155446097, guid: d39e58128b9eb5f4c9f9812b17dd6b5a, type: 3}
   attacks:
-  - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}
-  - {fileID: 11400000, guid: 36884b678bcb95244a0764b43f7000e0, type: 2}
-  maxHealth: 10
-  baseSpeed: 10
+  - {fileID: 11400000, guid: d6cf6ff7efb34634392c1e8e28802026, type: 2}
+  maxHealth: 7
+  baseSpeed: 7
   flatDamageModifiers:
     keys: 030000000000000001000000020000000400000005000000060000000700000008000000
     values:
@@ -54,7 +53,7 @@ MonoBehaviour:
     - 0
     - 0
     - 0
-    - 0
+    - 1
     - 0
   resistanceMultipliers:
     keys: 000000000100000002000000030000000400000005000000060000000700000008000000

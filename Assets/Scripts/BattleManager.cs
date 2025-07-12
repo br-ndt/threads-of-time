@@ -133,7 +133,11 @@ public class BattleManager : MonoBehaviour
         // For simplicity, let's just add one predefined player actor for now
         for (int i = 0; i < demoHeroConfigs.Length; i++)
         {
-            GameObject playerGO = Instantiate(playerCharacterPrefab, playerSpawnPoints[i].position, Quaternion.identity);
+            GameObject playerGO = Instantiate(playerCharacterPrefab, playerSpawnPoints[i].position, playerSpawnPoints[i].rotation);
+            if (demoHeroConfigs[i].modelPrefab != null)
+            {
+                Instantiate(demoHeroConfigs[i].modelPrefab, playerGO.transform.position, playerGO.transform.rotation, playerGO.transform);
+            }
             if (playerGO.TryGetComponent<PlayerBattleActor>(out var playerActor))
             {
                 playerActor.Initialize(demoHeroConfigs[i]);

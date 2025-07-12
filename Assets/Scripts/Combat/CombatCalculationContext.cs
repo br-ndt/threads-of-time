@@ -11,6 +11,17 @@ namespace Assets.Scripts.Combat
     /// </summary>
     public class CombatCalculationContext
     {
+        public static DamageType[] damageTypes = new DamageType[]{
+            DamageType.PHYSICAL,
+            DamageType.ERG,
+            DamageType.ADDO,
+            DamageType.SOLLU,
+            DamageType.SQUQ,
+            DamageType.AIY,
+            DamageType.MAR,
+            DamageType.VEX,
+            DamageType.STRUE
+        };
         // General Combat Info
         public GameObject Attacker { get; private set; }
         public GameObject Defender { get; private set; }
@@ -49,16 +60,33 @@ namespace Assets.Scripts.Combat
             }
             IsCriticalHit = toHit >= 1 - (Definition.baseCritChance + Definition.critChanceBonus);
 
-            // Damage Calculation Order: base damage * % mod
-            foreach (KeyValuePair<DamageType, float> damageEntry in Definition.baseDamageByType)
+            // Damage Calculation Order: (damage range + base damage) * % mod
+            foreach (DamageType damageType in damageTypes)
             {
-                float damage = Definition.damageRangeByType.Keys.Contains(damageEntry.Key) ? UnityEngine.Random.Range(damageEntry.Value, Definition.damageRangeByType[damageEntry.Key]) : damageEntry.Value;
-                float multi = damageEntry.Key != DamageType.STRUE ? Definition.damageModifierByType[damageEntry.Key] : 1;
+                // the base damage is 0 if we do not have it in the mutable definition
+                float baseDamage = Definition.baseDamageModifierByType.Keys.Contains(damageType) ? Definition.baseDamageModifierByType[damageType] : 0;
+                // the damage range is null if we do not have it in the mutable definition
+                FloatRange? damageRange = Definition.baseDamageRangeByType.Keys.Contains(damageType) ? Definition.baseDamageRangeByType[damageType] : null;
+                // the multiplier is 1 if we do not have it in the definition or the damage type is STRUE
+                float multi = damageType == DamageType.STRUE || !Definition.damageMultiplierByType.Keys.Contains(damageType) ? 1 : Definition.damageMultiplierByType[damageType];
 
-                Debug.Log($"Base {damageEntry.Key} Damage: {damageEntry.Value:F2}");
-                Debug.Log($"{damageEntry.Key} Damage Multi: {multi * 100}%");
-                Debug.Log($"Pre-Resistance {damageEntry.Key} Damage: {damage * multi}");
-                FinalDamage += damage * multi;
+                // exit early if we aren't dealing damage
+                if (damageRange == null)
+                {
+                    if (baseDamage == 0)
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    baseDamage += UnityEngine.Random.Range(damageRange.Value.min, damageRange.Value.max);
+                }
+
+                Debug.Log($"Base {damageType} Damage: {baseDamage:F2}");
+                Debug.Log($"{damageType} Damage Multi: {multi * 100}%");
+                Debug.Log($"Pre-Resistance {damageType} Damage: {baseDamage * multi}");
+                FinalDamage += baseDamage * multi;
             }
             if (IsCriticalHit)
             {
@@ -66,10 +94,10 @@ namespace Assets.Scripts.Combat
                 FinalDamage *= 1.5f;
                 Debug.Log("CRITICAL HIT!");
             }
-            Debug.Log($"Flat Resistance: {Definition.overallResistanceValue:F2}");
-            Debug.Log($"Resistance Multi: {Definition.overallResistanceMultiplier * 100}%");
-            FinalDamage -= Definition.overallResistanceValue;
-            FinalDamage *= Math.Clamp(1 - Definition.overallResistanceMultiplier, 0, FinalDamage);
+            Debug.Log($"Flat Bonus (Damage - Resistance): {Definition.overallDamageModifier - Definition.overallResistanceModifier:F2}");
+            Debug.Log($"Overall Multi: {(Definition.overallDamageMultiplier - Definition.overallResistanceMultiplier) * 100}%");
+            FinalDamage += Definition.overallDamageModifier - Definition.overallResistanceModifier;
+            FinalDamage *= Math.Clamp(Definition.overallDamageMultiplier - Definition.overallResistanceMultiplier, 0, FinalDamage);
             FinalDamage = (float)Math.Floor(FinalDamage);
             Debug.Log($"Final Damage: {FinalDamage}");
         }

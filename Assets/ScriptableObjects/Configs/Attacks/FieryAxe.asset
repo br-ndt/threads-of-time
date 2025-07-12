@@ -18,18 +18,15 @@ MonoBehaviour:
     values:
     - 1
     - 1
-    defaultValue: 0
   damageRangeByType:
     keys: 00000000
     values:
     - 2
-    defaultValue: 0
   damageModifierByType:
     keys: 
     values: []
-    defaultValue: 1
   overallDamageModifier: 1
-  overallResistanceMultiplier: 0
+  overallResistanceMultiplier: -0.25
   overallResistanceValue: 0
   baseCritChance: 0.1
   critChanceBonus: 0

@@ -1,16 +1,16 @@
-using UnityEngine;
-using UnityEditor;
 using System.Collections.Generic;
-using System.Linq; // Used for LINQ extension methods
-using System; // Required for Enum class
+using System;
+using System.Linq;
 using Assets.Scripts.Combat;
+using UnityEditor;
+using UnityEngine;
 
 /// <summary>
-/// Custom PropertyDrawer for the DamageFloatDictionary class.
-/// By targeting the concrete class instead of the generic one, we ensure this drawer is always used.
+/// Custom PropertyDrawer for the DamageRangeDictionary.
+/// This is very similar to the previous dictionary drawer, but targets the new type.
 /// </summary>
-[CustomPropertyDrawer(typeof(DamageFloatDictionary))]
-public class DamageFloatDictionaryDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(DamageRangeDictionary))]
+public class DamageRangeDictionaryDrawer : PropertyDrawer
 {
     private const float AddButtonHeight = 20f;
     private const float Spacing = 5f;
@@ -19,10 +19,7 @@ public class DamageFloatDictionaryDrawer : PropertyDrawer
     {
         EditorGUI.BeginProperty(position, label, property);
 
-        // --- Get Key Type and Enum Info ---
-        // We use reflection to find the enum type from the base class's generic arguments.
-        // This makes the drawer reusable for other dictionaries inheriting from SerializableDictionary<Enum, T>.
-        Type keyType = fieldInfo.FieldType.BaseType.GetGenericArguments()[0];
+        Type keyType = typeof(DamageType); // We can be specific here
         string[] allEnumNames = Enum.GetNames(keyType);
         int[] allEnumValues = (int[])Enum.GetValues(keyType);
 
@@ -35,30 +32,29 @@ public class DamageFloatDictionaryDrawer : PropertyDrawer
         {
             EditorGUI.indentLevel++;
             float currentY = position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-
             int? indexToRemove = null;
 
             for (int i = 0; i < keysProperty.arraySize; i++)
             {
                 Rect itemRect = new Rect(position.x, currentY, position.width, EditorGUIUtility.singleLineHeight);
-                Rect keyRect = new Rect(itemRect.x, itemRect.y, itemRect.width * 0.45f - 5, itemRect.height);
-                Rect valueRect = new Rect(itemRect.x + itemRect.width * 0.45f, itemRect.y, itemRect.width * 0.45f - 5, itemRect.height);
+                Rect keyRect = new Rect(itemRect.x, itemRect.y, itemRect.width * 0.4f, itemRect.height);
+                Rect valueRect = new Rect(itemRect.x + itemRect.width * 0.4f + 5, itemRect.y, itemRect.width * 0.6f - 35, itemRect.height);
                 Rect removeButtonRect = new Rect(itemRect.x + itemRect.width - 25, itemRect.y, 25, itemRect.height);
 
                 SerializedProperty keyElement = keysProperty.GetArrayElementAtIndex(i);
                 SerializedProperty valueElement = valuesProperty.GetArrayElementAtIndex(i);
 
-                // --- Draw Filtered Enum Dropdown ---
+                // Draw the filtered enum dropdown for the key
                 DrawFilteredEnumPopup(keyRect, keyElement, keysProperty, i, keyType, allEnumNames, allEnumValues);
-                
-                // Draw the value field
+
+                // Draw the value field. This will automatically use our new FloatRangeDrawer!
                 EditorGUI.PropertyField(valueRect, valueElement, GUIContent.none);
 
                 if (GUI.Button(removeButtonRect, "-"))
                 {
                     indexToRemove = i;
                 }
-                
+
                 currentY += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
             }
 
@@ -68,10 +64,9 @@ public class DamageFloatDictionaryDrawer : PropertyDrawer
                 valuesProperty.DeleteArrayElementAtIndex(indexToRemove.Value);
             }
 
-            // --- Draw 'Add' Button (Disabled if all keys are used) ---
             Rect addButtonRect = new Rect(position.x + (position.width - 100) / 2, currentY + Spacing, 100, AddButtonHeight);
             bool allKeysUsed = keysProperty.arraySize >= allEnumNames.Length;
-            
+
             EditorGUI.BeginDisabledGroup(allKeysUsed);
             if (GUI.Button(addButtonRect, "Add Entry"))
             {
@@ -85,29 +80,19 @@ public class DamageFloatDictionaryDrawer : PropertyDrawer
         EditorGUI.EndProperty();
     }
 
-    /// <summary>
-    /// Draws a custom popup field that only shows enum values not already used as keys.
-    /// </summary>
     private void DrawFilteredEnumPopup(Rect position, SerializedProperty keyProperty, SerializedProperty allKeysProperty, int currentIndex, Type keyType, string[] allNames, int[] allValues)
     {
         int currentEnumValue = keyProperty.enumValueIndex;
-
-        // Find all keys currently in use, except for the one at the current index.
         var usedKeys = new HashSet<int>();
         for (int i = 0; i < allKeysProperty.arraySize; i++)
         {
-            if (i != currentIndex)
-            {
-                usedKeys.Add(allKeysProperty.GetArrayElementAtIndex(i).enumValueIndex);
-            }
+            if (i != currentIndex) usedKeys.Add(allKeysProperty.GetArrayElementAtIndex(i).enumValueIndex);
         }
 
-        // Build the list of available options for the popup.
         var availableNames = new List<string>();
         var availableValues = new List<int>();
         for (int i = 0; i < allValues.Length; i++)
         {
-            // An option is available if it's not used OR it's the one currently selected for this row.
             if (!usedKeys.Contains(i) || i == currentEnumValue)
             {
                 availableNames.Add(allNames[i]);
@@ -116,8 +101,6 @@ public class DamageFloatDictionaryDrawer : PropertyDrawer
         }
 
         int selectedIndexInPopup = availableValues.IndexOf(currentEnumValue);
-        
-        // If the current value is somehow a duplicate from before this system was active, handle it gracefully.
         if (selectedIndexInPopup == -1)
         {
             string currentName = Enum.GetName(keyType, currentEnumValue) ?? "INVALID";
@@ -127,14 +110,9 @@ public class DamageFloatDictionaryDrawer : PropertyDrawer
         }
 
         int newSelectedIndexInPopup = EditorGUI.Popup(position, selectedIndexInPopup, availableNames.ToArray());
-
-        // If the user selected a new value, update the property.
         keyProperty.enumValueIndex = availableValues[newSelectedIndexInPopup];
     }
 
-    /// <summary>
-    /// Adds a new entry to the dictionary, automatically selecting the first available enum key.
-    /// </summary>
     private void AddNewEntry(SerializedProperty keys, SerializedProperty values, int[] allEnumValues)
     {
         var usedKeys = new HashSet<int>();
@@ -143,23 +121,18 @@ public class DamageFloatDictionaryDrawer : PropertyDrawer
             usedKeys.Add(keys.GetArrayElementAtIndex(i).enumValueIndex);
         }
 
-        // Find the first enum value that is not currently in use.
-        int firstAvailableKey = -1;
-        foreach (int enumValue in allEnumValues)
-        {
-            if (!usedKeys.Contains(enumValue))
-            {
-                firstAvailableKey = enumValue;
-                break;
-            }
-        }
+        int firstAvailableKey = allEnumValues.FirstOrDefault(val => !usedKeys.Contains(val));
 
-        if (firstAvailableKey != -1)
+        if (usedKeys.Count < allEnumValues.Length)
         {
             keys.arraySize++;
             values.arraySize++;
             keys.GetArrayElementAtIndex(keys.arraySize - 1).enumValueIndex = firstAvailableKey;
-            values.GetArrayElementAtIndex(values.arraySize - 1).floatValue = 0f; // Default value
+
+            // Set a default FloatRange value
+            SerializedProperty newRange = values.GetArrayElementAtIndex(values.arraySize - 1);
+            newRange.FindPropertyRelative("min").floatValue = 10f;
+            newRange.FindPropertyRelative("max").floatValue = 20f;
         }
     }
 

@@ -29,11 +29,11 @@ Transform:
   m_GameObject: {fileID: 841406981154081762}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 735, y: 359.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6750191075808996177}
+  - {fileID: 5969057514190901694}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8679715264686057980
@@ -81,14 +81,11 @@ MonoBehaviour:
   flatResistanceModifiers:
     keys: 
     values: []
-    defaultValue: 0
   multResistanceModifiers:
-    keys: 01000000
-    values:
-    - 0.5
-    defaultValue: 1
-  overallResistanceMultiplier: 0
+    keys: 
+    values: []
   overallResistanceValue: 0
+  overallResistanceMultiplier: 0
   dodgeChanceModifier: 0.05
 --- !u!114 &1937148133319064177
 MonoBehaviour:
@@ -103,17 +100,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   combatCalculationEvent: {fileID: 11400000, guid: 8b16f38731f303b4b914bafbb9acf714, type: 2}
-  criticalChanceBonus: 0.05
-  overallDamageMultiplier: 1.1
+  rangeDamageModifiers:
+    keys: 
+    values: []
   flatDamageModifiers:
     keys: 
     values: []
-    defaultValue: 0
   multDamageModifiers:
     keys: 
     values: []
-    defaultValue: 0
---- !u!1 &2029503914125316016
+  overallDamageModifier: 0
+  overallDamageMultiplier: 0
+  criticalChanceBonus: 0
+--- !u!1 &4098936044646343180
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,10 +120,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6750191075808996177}
-  - component: {fileID: 4216751212905687500}
-  - component: {fileID: 3536420241749755881}
-  - component: {fileID: 9279077137399812}
+  - component: {fileID: 5969057514190901694}
+  - component: {fileID: 2536941336129626140}
+  - component: {fileID: 6081481901805411522}
+  - component: {fileID: 1918437724587469245}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -132,13 +131,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6750191075808996177
+--- !u!4 &5969057514190901694
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2029503914125316016}
+  m_GameObject: {fileID: 4098936044646343180}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -147,21 +146,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9218314610204072924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &4216751212905687500
+--- !u!33 &2536941336129626140
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2029503914125316016}
+  m_GameObject: {fileID: 4098936044646343180}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &3536420241749755881
+--- !u!23 &6081481901805411522
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2029503914125316016}
+  m_GameObject: {fileID: 4098936044646343180}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -200,13 +199,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &9279077137399812
+--- !u!136 &1918437724587469245
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2029503914125316016}
+  m_GameObject: {fileID: 4098936044646343180}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

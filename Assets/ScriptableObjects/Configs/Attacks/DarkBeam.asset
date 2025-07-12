@@ -10,23 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6684448ba08490a4b8ea66829c6277ee, type: 3}
-  m_Name: InfectedBite
+  m_Name: DarkBeam
   m_EditorClassIdentifier: 
-  attackName: Infected Bite
+  attackName: Dark Beam
   baseDamageByType:
-    keys: 0000000001000000
+    keys: 010000000700000008000000
     values:
+    - 2
+    - 2
     - 1
-    - 5
   damageRangeByType:
-    keys: 
-    values: []
+    keys: 0100000007000000
+    values:
+    - 5
+    - 5
   damageModifierByType:
     keys: 
     values: []
   overallDamageModifier: 1
   overallResistanceMultiplier: 0
   overallResistanceValue: 0
-  baseCritChance: 0.05
+  baseCritChance: 0
   critChanceBonus: 0
   dodgeChance: 0.05
