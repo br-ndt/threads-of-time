@@ -32,7 +32,7 @@ public class BattleManager : MonoBehaviour
     public GameObject playerCharacterPrefab; // Assign a player character prefab for instantiation
     public Transform[] playerSpawnPoints; // Assign empty transforms in your scene
     public Transform[] enemySpawnPoints; // Assign empty transforms in your scene
-    [SerializeField] private HeroConfig[] demoHeroConfigs;
+    // [SerializeField] private HeroConfig[] demoHeroConfigs;
 
     private BattleConfig currentBattleConfig;
 
@@ -48,6 +48,10 @@ public class BattleManager : MonoBehaviour
     // Reference to the CombatManager for performing attacks
     private CombatManager combatCalculator;
 
+    private AudioSource audioSource;
+    private AudioClip currentTrack;
+    [SerializeField] private List<AudioClip> tracklist;
+    [SerializeField] private AudioClip victoryTune;
 
     private void Awake()
     {
@@ -77,6 +81,16 @@ public class BattleManager : MonoBehaviour
         {
             battleLeaveEvent.OnBattleEnded += HandleLeaveBattle;
         }
+
+        audioSource = GetComponent<AudioSource>();
+        currentTrack = tracklist[Random.Range(0, tracklist.Count)];
+
+        // silently preload the victory tune
+        audioSource.clip = victoryTune;
+        audioSource.volume = 0f;
+        audioSource.Play();
+        audioSource.Pause();
+        audioSource.volume = 0.4f; 
     }
 
     private void OnDisable()
@@ -131,16 +145,16 @@ public class BattleManager : MonoBehaviour
 
         // 1. Instantiate Player Characters (from BattleConfig or a default party)
         // For simplicity, let's just add one predefined player actor for now
-        for (int i = 0; i < demoHeroConfigs.Length; i++)
+        for (int i = 0; i < currentBattleConfig.heroes.Count; i++)
         {
-            GameObject playerGO = Instantiate(playerCharacterPrefab, playerSpawnPoints[i].position, playerSpawnPoints[i].rotation);
-            if (demoHeroConfigs[i].modelPrefab != null)
+            var heroConfig = currentBattleConfig.heroes[i];
+            GameObject playerGO = Instantiate(playerCharacterPrefab);
+            playerGO.transform.position = playerSpawnPoints[i].position;
+
+            var playerActor = playerGO.GetComponent<PlayerBattleActor>();
+            if (playerActor != null)
             {
-                Instantiate(demoHeroConfigs[i].modelPrefab, playerGO.transform.position, playerGO.transform.rotation, playerGO.transform);
-            }
-            if (playerGO.TryGetComponent<PlayerBattleActor>(out var playerActor))
-            {
-                playerActor.Initialize(demoHeroConfigs[i]);
+                playerActor.Initialize(heroConfig);
                 activeActors.Add(playerActor);
                 playerActors.Add(playerActor);
                 Debug.Log($"Spawned Player: {playerActor.ActorName}");
@@ -149,17 +163,19 @@ public class BattleManager : MonoBehaviour
             {
                 Debug.LogError("PlayerCharacterPrefab does not have a PlayerBattleActor component!");
             }
-
         }
 
         // 2. Instantiate Enemies based on BattleConfig
         for (int i = 0; i < currentBattleConfig.enemies.Count && i < enemySpawnPoints.Length; i++)
         {
-            GameObject enemyGO = Instantiate(enemyPrefab, enemySpawnPoints[i].position, Quaternion.identity);
-            EnemyBattleActor enemyActor = enemyGO.GetComponent<EnemyBattleActor>();
+            var enemyConfig = currentBattleConfig.enemies[i];
+            GameObject enemyGO = Instantiate(enemyPrefab);
+            enemyGO.transform.position = enemySpawnPoints[i].position;
+
+            var enemyActor = enemyGO.GetComponent<EnemyBattleActor>();
             if (enemyActor != null)
             {
-                enemyActor.Initialize(currentBattleConfig.enemies[i], i);
+                enemyActor.Initialize(enemyConfig, i);
                 activeActors.Add(enemyActor);
                 enemyActors.Add(enemyActor);
                 Debug.Log($"Spawned Enemy: {enemyActor.ActorName}");
@@ -181,7 +197,8 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log("<color=orange>--- Battle Loop Started ---</color>");
 
-        GetComponent<AudioSource>().Play();
+        audioSource.clip = currentTrack;
+        audioSource.Play();
 
         while (CheckBattleEndConditions() == BattleEndResult.None)
         {
@@ -234,7 +251,25 @@ public class BattleManager : MonoBehaviour
         // Battle has ended
         BattleEndResult result = CheckBattleEndConditions();
         bool playerWon = result == BattleEndResult.PlayersWin;
-        GetComponent<AudioSource>().Stop();
+
+        audioSource.Stop();
+
+        if (playerWon)
+        {
+            foreach (var playerActor in playerActors)
+            {
+                if (playerActor is PlayerBattleActor player && player.spriteCharacter != null)
+                {
+                    player.spriteCharacter.Play(BattleSpriteState.Run);
+                    player.spriteCharacter.speedMult = 2f;
+                }
+            }
+
+            audioSource.resource = victoryTune;
+            audioSource.time = 49f;
+            audioSource.Play();
+        }
+
         battleEndEvent.Raise(playerWon); // Announce battle outcome
         Debug.Log($"<color=orange>--- Battle Ended: {(playerWon ? "VICTORY" : "DEFEAT")} ---</color>");
     }
@@ -275,6 +310,7 @@ public class BattleManager : MonoBehaviour
                     {
                         Debug.Log($"{playerActor.ActorName} attacking {targetActor.ActorName} with {action.AttackDefinition.attackName}...");
                         combatCalculator.PerformAttack(playerActor.GameObject, targetActor.GameObject, action.AttackDefinition);
+
                         // Await animation or effects if desired
                         yield return new WaitForSeconds(1.5f); // Simulate action time
                         if (!targetActor.IsAlive)
@@ -301,6 +337,9 @@ public class BattleManager : MonoBehaviour
             case PlayerAction.PlayerActionType.Run:
                 Debug.Log($"{playerActor.ActorName} attempts to run!");
                 // Implement escape logic
+                SpriteCharacter2D sprite = playerActor.GameObject.GetComponentInChildren<SpriteCharacter2D>();
+                sprite.isFlipped = !sprite.isFlipped;
+                sprite.Play(BattleSpriteState.Run);
                 battleEndEvent.Raise(false); // Assume running is a "loss" for now
                 yield break; // Exit coroutine
             default:
@@ -368,6 +407,8 @@ public class BattleManager : MonoBehaviour
         turnOrderQueue.Clear();
         currentActor = null;
 
+        audioSource.Stop();
+
         // This is the correct GameStateChangeEvent from GameStateMachine.cs
         // GameStateChangeEvent should be raised from the GameStateMachine directly if that's its role.
         // Or, BattleManager can raise a request via the assigned gameStateChangeEvent SO.
@@ -380,4 +421,5 @@ public class BattleManager : MonoBehaviour
             Debug.LogError("gameStateChangeEvent not assigned to BattleManager! Cannot transition back to overworld.");
         }
     }
+
 }

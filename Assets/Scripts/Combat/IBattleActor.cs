@@ -14,7 +14,7 @@ namespace Assets.Scripts.Combat
 
         void OnTurnStart(); // Called by BattleManager when it's this actor's turn
         void OnTurnEnd();   // Called by BattleManager when this actor's turn concludes
-        
+
         // Add more methods as needed, e.g., TakeDamage(), Heal(), ApplyStatusEffect()
     }
 }

@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1006739e94d1cc5498693ccd99b66396, type: 3}
+  m_Name: Dennis
+  m_EditorClassIdentifier: 
+  heroName: Dennis
+  avatar: {fileID: 21300000, guid: b2a14d812c41297409a1a2e4ff73b567, type: 3}
+  attacks:
+  - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}
+  - {fileID: 11400000, guid: 36884b678bcb95244a0764b43f7000e0, type: 2}
+  animations:
+  - {fileID: 11400000, guid: 578bd23b1f9469d4a9237c70bc32537d, type: 2}
+  - {fileID: 11400000, guid: 32a2df7052ca13a4f8ad3f407c725263, type: 2}
+  - {fileID: 11400000, guid: 74f7ed6bee1ec9d408c8a16c2d39ad92, type: 2}
+  - {fileID: 11400000, guid: 579a3f1cc2745544c87ab29f0921691a, type: 2}
+  - {fileID: 11400000, guid: 6de13ec99a111c84cb2cfb25faac97bf, type: 2}
+  - {fileID: 11400000, guid: f7bc375d1c2a5ed46a678d7be7242187, type: 2}
+  - {fileID: 11400000, guid: 4771739ced84dfc40a5a2966c92b9471, type: 2}
+  - {fileID: 11400000, guid: 719faab2c634184449751eb8ee9ee45a, type: 2}
+  - {fileID: 11400000, guid: 2cdcb0fe7ddc7e443a626421870df546, type: 2}
+  - {fileID: 11400000, guid: 285d5680ff3bc2044868db263fb3aa96, type: 2}
+  - {fileID: 11400000, guid: 88adab5d065774d4f8e9e900e21b16ba, type: 2}
+  - {fileID: 11400000, guid: 73cb9f1e2b7c067479ae10e07ac68ce4, type: 2}
+  maxHealth: 10
+  baseSpeed: 10
+  flatDamageModifiers:
+    keys: 000000000100000002000000030000000400000005000000060000000700000008000000
+    values:
+    - 1
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  damageMultipliers:
+    keys: 000000000100000002000000030000000400000005000000060000000700000008000000
+    values:
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
+  flatResistances:
+    keys: 000000000100000002000000030000000400000005000000060000000700000008000000
+    values:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+  resistanceMultipliers:
+    keys: 000000000100000002000000030000000400000005000000060000000700000008000000
+    values:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0

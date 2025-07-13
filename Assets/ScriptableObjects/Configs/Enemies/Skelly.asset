@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
+  m_Name: Skelly
+  m_EditorClassIdentifier: 
+  enemyName: Skop
+  avatar: {fileID: 257241536, guid: ae193d8a5738e4f448628eee4e96d6e9, type: 3}
+  attacks:
+  - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}
+  animations:
+  - {fileID: 11400000, guid: 7f2949b55eb8a7244a8decc1af975e89, type: 2}
+  - {fileID: 11400000, guid: 529f86d30cc4147418816f020ad8413d, type: 2}
+  - {fileID: 11400000, guid: ac77e4fdc5b79ff4cad9fe993f9c7bfc, type: 2}
+  - {fileID: 11400000, guid: 8e192c9a04a2a784e895cc8123a49a5c, type: 2}
+  - {fileID: 11400000, guid: cf80284517057344b8289686035196c2, type: 2}
+  - {fileID: 11400000, guid: 8c316b8a67f8ac44f8daa8878dc86ea4, type: 2}
+  - {fileID: 11400000, guid: ca6f75f6bbeeb1043be7354f64c0f402, type: 2}
+  - {fileID: 11400000, guid: 31506afb4e4091840b7ee3df0f99d2ac, type: 2}
+  - {fileID: 11400000, guid: 22a3e2d41f272eb4497bcfb927bc5c63, type: 2}
+  - {fileID: 11400000, guid: f33373cd86a0fd1449c07af07ebe990d, type: 2}
+  maxHealth: 10
+  baseSpeed: 10
+  flatDamageModifiers:
+    keys: 00000000
+    values:
+    - 1
+  damageMultipliers:
+    keys: 
+    values: []
+  flatResistances:
+    keys: 
+    values: []
+  resistanceMultipliers:
+    keys: 
+    values: []

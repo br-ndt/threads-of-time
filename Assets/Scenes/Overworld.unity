@@ -134,7 +134,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1038563477
 Transform:
@@ -164,7 +164,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameStateChangeEvent: {fileID: 11400000, guid: b3e23cd2873bbc64eb13f983e4232a12, type: 2}
-  specificBattleConfig: {fileID: 11400000, guid: 5323f13e7fb8eb440bb698bad7c6e37d, type: 2}
+  possibleBattles:
+  - {fileID: 11400000, guid: 6d6643c996bc978449d2326faa319ea7, type: 2}
+  - {fileID: 11400000, guid: 43a47ef295309d84a8fa055c60856221, type: 2}
+  - {fileID: 11400000, guid: 7a13889e710a9094d8a6c1656ee66e6b, type: 2}
   specificCutsceneConfig: {fileID: 11400000, guid: 9c13896d6e02a8747873a84245ad55ee, type: 2}
 --- !u!1 &1866820250
 GameObject:
@@ -257,13 +260,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1866820250}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.37918785, y: 0.4001846, z: -0.18660928, w: 0.81317025}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: 52.406, z: 0}
 --- !u!114 &1866820253
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,10 +13,12 @@ namespace Assets.Scripts.Configs
         public string heroName = "Hero";
         [Tooltip("For battle and cutscenes(?)")]
         public Sprite avatar;
-        [Tooltip("This should only be the mesh, materials, and textures required for rendering (check Assets/Models).")]
-        public GameObject modelPrefab;
+        // [Tooltip("This should only be the mesh, materials, and textures required for rendering (check Assets/Models).")]
+        // public GameObject modelPrefab;
         [Header("Attribs")]
         public List<AttackDefinition> attacks = new();
+        [Header("Anims")]
+        public List<SpriteBookConfig> animations;
         [Header("Stats")]
         public int maxHealth = 10;
         public int baseSpeed = 10;

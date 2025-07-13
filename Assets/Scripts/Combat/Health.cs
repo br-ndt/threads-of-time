@@ -1,5 +1,9 @@
 using Assets.Scripts.Events;
+using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 namespace Assets.Scripts.Combat
 {
@@ -13,11 +17,13 @@ namespace Assets.Scripts.Combat
 
         private bool initialized = false;
         private IBattleActor _actor; // Reference to the IBattleActor interface on this GameObject
+        private SpriteCharacter2D _sprite;
 
         void Awake()
         {
             CurrentHealth = MaxHealth;
             _actor = GetComponent<IBattleActor>();
+            _sprite = GetComponentInChildren<SpriteCharacter2D>();
         }
 
         void Start()
@@ -54,10 +60,48 @@ namespace Assets.Scripts.Combat
             if (!IsAlive)
             {
                 Debug.Log($"{gameObject.name} has been defeated!");
-                // You'd trigger death animations, effects, disable actor, etc.
-                gameObject.SetActive(false);
+                // You'd trigger death animations, effects, disable actor, etc. 
+                if (_sprite != null) DieAndFade(_sprite);
+                else gameObject.SetActive(false);
             }
         }
+
+        private void DieAndFade(SpriteCharacter2D sprite)
+        {
+            StartCoroutine(DieAndFadeRoutine(sprite));
+        }
+
+        private IEnumerator DieAndFadeRoutine(SpriteCharacter2D sprite)
+        {
+            sprite.Play(States.BattleSpriteState.Die);
+
+            yield return new WaitForSeconds(0.3f); // Let death animation start a moment
+
+            Renderer rend = sprite.GetComponent<Renderer>();
+            Material mat = rend != null ? rend.material : null;
+
+            if (mat != null && mat.HasProperty("_Color"))
+            {
+                Color originalColor = mat.color;
+                float fadeDuration = 3f;
+                float elapsed = 0f;
+
+                while (elapsed < fadeDuration)
+                {
+                    elapsed += Time.deltaTime;
+                    float t = Mathf.Clamp01(elapsed / fadeDuration);
+                    float smoothAlpha = Mathf.SmoothStep(1f, 0f, t);
+                    mat.color = new Color(originalColor.r, originalColor.g, originalColor.b, smoothAlpha);
+                    yield return null;
+                }
+
+                mat.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+            }
+
+            gameObject.SetActive(false);
+            Debug.Log($"{gameObject.name} has faded out smoothly and been disabled.");
+        }
+
 
         public void Heal(float amount)
         {

@@ -13,23 +13,21 @@ MonoBehaviour:
   m_Name: Slash
   m_EditorClassIdentifier: 
   attackName: Slash
-  baseDamageByType:
+  baseDamageRangeByType:
     keys: 00000000
     values:
-    - 5
-    defaultValue: 0
-  damageRangeByType:
-    keys: 00000000
-    values:
-    - 10
-    defaultValue: 0
-  damageModifierByType:
+    - min: 1
+      max: 10
+  baseDamageModifierByType:
     keys: 
     values: []
-    defaultValue: 1
+  damageMultiplierByType:
+    keys: 
+    values: []
   overallDamageModifier: 1
+  overallDamageMultiplier: 1
+  overallResistanceModifier: 0
   overallResistanceMultiplier: 0
-  overallResistanceValue: 0
   baseCritChance: 0.05
   critChanceBonus: 0
   dodgeChance: 0.05

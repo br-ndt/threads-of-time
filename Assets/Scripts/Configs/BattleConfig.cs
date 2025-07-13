@@ -12,6 +12,9 @@ namespace Assets.Scripts.Configs
         [Header("Enemies")]
         public List<EnemyConfig> enemies = new(); // TODO: List of enemy prefab IDs or data IDs
 
+        [Header("Heroes")]
+        public List<HeroConfig> heroes = new();
+
         [Header("Environment")]
         public string battleBackgroundSceneName; // Name of the scene for the battle background
         public string battleMusicID; // ID for battle music

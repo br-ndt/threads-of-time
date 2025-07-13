@@ -13,21 +13,21 @@ MonoBehaviour:
   m_Name: FieryAxe
   m_EditorClassIdentifier: 
   attackName: Fiery Axe
-  baseDamageByType:
-    keys: 0000000002000000
-    values:
-    - 1
-    - 1
-  damageRangeByType:
-    keys: 00000000
-    values:
-    - 2
-  damageModifierByType:
+  spriteProjectilePrefab: {fileID: 6628492642499365167, guid: 6547a52530f652444be5676c46724b2f, type: 3}
+  projectileAnimation: {fileID: 11400000, guid: 6714d872287ef45439cd27d0546020c5, type: 2}
+  baseDamageRangeByType:
+    keys: 
+    values: []
+  baseDamageModifierByType:
+    keys: 
+    values: []
+  damageMultiplierByType:
     keys: 
     values: []
   overallDamageModifier: 1
+  overallDamageMultiplier: 1
+  overallResistanceModifier: 0
   overallResistanceMultiplier: -0.25
-  overallResistanceValue: 0
   baseCritChance: 0.1
   critChanceBonus: 0
   dodgeChance: 0.05

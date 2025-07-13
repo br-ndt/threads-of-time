@@ -13,23 +13,23 @@ MonoBehaviour:
   m_Name: DarkBeam
   m_EditorClassIdentifier: 
   attackName: Dark Beam
-  baseDamageByType:
-    keys: 010000000700000008000000
+  spriteProjectilePrefab: {fileID: 6628492642499365167, guid: 6547a52530f652444be5676c46724b2f, type: 3}
+  projectileAnimation: {fileID: 11400000, guid: d24c91b547727994c88be601aa47b3a2, type: 2}
+  baseDamageRangeByType:
+    keys: 02000000
     values:
-    - 2
-    - 2
-    - 1
-  damageRangeByType:
-    keys: 0100000007000000
-    values:
-    - 5
-    - 5
-  damageModifierByType:
+    - min: 10
+      max: 20
+  baseDamageModifierByType:
+    keys: 
+    values: []
+  damageMultiplierByType:
     keys: 
     values: []
   overallDamageModifier: 1
+  overallDamageMultiplier: 1
+  overallResistanceModifier: 0
   overallResistanceMultiplier: 0
-  overallResistanceValue: 0
   baseCritChance: 0
   critChanceBonus: 0
   dodgeChance: 0.05

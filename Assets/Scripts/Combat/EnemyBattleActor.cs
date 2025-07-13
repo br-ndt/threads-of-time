@@ -1,6 +1,7 @@
 using UnityEngine;
 using Assets.Scripts.Combat;
-using Assets.Scripts.Configs; // For IBattleActor
+using Assets.Scripts.Configs;
+using System.Collections; // For IBattleActor
 
 namespace Assets.Scripts.Combat
 {
@@ -31,15 +32,42 @@ namespace Assets.Scripts.Combat
         public Resistance _resistance;
         public Sprite Avatar => _enemyConfig.avatar;
 
+        public SpriteCharacter2D spriteCharacter;
+
+        private GameObject marker;
+
         void Awake()
         {
             Health = GetComponent<Health>();
             _resistance = GetComponent<Resistance>();
+            spriteCharacter = GetComponentInChildren<SpriteCharacter2D>();
+            marker = transform.Find("TurnMarker").gameObject;
+
             if (_enemyConfig != null)
             {
                 Initialize(_enemyConfig, 0);
             }
         }
+        private void Start()
+        {
+            StartCoroutine(OrientToCamera());
+        }
+
+        private IEnumerator OrientToCamera()
+        {
+            // Wait one frame to ensure Camera.main is available
+            yield return null;
+
+            Vector3 direction = Camera.main.transform.position - transform.position;
+            direction.y = 0; // eliminate vertical difference
+
+            if (direction != Vector3.zero) // avoid zero length
+            {
+                Quaternion rotation = Quaternion.LookRotation(-direction, Vector3.up);
+                transform.rotation = rotation;
+            }
+        }
+
 
         /// <summary>
         /// Initializes the enemy actor with data from an EnemyConfigSO.
@@ -50,6 +78,10 @@ namespace Assets.Scripts.Combat
         {
             _enemyConfig = config;
 
+            if (spriteCharacter != null)
+            {
+                spriteCharacter.LoadFromConfig(config);
+            }
 
             // Set base stats from config
             Health.Initialize(config.maxHealth);
@@ -72,6 +104,7 @@ namespace Assets.Scripts.Combat
         public void OnTurnStart()
         {
             Debug.Log($"<color=red>{ActorName}'s Turn!</color> AI is thinking...");
+            marker.SetActive(true);
             // Trigger AI logic, play thinking animation, etc.
             // This is where you would start a coroutine for enemy AI action
         }
@@ -79,6 +112,7 @@ namespace Assets.Scripts.Combat
         public void OnTurnEnd()
         {
             Debug.Log($"{ActorName}'s Turn Ended.");
+            marker.SetActive(false);
         }
 
         // Methods to interact with the HealthComponent
@@ -91,6 +125,7 @@ namespace Assets.Scripts.Combat
             // Simple AI: always attack the provided player target with its default attack
             if (_enemyConfig != null && _enemyConfig.attacks[0] != null)
             {
+                // if (spriteCharacter != null) spriteCharacter.Play(States.BattleSpriteState.Attack);
                 return new PlayerAction(_enemyConfig.attacks[0], playerTarget.GameObject);
             }
             else
@@ -99,5 +134,6 @@ namespace Assets.Scripts.Combat
                 return new PlayerAction(PlayerAction.PlayerActionType.Defend); // Fallback
             }
         }
+
     }
 }

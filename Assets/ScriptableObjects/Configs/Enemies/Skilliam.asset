@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
+  m_Name: Skilliam
+  m_EditorClassIdentifier: 
+  enemyName: Skilliam
+  avatar: {fileID: 1688729308, guid: 5d2553da0b4ce634eb1d385d73c994bf, type: 3}
+  attacks:
+  - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}
+  animations:
+  - {fileID: 11400000, guid: 9d2ab6d3d077aef4f9d47f7667cd5281, type: 2}
+  - {fileID: 11400000, guid: cd8c7733dfea00b40afddfc0e1760d1c, type: 2}
+  - {fileID: 11400000, guid: c05d0a8b49907fd49b5b0156d6178dcd, type: 2}
+  - {fileID: 11400000, guid: 89d1494e5acdc504bb1fbe2ffe767df9, type: 2}
+  - {fileID: 11400000, guid: cdbd47d30fce17846b60413aca05267b, type: 2}
+  - {fileID: 11400000, guid: f3346208a8ceda041bb045e805c80b24, type: 2}
+  - {fileID: 11400000, guid: 54deba593efb3d04d9dd23c2ae1afb6d, type: 2}
+  - {fileID: 11400000, guid: aff346d5f7dfca34cb1b5ad0b28a7a2e, type: 2}
+  - {fileID: 11400000, guid: a94537d72b19abd4486e13adff30faad, type: 2}
+  - {fileID: 11400000, guid: ab3ca1584728738459009d0bbd729f26, type: 2}
+  maxHealth: 10
+  baseSpeed: 10
+  flatDamageModifiers:
+    keys: 00000000
+    values:
+    - 1
+  damageMultipliers:
+    keys: 
+    values: []
+  flatResistances:
+    keys: 
+    values: []
+  resistanceMultipliers:
+    keys: 
+    values: []

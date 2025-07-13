@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
+  m_Name: Elisa
+  m_EditorClassIdentifier: 
+  enemyName: Elisa
+  avatar: {fileID: 1235205148, guid: 5d9da8f526fbc0c46b6f591f302d25f2, type: 3}
+  attacks:
+  - {fileID: 11400000, guid: 219cd615ab84bea49b2da5d87065e10e, type: 2}
+  animations:
+  - {fileID: 11400000, guid: 765270a3bf94e27408ffe79c5ce3f53a, type: 2}
+  - {fileID: 11400000, guid: 8a9c8b2d7f8a0cc48a6b313576125513, type: 2}
+  - {fileID: 11400000, guid: f43ce5959d44e914d8737aed674276b2, type: 2}
+  - {fileID: 11400000, guid: b146c6e982b1a0f46b860241a3012818, type: 2}
+  - {fileID: 11400000, guid: a833ba7ab5d2c1345a49fe31aacc2358, type: 2}
+  maxHealth: 10
+  baseSpeed: 10
+  flatDamageModifiers:
+    keys: 01000000
+    values:
+    - 1
+  damageMultipliers:
+    keys: 
+    values: []
+  flatResistances:
+    keys: 
+    values: []
+  resistanceMultipliers:
+    keys: 
+    values: []

@@ -2,6 +2,8 @@ using UnityEngine;
 using Assets.Scripts.States;
 using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 public class OverworldManager : MonoBehaviour
 {
@@ -11,7 +13,7 @@ public class OverworldManager : MonoBehaviour
 
     [Header("Battle & Cutscene Configurations")]
     [SerializeField]
-    private BattleConfig specificBattleConfig; // Assign a pre-configured BattleConfig asset
+    private List<BattleConfig> possibleBattles; // Assign a pre-configured BattleConfig asset
     [SerializeField]
     private CutsceneConfig specificCutsceneConfig; // Assign a pre-configured CutsceneConfig asset
 
@@ -20,10 +22,11 @@ public class OverworldManager : MonoBehaviour
         // Example: Trigger battle when 'B' is pressed
         if (Input.GetKeyDown(KeyCode.B))
         {
-            if (gameStateChangeEvent != null && specificBattleConfig != null)
+            if (gameStateChangeEvent != null && possibleBattles.Count > 0)
             {
+                BattleConfig selectedBattle = possibleBattles[Random.Range(0, possibleBattles.Count)];
                 // Request a transition to Battle state with a specific battle config
-                gameStateChangeEvent.Raise(GameState.Battle, specificBattleConfig);
+                gameStateChangeEvent.Raise(GameState.Battle, selectedBattle);
             }
             else
             {
@@ -49,10 +52,11 @@ public class OverworldManager : MonoBehaviour
     // Example: When player hits an invisible trigger for a battle
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("EnemyTrigger") && gameStateChangeEvent != null && specificBattleConfig != null)
+        if (other.CompareTag("EnemyTrigger") && gameStateChangeEvent != null && possibleBattles.Count > 0)
         {
             Debug.Log("Player entered enemy trigger! Starting battle...");
-            gameStateChangeEvent.Raise(GameState.Battle, specificBattleConfig);
+            BattleConfig selectedBattle = possibleBattles[Random.Range(0, possibleBattles.Count)];
+            gameStateChangeEvent.Raise(GameState.Battle, selectedBattle);
         }
     }
 }

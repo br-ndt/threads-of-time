@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Configs;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace Assets.Scripts.Combat
     /// Component representing a player-controlled actor in battle.
     /// </summary>
     [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(Resistance))]
     // Add CharacterCombatStats and other relevant components here
     public class PlayerBattleActor : MonoBehaviour, IBattleActor
     {
@@ -28,21 +30,52 @@ namespace Assets.Scripts.Combat
         public Sprite Avatar => _heroConfig.avatar;
         public List<AttackDefinition> Attacks => _heroConfig.attacks;
 
+        public SpriteCharacter2D spriteCharacter;
+
+        private GameObject marker;
+
         void Awake()
         {
             Health = GetComponent<Health>();
             Resistance = GetComponent<Resistance>();
+
+            spriteCharacter = GetComponentInChildren<SpriteCharacter2D>();
+            marker = transform.Find("TurnMarker").gameObject;
+        }
+
+        private void Start()
+        {
+            StartCoroutine(OrientToCamera());
+        }
+
+        private IEnumerator OrientToCamera()
+        {
+            // Wait one frame to ensure Camera.main is available
+            yield return null;
+
+            Vector3 direction = Camera.main.transform.position - transform.position;
+            direction.y = 0; // eliminate vertical difference
+
+            if (direction != Vector3.zero) // avoid zero length
+            {
+                Quaternion rotation = Quaternion.LookRotation(-direction, Vector3.up);
+                transform.rotation = rotation;
+            }
         }
 
         /// <summary>
-        /// Initializes the enemy actor with data from an EnemyConfigSO.
+        /// Initializes the hero actor with data from an HeroConfigSO.
         /// This should be called immediately after instantiation.
         /// </summary>
-        /// <param name="config">The EnemyConfigSO to use for this actor.</param>
+        /// <param name="config">The HeroConfigSO to use for this actor.</param>
         public void Initialize(HeroConfig config)
         {
             _heroConfig = config;
 
+            if (spriteCharacter != null)
+            {
+                spriteCharacter.LoadFromConfig(config);
+            }
 
             // Set base stats from config
             Health.Initialize(config.maxHealth);
@@ -66,14 +99,17 @@ namespace Assets.Scripts.Combat
         public void OnTurnStart()
         {
             Debug.Log($"<color=cyan>{ActorName}'s Turn!</color> Awaiting player input...");
+            marker.SetActive(true);
             // Enable UI elements specific to player character, highlight character, etc.
         }
 
         public void OnTurnEnd()
         {
             Debug.Log($"{ActorName}'s Turn Ended.");
+            marker.SetActive(false);
             // Disable UI elements, remove highlight, etc.
         }
+
 
         // Methods to interact with the HealthComponent
         public void TakeDamage(float damage) => Health.TakeDamage(damage);

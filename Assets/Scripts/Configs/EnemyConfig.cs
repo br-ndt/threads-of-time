@@ -14,6 +14,8 @@ namespace Assets.Scripts.Configs
         public Sprite avatar;
         [Header("Attribs")]
         public List<AttackDefinition> attacks = new();
+        [Header("Anims")]
+        public List<SpriteBookConfig> animations;
         [Header("Stats")]
         public int maxHealth = 10;
         public int baseSpeed = 10;

@@ -1,3 +1,4 @@
+using Assets.Scripts.Configs;
 using UnityEngine;
 
 namespace Assets.Scripts.Combat
