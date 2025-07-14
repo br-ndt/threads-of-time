@@ -322,3 +322,4 @@ MonoBehaviour:
   rotateAmplitude: 60
   rotateFrequency: 1.5
   actorTurnEvent: {fileID: 11400000, guid: 801582570dfb0a344af0b9b72b530fcb, type: 2}
+  battleEndEvent: {fileID: 11400000, guid: b3f8916cf3a04d740a4af3b923304ac9, type: 2}

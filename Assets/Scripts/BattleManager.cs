@@ -5,7 +5,7 @@ using System.Linq; // For OrderBy
 using Assets.Scripts.States;
 using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
-using Assets.Scripts.Combat; 
+using Assets.Scripts.Combat;
 
 public class BattleManager : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField]
     private GameStateChangeEvent gameStateChanged; // Listens for GameState changes
     [SerializeField]
-    private GameStateChangeEvent requestGameStateChange; 
+    private GameStateChangeEvent requestGameStateChange;
     [SerializeField]
     private BattleStartEvent battleStartEvent; // Raises when battle starts
     [SerializeField]
@@ -92,7 +92,7 @@ public class BattleManager : MonoBehaviour
         audioSource.volume = 0f;
         audioSource.Play();
         audioSource.Pause();
-        audioSource.volume = 0.4f; 
+        audioSource.volume = 0.4f;
     }
 
     private void OnDisable()
@@ -218,7 +218,10 @@ public class BattleManager : MonoBehaviour
                     continue;
                 }
 
-                actorTurnEvent.Raise((currentActor, true)); // Notify UI and other systems
+                if (CurrentBattleState != BattleState.BattleEnd)
+                {
+                    actorTurnEvent.Raise((currentActor, true)); // Notify UI and other systems
+                }
 
                 if (currentActor.IsPlayerControlled)
                 {
@@ -239,7 +242,10 @@ public class BattleManager : MonoBehaviour
                     yield return StartCoroutine(PerformEnemyAction(currentActor as EnemyBattleActor)); // Cast to EnemyBattleActor for AI logic
                 }
 
-                actorTurnEvent.Raise((currentActor, false));
+                if (CurrentBattleState != BattleState.BattleEnd)
+                {
+                    actorTurnEvent.Raise((currentActor, false));
+                }
 
                 // Remove defeated actors from active list
                 activeActors.RemoveAll(actor => !actor.IsAlive);
@@ -261,6 +267,7 @@ public class BattleManager : MonoBehaviour
             audioSource.Play();
         }
 
+        CurrentBattleState = BattleState.BattleEnd;
         battleEndEvent.Raise(playerWon); // Announce battle outcome
         Debug.Log($"<color=orange>--- Battle Ended: {(playerWon ? "VICTORY" : "DEFEAT")} ---</color>");
     }
@@ -331,6 +338,7 @@ public class BattleManager : MonoBehaviour
                 SpriteCharacter2D sprite = playerActor.GameObject.GetComponentInChildren<SpriteCharacter2D>();
                 sprite.isFlipped = !sprite.isFlipped;
                 sprite.Play(BattleSpriteState.Run);
+                CurrentBattleState = BattleState.BattleEnd;
                 battleEndEvent.Raise(false); // Assume running is a "loss" for now
                 yield break; // Exit coroutine
             default:
