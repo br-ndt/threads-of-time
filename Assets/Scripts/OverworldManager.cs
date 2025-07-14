@@ -4,6 +4,7 @@ using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.TextCore.Text;
 
 public class OverworldManager : MonoBehaviour
 {
@@ -27,6 +28,7 @@ public class OverworldManager : MonoBehaviour
     private bool canMove = false;
     private bool isMoving = false;
     private Vector3 targetPosition;
+    private SpriteCharacter2D spriteCharacter;
 
     void OnEnable()
     {
@@ -50,6 +52,11 @@ public class OverworldManager : MonoBehaviour
         {
             requestGameStateChange.OnEventRaised -= HandleGameStateRequested;
         }
+    }
+
+    void Awake()
+    {
+        spriteCharacter = player.GetComponent<SpriteCharacter2D>();
     }
 
     void Start()
@@ -105,6 +112,8 @@ public class OverworldManager : MonoBehaviour
     private IEnumerator MovePlayer()
     {
         isMoving = true;
+        spriteCharacter.Play(BattleSpriteState.Walk);
+        spriteCharacter.isFlipped = player.transform.position.x < targetPosition.x;
 
         // TODO check for collision
 
@@ -115,6 +124,7 @@ public class OverworldManager : MonoBehaviour
         }
 
         player.transform.position = targetPosition;
+        spriteCharacter.Play(BattleSpriteState.Idle);
         isMoving = false;
     }
 
