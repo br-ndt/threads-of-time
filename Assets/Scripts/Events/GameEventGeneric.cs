@@ -19,13 +19,10 @@ namespace Assets.Scripts.Events
         /// <param name="value">The payload to pass to the listeners.</param>
         public void Raise(T value)
         {
-            // The '?' (null-conditional operator) ensures we don't try to invoke
-            // if there are no listeners subscribed.
             OnEventRaised?.Invoke(value);
         }
 
         // Optional: Methods for manual subscription/unsubscription if preferred over direct '+=' '/-='
-        // However, direct '+=' and '-=' are generally fine and more common.
         public void AddListener(Action<T> listener)
         {
             OnEventRaised += listener;

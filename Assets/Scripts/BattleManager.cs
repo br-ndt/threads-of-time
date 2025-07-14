@@ -5,13 +5,15 @@ using System.Linq; // For OrderBy
 using Assets.Scripts.States;
 using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
-using Assets.Scripts.Combat; // New: For IBattleActor, BattleState, PlayerAction, etc.
+using Assets.Scripts.Combat; 
 
 public class BattleManager : MonoBehaviour
 {
     [Header("Event Channels")]
     [SerializeField]
-    private GameStateChangeEvent gameStateChangeEvent; // Listens for GameState changes
+    private GameStateChangeEvent gameStateChanged; // Listens for GameState changes
+    [SerializeField]
+    private GameStateChangeEvent requestGameStateChange; 
     [SerializeField]
     private BattleStartEvent battleStartEvent; // Raises when battle starts
     [SerializeField]
@@ -34,7 +36,7 @@ public class BattleManager : MonoBehaviour
     public Transform[] enemySpawnPoints; // Assign empty transforms in your scene
     // [SerializeField] private HeroConfig[] demoHeroConfigs;
 
-    private BattleConfig currentBattleConfig;
+    [SerializeField] private BattleConfig currentBattleConfig;
 
     // Core Battle State
     public BattleState CurrentBattleState { get; private set; } = BattleState.CalculatingTurnOrder;
@@ -66,20 +68,20 @@ public class BattleManager : MonoBehaviour
     private void OnEnable()
     {
         // Subscribe to GameState changes from the main GameStateMachine
-        if (GameStateMachine.Instance != null)
+        if (gameStateChanged != null)
         {
-            GameStateMachine.Instance.OnStateChanged += HandleGameStateChange;
+            gameStateChanged.OnEventRaised += HandleGameStateChange;
         }
 
         // Subscribe to player action choices
         if (playerActionChosenEvent != null)
         {
-            playerActionChosenEvent.OnActionChosen += HandlePlayerActionChosen;
+            playerActionChosenEvent.OnEventRaised += HandlePlayerActionChosen;
         }
 
         if (battleLeaveEvent != null)
         {
-            battleLeaveEvent.OnBattleEnded += HandleLeaveBattle;
+            battleLeaveEvent.OnEventRaised += HandleLeaveBattle;
         }
 
         audioSource = GetComponent<AudioSource>();
@@ -95,19 +97,19 @@ public class BattleManager : MonoBehaviour
 
     private void OnDisable()
     {
-        if (GameStateMachine.Instance != null)
+        if (gameStateChanged != null)
         {
-            GameStateMachine.Instance.OnStateChanged -= HandleGameStateChange;
+            gameStateChanged.OnEventRaised -= HandleGameStateChange;
         }
 
         if (playerActionChosenEvent != null)
         {
-            playerActionChosenEvent.OnActionChosen -= HandlePlayerActionChosen;
+            playerActionChosenEvent.OnEventRaised -= HandlePlayerActionChosen;
         }
 
         if (battleLeaveEvent != null)
         {
-            battleLeaveEvent.OnBattleEnded -= HandleLeaveBattle;
+            battleLeaveEvent.OnEventRaised -= HandleLeaveBattle;
         }
     }
 
@@ -116,11 +118,11 @@ public class BattleManager : MonoBehaviour
         playerChosenAction = action; // Reset action
     }
 
-    private void HandleGameStateChange(GameState newState, GameConfig config)
+    private void HandleGameStateChange((GameState state, GameConfig config) payload)
     {
-        if (newState == GameState.Battle)
+        if (payload.state == GameState.Battle)
         {
-            currentBattleConfig = config as BattleConfig;
+            currentBattleConfig = payload.config as BattleConfig;
             if (currentBattleConfig != null)
             {
                 Debug.Log($"<color=blue>BattleManager received Battle State! Setting up battle with config: {currentBattleConfig.name}</color>");
@@ -412,9 +414,9 @@ public class BattleManager : MonoBehaviour
         // This is the correct GameStateChangeEvent from GameStateMachine.cs
         // GameStateChangeEvent should be raised from the GameStateMachine directly if that's its role.
         // Or, BattleManager can raise a request via the assigned gameStateChangeEvent SO.
-        if (gameStateChangeEvent != null)
+        if (requestGameStateChange != null)
         {
-            gameStateChangeEvent.Raise(GameState.Overworld); // Request transition back to overworld
+            requestGameStateChange.Raise((GameState.Overworld, null)); // Request transition back to overworld
         }
         else
         {

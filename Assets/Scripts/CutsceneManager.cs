@@ -3,29 +3,29 @@ using Assets.Scripts.States;
 using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
 using System.Collections;
+using System;
 
 public class CutsceneManager : MonoBehaviour
 {
     [Header("Event Channels")]
-    [SerializeField]
-    private GameStateChangeEvent gameStateChangeEvent; // Listen for GameState changes
-
+    [SerializeField] private GameStateChangeEvent gameStateChanged; // Listen for GameState changes
+    [SerializeField] private GameStateChangeEvent requestGameStateChange;
     private CutsceneConfig currentCutsceneConfig;
     private Coroutine cutsceneRoutine;
 
     private void OnEnable()
     {
-        if (GameStateMachine.Instance != null) // Check if GameStateMachine is initialized
+        if (gameStateChanged != null)
         {
-            GameStateMachine.Instance.OnStateChanged += HandleGameStateChange;
+            gameStateChanged.OnEventRaised += HandleGameStateChange;
         }
     }
 
     private void OnDisable()
     {
-        if (GameStateMachine.Instance != null)
+        if (gameStateChanged != null)
         {
-            GameStateMachine.Instance.OnStateChanged -= HandleGameStateChange;
+            gameStateChanged.OnEventRaised -= HandleGameStateChange;
         }
         if (cutsceneRoutine != null)
         {
@@ -33,11 +33,11 @@ public class CutsceneManager : MonoBehaviour
         }
     }
 
-    private void HandleGameStateChange(GameState newState, GameConfig config)
+    private void HandleGameStateChange((GameState, GameConfig) stateAndConfig)
     {
-        if (newState == GameState.Cutscene)
+        if (stateAndConfig.Item1 == GameState.Cutscene)
         {
-            currentCutsceneConfig = config as CutsceneConfig;
+            currentCutsceneConfig = stateAndConfig.Item2 as CutsceneConfig;
             if (currentCutsceneConfig != null)
             {
                 Debug.Log($"<color=magenta>CutsceneManager received Cutscene State! Setting up cutscene: {currentCutsceneConfig.name}</color>");
@@ -67,17 +67,10 @@ public class CutsceneManager : MonoBehaviour
         Debug.Log("--- Cutscene Complete! ---");
 
         // Transition back after cutscene finishes
-        if (gameStateChangeEvent != null)
+        if (requestGameStateChange != null)
         {
-            if (!string.IsNullOrEmpty(currentCutsceneConfig.nextSceneOnEnd))
-            {
-                // If the cutscene leads to another specific scene (e.g., dungeon)
-                // You'd need to create a new GameConfig if parameters are needed
-                Debug.Log($"Loading next scene: {currentCutsceneConfig.nextSceneOnEnd}");
-                // In this simplified example, we'll just go back to overworld,
-                // but in a real game, you'd likely transition to the specific scene via the GameStateMachine
-            }
-            gameStateChangeEvent.Raise(GameState.Overworld); // Default back to overworld
+            Debug.Log($"Loading next scene: {currentCutsceneConfig.gameStateOnEnd}...");
+            requestGameStateChange.Raise((currentCutsceneConfig.gameStateOnEnd, currentCutsceneConfig.nextSceneBattle));
         }
     }
 }

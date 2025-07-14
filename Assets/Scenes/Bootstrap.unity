@@ -424,10 +424,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14d0d18eb2d8cf34eab33c4dec119caf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStateChangeEvent: {fileID: 11400000, guid: b3e23cd2873bbc64eb13f983e4232a12, type: 2}
+  gameStateRequestedEvent: {fileID: 11400000, guid: b3e23cd2873bbc64eb13f983e4232a12, type: 2}
+  gameStateChangedEvent: {fileID: 11400000, guid: 1033d8ae536ebe048b2a79f2f1b09eb6, type: 2}
   overworld: Overworld
   battle: Battle
   cutscene: Cutscene
+  dynamicSceneKeys:
+  - Battle
+  - Cutscene
   loadingScreenPanel: {fileID: 2057363930}
   fadeDuration: 0.5
 --- !u!114 &656660480
@@ -442,10 +446,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fde550159e00f944baf81a005a284b3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameStateChanged: {fileID: 11400000, guid: 1033d8ae536ebe048b2a79f2f1b09eb6, type: 2}
   overworldCameraID: OverworldCamera
   battleCameraID: BattleCamera
   cutsceneCameraID: CutsceneCamera
-  gameBrain: {fileID: 656660479}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

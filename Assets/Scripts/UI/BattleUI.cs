@@ -90,31 +90,31 @@ namespace Assets.Scripts.UI
         {
             if (gameStateChangeEvent != null)
             {
-                gameStateChangeEvent.OnStateChangeRequested += HandleGameStateChange;
+                gameStateChangeEvent.OnEventRaised += HandleGameStateChange;
             }
             if (actorTurnEvent != null)
             {
-                actorTurnEvent.OnTurnStarted += HandleActorTurnStarted;
+                actorTurnEvent.OnEventRaised += HandleActorTurnStarted;
             }
             if (battleStartEvent != null)
             {
-                battleStartEvent.OnBattleStarted += HandleBattleStarted;
+                battleStartEvent.OnEventRaised += HandleBattleStarted;
             }
             if (battleEndEvent != null)
             {
-                battleEndEvent.OnBattleEnded += HandleBattleEnded;
+                battleEndEvent.OnEventRaised += HandleBattleEnded;
             }
             if (availableAttacksEvent != null)
             {
-                availableAttacksEvent.OnAttacksAvailable += HandleAvailableAttacks;
+                availableAttacksEvent.OnEventRaised += HandleAvailableAttacks;
             }
             if (availableTargetsEvent != null)
             {
-                availableTargetsEvent.OnTargetsAvailable += HandleAvailableTargets;
+                availableTargetsEvent.OnEventRaised += HandleAvailableTargets;
             }
             if (healthChangeEvent != null)
             {
-                healthChangeEvent.OnHealthChanged += HandleHealthChanged;
+                healthChangeEvent.OnEventRaised += HandleHealthChanged;
             }
         }
 
@@ -122,40 +122,40 @@ namespace Assets.Scripts.UI
         {
             if (gameStateChangeEvent != null)
             {
-                gameStateChangeEvent.OnStateChangeRequested -= HandleGameStateChange;
+                gameStateChangeEvent.OnEventRaised -= HandleGameStateChange;
             }
             if (actorTurnEvent != null)
             {
-                actorTurnEvent.OnTurnStarted -= HandleActorTurnStarted;
+                actorTurnEvent.OnEventRaised -= HandleActorTurnStarted;
             }
             if (battleStartEvent != null)
             {
-                battleStartEvent.OnBattleStarted -= HandleBattleStarted;
+                battleStartEvent.OnEventRaised -= HandleBattleStarted;
             }
             if (battleEndEvent != null)
             {
-                battleEndEvent.OnBattleEnded -= HandleBattleEnded;
+                battleEndEvent.OnEventRaised -= HandleBattleEnded;
             }
             if (availableAttacksEvent != null)
             {
-                availableAttacksEvent.OnAttacksAvailable -= HandleAvailableAttacks;
+                availableAttacksEvent.OnEventRaised -= HandleAvailableAttacks;
             }
             if (availableTargetsEvent != null)
             {
-                availableTargetsEvent.OnTargetsAvailable -= HandleAvailableTargets;
+                availableTargetsEvent.OnEventRaised -= HandleAvailableTargets;
             }
             if (healthChangeEvent != null)
             {
-                healthChangeEvent.OnHealthChanged -= HandleHealthChanged;
+                healthChangeEvent.OnEventRaised -= HandleHealthChanged;
             }
             ClearAttackButtons(); // Clean up buttons on disable
             ClearTargetButtons();
             ClearAllActorInfoPanels(); // Clean up actor info panels
         }
 
-        private void HandleGameStateChange(GameState state, GameConfig config)
+        private void HandleGameStateChange((GameState state, GameConfig config) payload)
         {
-            if (state != GameState.Battle)
+            if (payload.state != GameState.Battle)
             {
                 // This will happen when leaving battle
                 bottomPanel.SetActive(false);
@@ -187,31 +187,31 @@ namespace Assets.Scripts.UI
             ClearAttackButtons();
         }
 
-        private void HandleHealthChanged(IBattleActor actor, float currentHealth, float maxHealth)
+        private void HandleHealthChanged((IBattleActor actor, float currentHealth, float maxHealth) payload)
         {
-            Debug.Log($"UI received Health Change for {actor.ActorName}: {currentHealth}/{maxHealth}");
+            Debug.Log($"UI received Health Change for {payload.actor.ActorName}: {payload.currentHealth}/{payload.maxHealth}");
 
-            GameObject infoPanelGO = actor.IsPlayerControlled
-                ? spawnedHeroInfos.GetValueOrDefault(actor)
-                : spawnedEnemyInfos.GetValueOrDefault(actor);
+            GameObject infoPanelGO = payload.actor.IsPlayerControlled
+                ? spawnedHeroInfos.GetValueOrDefault(payload.actor)
+                : spawnedEnemyInfos.GetValueOrDefault(payload.actor);
             if (infoPanelGO != null)
             {
                 // Assuming "Health" is a child GameObject with an Image (fill) and a Text (text)
                 Image healthImg = infoPanelGO.transform.Find("Health").GetComponent<Image>();
                 TMP_Text healthText = healthImg.GetComponentInChildren<TMP_Text>();
 
-                float targetFill = currentHealth / maxHealth;
+                float targetFill = payload.currentHealth / payload.maxHealth;
 
                 if (healthImg != null) StartCoroutine(SmoothFill(healthImg, targetFill, 5f));
 
-                if (healthText != null) healthText.text = $"{currentHealth:F0}/{maxHealth:F0}";
+                if (healthText != null) healthText.text = $"{payload.currentHealth:F0}/{payload.maxHealth:F0}";
 
                 // Hide panel if actor is defeated
-                infoPanelGO.SetActive(actor.IsAlive);
+                infoPanelGO.SetActive(payload.actor.IsAlive);
             }
             else
             {
-                Debug.LogWarning($"Could not find info panel for {actor.DisplayName}");
+                Debug.LogWarning($"Could not find info panel for {payload.actor.DisplayName}");
             }
         }
 
@@ -256,27 +256,14 @@ namespace Assets.Scripts.UI
         private void InstantiateActorInfoPanel(IBattleActor actor, GameObject prefab, Transform parent, Dictionary<IBattleActor, GameObject> spawnedPanelsDict)
         {
             GameObject infoGO = Instantiate(prefab, parent);
-            // Assuming your prefab has these child elements with these names
             TMP_Text title = infoGO.transform.Find("Title").GetComponent<TMP_Text>();
             Image avatarImg = infoGO.transform.Find("Avatar").GetComponent<Image>();
-
-            // Health components will be updated by HandleHealthChanged
-            // Image healthImg = infoGO.transform.Find("Health").GetComponent<Image>();
-            // TMP_Text healthText = healthImg.GetComponentInChildren<TMP_Text>();
 
             infoGO.name = actor.ActorName; // Use ActorName for internal lookup consistency
             title.text = actor.DisplayName;
             avatarImg.sprite = actor.Avatar;
 
-            // Get current health to populate initially (HandleHealthChanged will do this too)
-            // HealthComponent actorHealth = actor.GameObject.GetComponent<HealthComponent>(); // Use HealthComponent not Health
-            // if (actorHealth != null)
-            // {
-            //     healthImg.fillAmount = actorHealth.CurrentHealth / actorHealth.MaxHealth;
-            //     healthText.text = $"{actorHealth.CurrentHealth:F0}/{actorHealth.MaxHealth:F0}";
-            // }
-
-            spawnedPanelsDict.Add(actor, infoGO); // Store reference
+            spawnedPanelsDict.Add(actor, infoGO); 
         }
 
         private void ClearAllActorInfoPanels()
@@ -388,7 +375,7 @@ namespace Assets.Scripts.UI
 
         {
             Debug.Log("Attack button clicked. Awaiting attack selection.");
-            actionsPanel.SetActive(false); // Hide action panel
+            actionsPanel.SetActive(false);
             attackMenu.SetActive(true);
         }
 
@@ -397,41 +384,41 @@ namespace Assets.Scripts.UI
             selectedAttackDefinition = attackDef; // Store the chosen attack
             Debug.Log($"Selected attack: {attackDef.attackName}. Now select target.");
 
-            attackMenu.SetActive(false); // Hide attack selection
-            targetMenu.SetActive(true); // Show target selection
-            ClearAttackButtons(); // Clean up attack buttons
+            attackMenu.SetActive(false);
+            targetMenu.SetActive(true);
+            ClearAttackButtons();
         }
 
         private void OnCancelAttackSelection()
         {
             Debug.Log("Attack selection cancelled. Returning to main actions.");
-            attackMenu.SetActive(false); // Hide attack selection
-            actionsPanel.SetActive(true); // Show main actions panel
-            ClearAttackButtons(); // Clean up buttons
+            attackMenu.SetActive(false); 
+            actionsPanel.SetActive(true); 
+            ClearAttackButtons(); 
         }
 
         private void OnDefendButtonClicked()
         {
             playerActionChosenEvent.Raise(new PlayerAction(PlayerAction.PlayerActionType.Defend));
             actionsPanel.SetActive(false);
-            targetMenu.SetActive(false); // Ensure hidden if somehow active
-            ClearTargetButtons(); // Clean up
+            targetMenu.SetActive(false); 
+            ClearTargetButtons();
         }
 
         private void OnRunButtonClicked()
         {
             playerActionChosenEvent.Raise(new PlayerAction(PlayerAction.PlayerActionType.Run));
             actionsPanel.SetActive(false);
-            targetMenu.SetActive(false); // Ensure hidden if somehow active
-            ClearTargetButtons(); // Clean up
+            targetMenu.SetActive(false); 
+            ClearTargetButtons();
         }
 
         private void OnCancelTargetSelection()
         {
             Debug.Log("Target selection cancelled.");
-            targetMenu.SetActive(false); // Hide target selection panel
-            actionsPanel.SetActive(true); // Show action panel again
-            ClearTargetButtons(); // Clean up generated buttons
+            targetMenu.SetActive(false);
+            actionsPanel.SetActive(true); 
+            ClearTargetButtons();
         }
 
         private void OnTargetButtonClicked(GameObject targetGameObject)
@@ -439,8 +426,8 @@ namespace Assets.Scripts.UI
             if (selectedAttackDefinition != null && targetGameObject != null)
             {
                 playerActionChosenEvent.Raise(new PlayerAction(selectedAttackDefinition, targetGameObject));
-                targetMenu.SetActive(false); // Hide target panel
-                ClearTargetButtons(); // Clean up buttons after selection
+                targetMenu.SetActive(false); 
+                ClearTargetButtons(); 
             }
             else
             {

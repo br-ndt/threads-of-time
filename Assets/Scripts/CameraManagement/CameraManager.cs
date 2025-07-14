@@ -2,12 +2,14 @@ using UnityEngine;
 using System.Collections.Generic;
 using Assets.Scripts.States;
 using Assets.Scripts.Configs;
+using Assets.Scripts.Events;
 
 namespace Assets.Scripts.CameraManagement
 {
     public class CameraManager : MonoBehaviour
     {
         public static CameraManager Instance { get; private set; }
+        [SerializeField] private GameStateChangeEvent gameStateChanged;
 
         // A dictionary to hold all registered cameras by a unique ID (e.g., scene name)
         private readonly Dictionary<string, Camera> registeredCameras = new();
@@ -16,7 +18,6 @@ namespace Assets.Scripts.CameraManagement
         [SerializeField] private string overworldCameraID = "OverworldCamera"; // ID of the camera to activate when overworld scene is active
         [SerializeField] private string battleCameraID = "BattleCamera";       // ID of the camera to activate when battle scene is active
         [SerializeField] private string cutsceneCameraID = "CutsceneCamera";   // ID of the camera to activate when cutscene scene is active
-        [SerializeField] private GameStateMachine gameBrain;
         public Camera ActiveCamera { get; private set; }
 
         private void Awake()
@@ -148,24 +149,24 @@ namespace Assets.Scripts.CameraManagement
         {
             // Subscribe to the GameStateChangeEvent from your events system
             // You'll need to assign your GameStateChangeEvent ScriptableObject here in the Inspector
-            if (gameBrain != null) // Check if GameStateMachine is initialized
+            if (gameStateChanged != null) // Check if GameStateMachine is initialized
             {
-                gameBrain.OnStateChanged += HandleGameStateChange;
+                gameStateChanged.OnEventRaised += HandleGameStateChange;
             }
             // else, you might want to find the event channel via Resources.Load or assign it in inspector
         }
 
         private void OnDisable()
         {
-            if (gameBrain != null)
+            if (gameStateChanged != null)
             {
-                gameBrain.OnStateChanged -= HandleGameStateChange;
+                gameStateChanged.OnEventRaised -= HandleGameStateChange;
             }
         }
 
-        private void HandleGameStateChange(GameState newState, GameConfig config)
+        private void HandleGameStateChange((GameState state, GameConfig config) payload)
         {
-            switch (newState)
+            switch (payload.state)
             {
                 case GameState.Overworld:
                     ActivateCamera(overworldCameraID);

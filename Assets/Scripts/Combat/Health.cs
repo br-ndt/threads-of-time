@@ -31,7 +31,7 @@ namespace Assets.Scripts.Combat
             // Raise event initially to set up UI for current health
             if (healthChangeEvent != null && _actor != null)
             {
-                healthChangeEvent.Raise(_actor, CurrentHealth, MaxHealth);
+                healthChangeEvent.Raise((_actor, CurrentHealth, MaxHealth));
             }
         }
 
@@ -54,7 +54,7 @@ namespace Assets.Scripts.Combat
             // Raise the event after health changes
             if (healthChangeEvent != null && _actor != null)
             {
-                healthChangeEvent.Raise(_actor, CurrentHealth, MaxHealth);
+                healthChangeEvent.Raise((_actor, CurrentHealth, MaxHealth));
             }
 
             if (!IsAlive)
@@ -112,7 +112,7 @@ namespace Assets.Scripts.Combat
             // Raise the event after health changes
             if (healthChangeEvent != null && _actor != null)
             {
-                healthChangeEvent.Raise(_actor, CurrentHealth, MaxHealth);
+                healthChangeEvent.Raise((_actor, CurrentHealth, MaxHealth));
             }
         }
     }

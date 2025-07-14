@@ -3622,7 +3622,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b0a32f5505c2ad408b24ad0e3287267, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStateChangeEvent: {fileID: 11400000, guid: b3e23cd2873bbc64eb13f983e4232a12, type: 2}
+  gameStateChanged: {fileID: 11400000, guid: 1033d8ae536ebe048b2a79f2f1b09eb6, type: 2}
+  requestGameStateChange: {fileID: 11400000, guid: b3e23cd2873bbc64eb13f983e4232a12, type: 2}
   battleStartEvent: {fileID: 11400000, guid: 8723be8c3258ffe4e842a565cc75f2f8, type: 2}
   actorTurnEvent: {fileID: 11400000, guid: 801582570dfb0a344af0b9b72b530fcb, type: 2}
   availableAttacksEvent: {fileID: 11400000, guid: 9ad0982e673e81640b14d5ea1c437acc, type: 2}
@@ -3640,6 +3641,7 @@ MonoBehaviour:
   - {fileID: 158974927}
   - {fileID: 430817292}
   - {fileID: 1760113340}
+  currentBattleConfig: {fileID: 0}
   tracklist:
   - {fileID: 8300000, guid: 2fd5b13e24ab45b4ca3db38926f2472c, type: 3}
   victoryTune: {fileID: 8300000, guid: 381f321b5fd476647a8ca0f88e477d44, type: 3}

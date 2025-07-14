@@ -3,8 +3,8 @@ using Assets.Scripts.States;
 
 namespace Assets.Scripts.Configs
 {
-    [CreateAssetMenu(fileName = "SpriteBook", menuName = "SpriteAnimation/SpriteBook")]
-    public class SpriteBookConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "SpriteBook", menuName = "Sprite Animation/Sprite Book")]
+    public class SpriteBookConfig : GameConfig
     {
         public BattleSpriteState animationType;
         public AnimPlayback playbackType;

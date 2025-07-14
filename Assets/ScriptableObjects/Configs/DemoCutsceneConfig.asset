@@ -19,4 +19,5 @@ MonoBehaviour:
   characterStartPositions:
   - {x: 1, y: 2, z: 3}
   duration: 5
-  nextSceneOnEnd: Battle
+  gameStateOnEnd: 2
+  nextSceneBattle: {fileID: 11400000, guid: 7a13889e710a9094d8a6c1656ee66e6b, type: 2}

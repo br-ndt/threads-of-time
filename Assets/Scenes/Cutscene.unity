@@ -299,7 +299,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50634c6cc64b29848ab4bfd272485ac2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStateChangeEvent: {fileID: 11400000, guid: b3e23cd2873bbc64eb13f983e4232a12, type: 2}
+  gameStateChanged: {fileID: 11400000, guid: 1033d8ae536ebe048b2a79f2f1b09eb6, type: 2}
+  requestGameStateChange: {fileID: 11400000, guid: b3e23cd2873bbc64eb13f983e4232a12, type: 2}
 --- !u!4 &864406394
 Transform:
   m_ObjectHideFlags: 0

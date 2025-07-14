@@ -12,13 +12,15 @@ namespace Assets.Scripts.States
 
         [Header("Event Channels")]
         [SerializeField]
-        private GameStateChangeEvent gameStateChangeEvent; // Event to request state changes
-        public event System.Action<GameState, GameConfig> OnStateChanged;
+        private GameStateChangeEvent gameStateRequestedEvent; // Raised by others, to request a state change
+        [SerializeField]
+        private GameStateChangeEvent gameStateChangedEvent; // Raised here, to notify others that the state change has occurred
 
         [Header("Scene References")]
         [SerializeField] string overworld = "Overworld";
         [SerializeField] string battle = "Battle";
         [SerializeField] string cutscene = "Cutscene";
+        [SerializeField] string[] dynamicSceneKeys = new string[] { "Battle", "Cutscene" };
 
         // Current state and its associated configuration
         public GameState CurrentState { get; private set; } = GameState.None;
@@ -60,40 +62,33 @@ namespace Assets.Scripts.States
 
         private void OnEnable()
         {
-            if (gameStateChangeEvent != null)
+            if (gameStateRequestedEvent != null)
             {
-                gameStateChangeEvent.OnStateChangeRequested += HandleStateChangeRequest;
+                gameStateRequestedEvent.OnEventRaised += HandleStateChangeRequest;
             }
         }
 
         private void OnDisable()
         {
-            if (gameStateChangeEvent != null)
+            if (gameStateRequestedEvent != null)
             {
-                gameStateChangeEvent.OnStateChangeRequested -= HandleStateChangeRequest;
+                gameStateRequestedEvent.OnEventRaised -= HandleStateChangeRequest;
             }
         }
 
         private void Start()
         {
             // Initial state setup (e.g., load the overworld scene at start)
-            if (CurrentState == GameState.None)
-            {
-                TransitionToState(GameState.Overworld); // Or GameState.TitleScreen
-            }
+            StartCoroutine(PerformTransition(GameState.Overworld, null));
         }
 
-        // --- Public method to request a state transition ---
-        public void TransitionToState(GameState newState, GameConfig config = null)
+        // Listener for the GameStateChangeEvent.
+        private void HandleStateChangeRequest((GameState, GameConfig) stateAndConfig)
         {
-            if (CurrentState == newState && config == CurrentConfig)
-            {
-                Debug.LogWarning($"Already in {newState} with same config. Ignoring transition request.");
-                return;
-            }
-
-            Debug.Log($"Requesting transition from {CurrentState} to {newState}");
-            StartCoroutine(PerformTransition(newState, config));
+            Debug.Log($"Game State Change Requested to: {stateAndConfig.Item1}. Config provided: {stateAndConfig.Item2 != null}");
+            StartCoroutine(PerformTransition(stateAndConfig.Item1, stateAndConfig.Item2));
+            // We call TransitionToState directly, not via the event in this manager.
+            // This prevents an infinite loop if this manager also raised the event.
         }
 
         private IEnumerator PerformTransition(GameState newState, GameConfig config)
@@ -105,7 +100,7 @@ namespace Assets.Scripts.States
             yield return FadeLoadingScreen(true); // Fade In loading screen
 
             // 2. Unload previous dynamic scene (Battle, Cutscene) if active
-            yield return UnloadCurrentDynamicScene(newState);
+            yield return UnloadDynamicScenes();
 
             // 3. Handle scene loading/unloading based on new state
             yield return LoadNewSceneForState(newState);
@@ -117,7 +112,7 @@ namespace Assets.Scripts.States
             // Let other systems know the state has changed (optional, can be done by listeners directly)
             // gameStateChangeEvent.Raise(CurrentState, CurrentConfig); // This could cause an infinite loop if listened to by this manager.
             // Instead, rely on direct scene/system listeners to pick up the state.
-            OnStateChanged?.Invoke(CurrentState, CurrentConfig);
+            gameStateChangedEvent.Raise((CurrentState, CurrentConfig));
 
             yield return FadeLoadingScreen(false); // Fade Out loading screen
         }
@@ -148,21 +143,13 @@ namespace Assets.Scripts.States
             }
         }
 
-        private IEnumerator UnloadCurrentDynamicScene(GameState newState)
+        private IEnumerator UnloadDynamicScenes()
         {
-            Debug.Log($"Unloading previous {newState} scenes...");
-            // Unload the previous additive scene if it was a battle or cutscene
-            if (newState == GameState.Battle && SceneManager.GetSceneByName(battle).isLoaded)
+            foreach (string sceneToUnload in dynamicSceneKeys)
             {
-                Debug.Log($"Unloading {battle}...");
-                yield return SceneManager.UnloadSceneAsync(battle);
+                if (SceneManager.GetSceneByName(sceneToUnload).isLoaded)
+                    yield return SceneManager.UnloadSceneAsync(sceneToUnload);
             }
-            else if (newState == GameState.Cutscene && SceneManager.GetSceneByName(cutscene).isLoaded)
-            {
-                Debug.Log($"Unloading {cutscene}...");
-                yield return SceneManager.UnloadSceneAsync(cutscene);
-            }
-            // Add other additive scenes to unload here if necessary
         }
 
         private IEnumerator LoadNewSceneForState(GameState newState)
@@ -193,15 +180,13 @@ namespace Assets.Scripts.States
                     loadMode = LoadSceneMode.Additive;
                     break;
                 case GameState.Menu:
-                    // Load a menu scene additively if not already loaded
-                    // You might have multiple menu scenes or a single one with different panels
                     // sceneToLoad = "MenuScene"; loadMode = LoadSceneMode.Additive;
                     yield break; // For now, no scene loading for Menu state
                 case GameState.GameOver:
-                    // sceneToLoad = gameOver; loadMode = LoadSceneMode.Additive;
+                    // sceneToLoad = "GameOver"; loadMode = LoadSceneMode.Additive;
                     yield break;
                 // case GameState.TitleScreen:
-                //     sceneToLoad = title; // Assume this is a single scene load
+                //     sceneToLoad = "Title";
                 //     loadMode = LoadSceneMode.Single;
                 //     break;
                 default:
@@ -215,7 +200,6 @@ namespace Assets.Scripts.States
                 Debug.Log($"Loading scene: {sceneToLoad} ({loadMode})");
                 AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneToLoad, loadMode);
 
-                // Wait until the asynchronous scene fully loads
                 while (!asyncLoad.isDone)
                 {
                     // Update progress bar here if you have one
@@ -235,20 +219,6 @@ namespace Assets.Scripts.States
             {
                 Debug.LogWarning($"Unhandled GameState: {newState}. No scene loaded.");
             }
-        }
-
-        // Listener for the GameStateChangeEvent.
-        // This is primarily for debugging or systems that *react* to state changes.
-        // The core transition logic is handled by the private PerformTransition coroutine.
-        private void HandleStateChangeRequest(GameState newState, GameConfig config)
-        {
-            // The TransitionToState method already handles the logic.
-            // This listener could be used by other managers (e.g., UI Manager)
-            // to show/hide specific UI elements based on the state.
-            Debug.Log($"Game State Change Requested to: {newState}. Config provided: {config != null}");
-            TransitionToState(newState, config);
-            // We call TransitionToState directly, not via the event in this manager.
-            // This prevents an infinite loop if this manager also raised the event.
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Assets.Scripts.Combat
         public bool IsAlive => Health.IsAlive;
 
         public Health Health { get; private set; }
-        public Resistance _resistance;
+        public Resistance Resistance { get; private set; }
         public Sprite Avatar => _enemyConfig.avatar;
 
         public SpriteCharacter2D spriteCharacter;
@@ -39,7 +39,7 @@ namespace Assets.Scripts.Combat
         void Awake()
         {
             Health = GetComponent<Health>();
-            _resistance = GetComponent<Resistance>();
+            Resistance = GetComponent<Resistance>();
             spriteCharacter = GetComponentInChildren<SpriteCharacter2D>();
             marker = transform.Find("TurnMarker").gameObject;
 
@@ -85,6 +85,7 @@ namespace Assets.Scripts.Combat
 
             // Set base stats from config
             Health.Initialize(config.maxHealth);
+            Resistance.Initialize(config.flatResistances, config.resistanceMultipliers);
             _currentSpeed = config.baseSpeed;
 
             // Initialize resistance component with data from config

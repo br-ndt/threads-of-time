@@ -25,7 +25,7 @@ namespace Assets.Scripts.Combat
         {
             if (combatCalculationEvent != null)
             {
-                combatCalculationEvent.OnCalculationRequested += ApplyOffensiveMods;
+                combatCalculationEvent.OnEventRaised += ApplyOffensiveMods;
             }
         }
 
@@ -33,7 +33,7 @@ namespace Assets.Scripts.Combat
         {
             if (combatCalculationEvent != null)
             {
-                combatCalculationEvent.OnCalculationRequested -= ApplyOffensiveMods;
+                combatCalculationEvent.OnEventRaised -= ApplyOffensiveMods;
             }
         }
 

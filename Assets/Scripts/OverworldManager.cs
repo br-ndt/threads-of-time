@@ -2,61 +2,129 @@ using UnityEngine;
 using Assets.Scripts.States;
 using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
-using NUnit.Framework;
 using System.Collections.Generic;
+using System.Collections;
 
 public class OverworldManager : MonoBehaviour
 {
     [Header("Event Channels")]
-    [SerializeField]
-    private GameStateChangeEvent gameStateChangeEvent; // Assign Game State Change Event
+    [SerializeField] private GameStateChangeEvent requestGameStateChange;
+    [SerializeField] private GameStateChangeEvent gameStateChanged;
 
     [Header("Battle & Cutscene Configurations")]
-    [SerializeField]
-    private List<BattleConfig> possibleBattles; // Assign a pre-configured BattleConfig asset
-    [SerializeField]
-    private CutsceneConfig specificCutsceneConfig; // Assign a pre-configured CutsceneConfig asset
+    [SerializeField] private List<BattleConfig> possibleBattles;
+    [SerializeField] private CutsceneConfig specificCutsceneConfig;
+
+    [Header("Player Settings")]
+    [Tooltip("How fast the player moves from one tile to the next.")]
+    public float moveSpeed = 5f;
+
+    [Tooltip("The size of one tile in the grid. Should match your tilemap grid size.")]
+    public float tileSize = 1f;
+
+    // Player state variables
+    [SerializeField] private GameObject player;
+    private bool canMove = false;
+    private bool isMoving = false;
+    private Vector3 targetPosition;
+
+    void OnEnable()
+    {
+        if (gameStateChanged != null)
+        {
+            gameStateChanged.OnEventRaised += HandleGameStateChange;
+        }
+        if (requestGameStateChange != null)
+        {
+            requestGameStateChange.OnEventRaised += HandleGameStateRequested;
+        }
+    }
+
+    void OnDisable()
+    {
+        if (gameStateChanged != null)
+        {
+            gameStateChanged.OnEventRaised -= HandleGameStateChange;
+        }
+        if (requestGameStateChange != null)
+        {
+            requestGameStateChange.OnEventRaised -= HandleGameStateRequested;
+        }
+    }
+
+    void Start()
+    {
+        player.transform.position = RoundToNearestTile(player.transform.position);
+    }
 
     void Update()
     {
-        // Example: Trigger battle when 'B' is pressed
-        if (Input.GetKeyDown(KeyCode.B))
+        if (!isMoving && canMove)
         {
-            if (gameStateChangeEvent != null && possibleBattles.Count > 0)
-            {
-                BattleConfig selectedBattle = possibleBattles[Random.Range(0, possibleBattles.Count)];
-                // Request a transition to Battle state with a specific battle config
-                gameStateChangeEvent.Raise(GameState.Battle, selectedBattle);
-            }
-            else
-            {
-                Debug.LogWarning("Battle Trigger: GameStateChangeEvent or BattleConfig is not assigned!");
-            }
-        }
+            float horizontalInput = Input.GetAxisRaw("Horizontal");
+            float verticalInput = Input.GetAxisRaw("Vertical");
 
-        // Example: Trigger cutscene when 'C' is pressed
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            if (gameStateChangeEvent != null && specificCutsceneConfig != null)
+            if (horizontalInput != 0)
             {
-                // Request a transition to Cutscene state with a specific cutscene config
-                gameStateChangeEvent.Raise(GameState.Cutscene, specificCutsceneConfig);
+                targetPosition = player.transform.position + new Vector3(horizontalInput * tileSize, 0, 0);
+                StartCoroutine(MovePlayer());
             }
-            else
+            else if (verticalInput != 0)
             {
-                Debug.LogWarning("Cutscene Trigger: GameStateChangeEvent or CutsceneConfig is not assigned!");
+                targetPosition = player.transform.position + new Vector3(0, verticalInput * tileSize, 0);
+                StartCoroutine(MovePlayer());
             }
         }
     }
 
-    // Example: When player hits an invisible trigger for a battle
-    void OnTriggerEnter(Collider other)
+    /// <summary>
+    /// Event listener for game state change being requested. We listen to this so we can quickly stop any interactions if we're leaving the scene
+    /// </summary>
+    private void HandleGameStateRequested((GameState state, GameConfig config) payload)
     {
-        if (other.CompareTag("EnemyTrigger") && gameStateChangeEvent != null && possibleBattles.Count > 0)
+        if (payload.state != GameState.Overworld)
         {
-            Debug.Log("Player entered enemy trigger! Starting battle...");
-            BattleConfig selectedBattle = possibleBattles[Random.Range(0, possibleBattles.Count)];
-            gameStateChangeEvent.Raise(GameState.Battle, selectedBattle);
+            canMove = false;
         }
+    }
+
+    /// <summary>
+    /// Event listener for game state change
+    /// </summary>
+    private void HandleGameStateChange((GameState state, GameConfig config) payload)
+    {
+        if (payload.state == GameState.Overworld)
+        {
+            canMove = true;
+        }
+    }
+
+    /// <summary>
+    /// A coroutine that smoothly moves the player from its current position to the target position.
+    /// </summary>
+    private IEnumerator MovePlayer()
+    {
+        isMoving = true;
+
+        // TODO check for collision
+
+        while (Vector3.Distance(player.transform.position, targetPosition) > 0.01f)
+        {
+            player.transform.position = Vector3.MoveTowards(player.transform.position, targetPosition, moveSpeed * Time.deltaTime);
+            yield return null; // Wait for the next frame
+        }
+
+        player.transform.position = targetPosition;
+        isMoving = false;
+    }
+
+    /// <summary>
+    /// Helper function to snap a position to the center of the nearest tile.
+    /// </summary>
+    private Vector3 RoundToNearestTile(Vector3 pos)
+    {
+        float x = Mathf.Round(pos.x / tileSize) * tileSize;
+        float y = Mathf.Round(pos.y / tileSize) * tileSize;
+        return new Vector3(x, y, pos.z);
     }
 }

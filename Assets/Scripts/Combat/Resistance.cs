@@ -24,8 +24,6 @@ namespace Assets.Scripts.Combat
 
         public void Initialize(DamageFloatDictionary flatResistances, DamageFloatDictionary resistanceMultipliers)
         {
-            Debug.Log(flatResistances);
-            Debug.Log(resistanceMultipliers);
             if (!initialized)
             {
                 flatResistanceModifiers = flatResistances;
@@ -38,7 +36,7 @@ namespace Assets.Scripts.Combat
         {
             if (combatCalculationEvent != null)
             {
-                combatCalculationEvent.OnCalculationRequested += ApplyDefensiveMods;
+                combatCalculationEvent.OnEventRaised += ApplyDefensiveMods;
             }
         }
 
@@ -46,7 +44,7 @@ namespace Assets.Scripts.Combat
         {
             if (combatCalculationEvent != null)
             {
-                combatCalculationEvent.OnCalculationRequested -= ApplyDefensiveMods;
+                combatCalculationEvent.OnEventRaised -= ApplyDefensiveMods;
             }
         }
 

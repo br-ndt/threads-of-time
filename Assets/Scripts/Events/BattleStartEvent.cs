@@ -8,13 +8,5 @@ namespace Assets.Scripts.Events
     /// Event raised when a specific actor's turn starts.
     /// </summary>
     [CreateAssetMenu(menuName = "Game Events/Battle Start Event")]
-    public class BattleStartEvent : ScriptableObject
-    {
-        public event System.Action<List<IBattleActor>> OnBattleStarted;
-
-        public void Raise(List<IBattleActor> actors)
-        {
-            OnBattleStarted?.Invoke(actors);
-        }
-    }
+    public class BattleStartEvent : GameEvent<List<IBattleActor>> { }
 }
