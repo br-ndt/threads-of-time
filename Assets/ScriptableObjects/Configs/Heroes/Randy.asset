@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1006739e94d1cc5498693ccd99b66396, type: 3}
+  m_Name: Randy
+  m_EditorClassIdentifier: 
+  actorName: Randy
+  avatar: {fileID: -1272963070, guid: 658991ac625d31142ae0660e8464a916, type: 3}
+  attacks:
+  - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}
+  - {fileID: 11400000, guid: 246d58a879f19b44690bdf3165a31b8a, type: 2}
+  - {fileID: 11400000, guid: 27faa49bdfe5bbb4a99ba1f68f4929a2, type: 2}
+  animations:
+  - {fileID: 11400000, guid: 885dbd7fc9617894da8dab5e62cbb55c, type: 2}
+  - {fileID: 11400000, guid: a8ecdc980a8a42b46a43194877f3d8f9, type: 2}
+  - {fileID: 11400000, guid: 07cf97e476f8aad4c8d22186c3d62790, type: 2}
+  - {fileID: 11400000, guid: 1eaf5690b66fad648ac3f8bf16e73670, type: 2}
+  - {fileID: 11400000, guid: 9fed0c94a55e9344ab07ead88b59d93b, type: 2}
+  - {fileID: 11400000, guid: 420a8ccda374b3144bb336cd6e68f2b5, type: 2}
+  - {fileID: 11400000, guid: 81df565153d755041a9b73c40179f29d, type: 2}
+  - {fileID: 11400000, guid: 426d0daa17947244ba08a2160f04b7cc, type: 2}
+  - {fileID: 11400000, guid: 9aa154b51679a1644a3f25ad8b0c84a4, type: 2}
+  - {fileID: 11400000, guid: 097aa46db3586b041a44850e166242f2, type: 2}
+  maxHealth: 30
+  baseSpeed: 15
+  flatDamageModifiers:
+    keys: 0000000002000000
+    values:
+    - 2
+    - 1
+  damageMultipliers:
+    keys: 
+    values: []
+  flatResistances:
+    keys: 00000000
+    values:
+    - 1
+  resistanceMultipliers:
+    keys: 00000000
+    values:
+    - 0.99

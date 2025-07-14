@@ -38,7 +38,8 @@ public class SpriteCharacter2D : MonoBehaviour
     private static readonly Dictionary<BattleSpriteState, BattleSpriteState[]> fallbackMap = new()
     {
         { BattleSpriteState.Critical, new[] { BattleSpriteState.Attack } },
-        { BattleSpriteState.Run,      new[] { BattleSpriteState.Walk, BattleSpriteState.Idle } }
+        { BattleSpriteState.Run,      new[] { BattleSpriteState.Walk, BattleSpriteState.Idle } },
+        { BattleSpriteState.Defend,   new[] { BattleSpriteState.Jump, BattleSpriteState.Idle } }
     };
 
 
@@ -192,6 +193,8 @@ public class SpriteCharacter2D : MonoBehaviour
 
     public void Play(BattleSpriteState state)
     {
+        if (currentState == state) return;
+
         if (animationMap == null) BuildAnimationMap();
 
         BattleSpriteState currentTry = state;

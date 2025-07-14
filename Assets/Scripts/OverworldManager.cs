@@ -127,8 +127,31 @@ public class OverworldManager : MonoBehaviour
         }
 
         player.transform.position = targetPosition;
-        spriteCharacter.Play(BattleSpriteState.Idle);
-        isMoving = false;
+
+        // check if there's more input
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+
+        if (horizontalInput == 0 && verticalInput == 0)
+        {
+            isMoving = false;
+            spriteCharacter.Play(BattleSpriteState.Idle);
+        }
+        else
+        {
+            // Immediately queue next move
+            if (horizontalInput != 0)
+            {
+                targetPosition = player.transform.position + new Vector3(horizontalInput * tileSize, 0, 0);
+                spriteCharacter.isFlipped = horizontalInput < 0;
+                StartCoroutine(MovePlayer());
+            }
+            else if (verticalInput != 0)
+            {
+                targetPosition = player.transform.position + new Vector3(0, verticalInput * tileSize, 0);
+                StartCoroutine(MovePlayer());
+            }
+        }
     }
 
     /// <summary>

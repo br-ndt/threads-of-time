@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: be79fe96923eaf94b9f8d39b39fcbc05, type: 3}
-  m_Name: Arrow
+  m_Name: SamuraiCommander_Dead
   m_EditorClassIdentifier: 
-  animationType: 0
-  playbackType: 0
-  spriteSheet: {fileID: 2800000, guid: c648f58a36ee21d4b80b94977683d23e, type: 3}
-  columns: 1
+  animationType: 9
+  spriteSheet: {fileID: 2800000, guid: 1527446461ab1384995d6e0e3339334b, type: 3}
+  columns: 6
   rows: 1
   framesPerSecond: 6

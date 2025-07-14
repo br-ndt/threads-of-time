@@ -849,22 +849,143 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   placeholderTex: {fileID: 2800000, guid: a754059e5ad44134e82a726d698e52d8, type: 3}
-  characterName: Dennis
+  characterName: Dubh
   animations:
-  - {fileID: 11400000, guid: 578bd23b1f9469d4a9237c70bc32537d, type: 2}
-  - {fileID: 11400000, guid: 32a2df7052ca13a4f8ad3f407c725263, type: 2}
-  - {fileID: 11400000, guid: 74f7ed6bee1ec9d408c8a16c2d39ad92, type: 2}
-  - {fileID: 11400000, guid: 579a3f1cc2745544c87ab29f0921691a, type: 2}
-  - {fileID: 11400000, guid: 6de13ec99a111c84cb2cfb25faac97bf, type: 2}
-  - {fileID: 11400000, guid: f7bc375d1c2a5ed46a678d7be7242187, type: 2}
-  - {fileID: 11400000, guid: 4771739ced84dfc40a5a2966c92b9471, type: 2}
-  - {fileID: 11400000, guid: 719faab2c634184449751eb8ee9ee45a, type: 2}
-  - {fileID: 11400000, guid: 2cdcb0fe7ddc7e443a626421870df546, type: 2}
-  - {fileID: 11400000, guid: 285d5680ff3bc2044868db263fb3aa96, type: 2}
-  - {fileID: 11400000, guid: 88adab5d065774d4f8e9e900e21b16ba, type: 2}
-  - {fileID: 11400000, guid: 73cb9f1e2b7c067479ae10e07ac68ce4, type: 2}
+  - {fileID: 11400000, guid: a676f98969167bb4895b72e0025ad269, type: 2}
+  - {fileID: 11400000, guid: 70e01696bcc224f49a156d72c93b7fed, type: 2}
+  - {fileID: 11400000, guid: 1aae4aa24eba1b5468489b8fb63b8a92, type: 2}
+  - {fileID: 11400000, guid: dc8863b090b05d74684c37048c10bdb7, type: 2}
+  - {fileID: 11400000, guid: 4357b2fbd8c934b44a83a69a542be9ab, type: 2}
+  - {fileID: 11400000, guid: 020e80ef18963fe47bd4c91ad19407a0, type: 2}
+  - {fileID: 11400000, guid: d5e1c54d1024d9b4b84dab7859fabdfe, type: 2}
+  - {fileID: 11400000, guid: ac46126c5e6a2dc48a59416a6c7693c0, type: 2}
+  - {fileID: 11400000, guid: 03321957184904a4d81f31494b28ce1c, type: 2}
+  - {fileID: 11400000, guid: e9850a8d29cb0a14bbc3c4013398d5e9, type: 2}
   speedMult: 1.6
   isFlipped: 0
+--- !u!1 &1801743680
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1801743685}
+  - component: {fileID: 1801743684}
+  - component: {fileID: 1801743683}
+  - component: {fileID: 1801743682}
+  - component: {fileID: 1801743681}
+  m_Layer: 0
+  m_Name: Samurai Battol
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1801743681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801743680}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ea5ab6119aaa06448d9cbd908576a4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _battleConfig: {fileID: 11400000, guid: 3b360ce9eca95d54383f901397e7a81f, type: 2}
+--- !u!64 &1801743682
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801743680}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &1801743683
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801743680}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 15303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1801743684
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801743680}
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1801743685
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1801743680}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -2.11, y: -18.57, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1866820250
 GameObject:
   m_ObjectHideFlags: 0
@@ -1147,4 +1268,5 @@ SceneRoots:
   - {fileID: 544275642}
   - {fileID: 971382067}
   - {fileID: 990555688}
+  - {fileID: 1801743685}
   - {fileID: 755225734}

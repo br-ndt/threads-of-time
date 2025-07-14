@@ -244,16 +244,7 @@ public class BattleManager : MonoBehaviour
         BattleEndResult result = CheckBattleEndConditions();
         bool playerWon = result == BattleEndResult.PlayersWin;
 
-
-        if (playerWon)
-        {
-            AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Victory);
-        } else
-        {
-            AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Defeat);
-        }
-
-            CurrentBattleState = BattleState.BattleEnd;
+        CurrentBattleState = BattleState.BattleEnd;
         battleEndEvent.Raise(playerWon); // Announce battle outcome
         Debug.Log($"<color=orange>--- Battle Ended: {(playerWon ? "VICTORY" : "DEFEAT")} ---</color>");
     }
@@ -373,10 +364,12 @@ public class BattleManager : MonoBehaviour
 
         if (allPlayersDefeated)
         {
+            AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Defeat);
             return BattleEndResult.PlayersLose;
         }
         if (allEnemiesDefeated)
         {
+            AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Victory);
             return BattleEndResult.PlayersWin;
         }
         return BattleEndResult.None;

@@ -71,7 +71,7 @@ namespace Assets.Scripts.Combat
 
             if (damage <= 0)
             {
-                sprite.Play(BattleSpriteState.Jump);
+                sprite.Play(BattleSpriteState.Defend);
                 Debug.Log("Attack missed or was resisted.");
             }
             else
