@@ -94,7 +94,7 @@ namespace Assets.Scripts.UI
             }
             if (actorTurnEvent != null)
             {
-                actorTurnEvent.OnEventRaised += HandleActorTurnStarted;
+                actorTurnEvent.OnEventRaised += HandleActorTurnEvent;
             }
             if (battleStartEvent != null)
             {
@@ -126,7 +126,7 @@ namespace Assets.Scripts.UI
             }
             if (actorTurnEvent != null)
             {
-                actorTurnEvent.OnEventRaised -= HandleActorTurnStarted;
+                actorTurnEvent.OnEventRaised -= HandleActorTurnEvent;
             }
             if (battleStartEvent != null)
             {
@@ -168,23 +168,26 @@ namespace Assets.Scripts.UI
             }
         }
 
-        private void HandleActorTurnStarted(IBattleActor actor)
+        private void HandleActorTurnEvent((IBattleActor actor, bool isStarting) payload)
         {
-            currentActorOnTurn = actor;
-            turnInfoText.text = $"{actor.DisplayName}'s Turn!";
+            if (payload.isStarting)
+            {
+                currentActorOnTurn = payload.actor;
+                turnInfoText.text = $"{payload.actor.DisplayName}'s Turn!";
 
-            if (actor.IsPlayerControlled)
-            {
-                actionsPanel.SetActive(true); // Show player action buttons
+                if (payload.actor.IsPlayerControlled)
+                {
+                    actionsPanel.SetActive(true); // Show player action buttons
+                }
+                else
+                {
+                    actionsPanel.SetActive(false); // Hide for enemy turn
+                }
+                attackMenu.SetActive(false);
+                targetMenu.SetActive(false);
+                ClearTargetButtons();
+                ClearAttackButtons();
             }
-            else
-            {
-                actionsPanel.SetActive(false); // Hide for enemy turn
-            }
-            attackMenu.SetActive(false);
-            targetMenu.SetActive(false);
-            ClearTargetButtons();
-            ClearAttackButtons();
         }
 
         private void HandleHealthChanged((IBattleActor actor, float currentHealth, float maxHealth) payload)
@@ -263,7 +266,7 @@ namespace Assets.Scripts.UI
             title.text = actor.DisplayName;
             avatarImg.sprite = actor.Avatar;
 
-            spawnedPanelsDict.Add(actor, infoGO); 
+            spawnedPanelsDict.Add(actor, infoGO);
         }
 
         private void ClearAllActorInfoPanels()
@@ -392,16 +395,16 @@ namespace Assets.Scripts.UI
         private void OnCancelAttackSelection()
         {
             Debug.Log("Attack selection cancelled. Returning to main actions.");
-            attackMenu.SetActive(false); 
-            actionsPanel.SetActive(true); 
-            ClearAttackButtons(); 
+            attackMenu.SetActive(false);
+            actionsPanel.SetActive(true);
+            ClearAttackButtons();
         }
 
         private void OnDefendButtonClicked()
         {
             playerActionChosenEvent.Raise(new PlayerAction(PlayerAction.PlayerActionType.Defend));
             actionsPanel.SetActive(false);
-            targetMenu.SetActive(false); 
+            targetMenu.SetActive(false);
             ClearTargetButtons();
         }
 
@@ -409,7 +412,7 @@ namespace Assets.Scripts.UI
         {
             playerActionChosenEvent.Raise(new PlayerAction(PlayerAction.PlayerActionType.Run));
             actionsPanel.SetActive(false);
-            targetMenu.SetActive(false); 
+            targetMenu.SetActive(false);
             ClearTargetButtons();
         }
 
@@ -417,7 +420,7 @@ namespace Assets.Scripts.UI
         {
             Debug.Log("Target selection cancelled.");
             targetMenu.SetActive(false);
-            actionsPanel.SetActive(true); 
+            actionsPanel.SetActive(true);
             ClearTargetButtons();
         }
 
@@ -426,8 +429,8 @@ namespace Assets.Scripts.UI
             if (selectedAttackDefinition != null && targetGameObject != null)
             {
                 playerActionChosenEvent.Raise(new PlayerAction(selectedAttackDefinition, targetGameObject));
-                targetMenu.SetActive(false); 
-                ClearTargetButtons(); 
+                targetMenu.SetActive(false);
+                ClearTargetButtons();
             }
             else
             {

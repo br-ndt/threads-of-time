@@ -23,7 +23,7 @@ public class SpriteCharacter2D : MonoBehaviour
     public bool isFlipped = false;
 
     private IBattleActor myActor;
-    
+
     public BattleSpriteState currentState { get; private set; }
     private BattleSpriteState loopState;
 
@@ -170,27 +170,14 @@ public class SpriteCharacter2D : MonoBehaviour
     }
 
 
-    public void LoadFromConfig(GameConfig config)
+    public void LoadFromConfig(ActorConfig config)
     {
         if (config == null) return;
 
-        if (config is EnemyConfig enemy)
-        {
-            characterName = enemy.enemyName;
-            animations = new List<SpriteBookConfig>(enemy.animations);
-            isFlipped = true;
-        }
-        else if (config is HeroConfig hero)
-        {
-            characterName = hero.heroName; // assuming heroName differs
-            animations = new List<SpriteBookConfig>(hero.animations);
-            isFlipped = false;
-        }
-        else
-        {
-            Debug.LogWarning($"Unsupported config type: {config.GetType()}");
-            return;
-        }
+        characterName = config.actorName;
+        animations = new List<SpriteBookConfig>(config.animations);
+
+        isFlipped = config is EnemyConfig;
 
         BuildAnimationMap();
         ResetState();
@@ -285,70 +272,5 @@ public class SpriteCharacter2D : MonoBehaviour
         currentState = 0;
         index = 0;
         frameTime = 0;
-    }
-}
-
-[CustomEditor(typeof(SpriteCharacter2D))]
-public class SpriteCharacter2DEditor : Editor
-{
-    private GameConfig configToLoad;
-
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
-
-        SpriteCharacter2D character = (SpriteCharacter2D)target;
-
-        GUILayout.Space(10);
-        GUILayout.Label("Animation Controls", EditorStyles.boldLabel);
-
-        // Load from Config
-        configToLoad = (GameConfig)EditorGUILayout.ObjectField(
-            "Config To Load",
-            configToLoad,
-            typeof(GameConfig),
-            false);
-
-        if (GUILayout.Button("Load From Config") && configToLoad != null)
-        {
-            Undo.RecordObject(character, "Load From Config");
-            character.LoadFromConfig(configToLoad);
-            EditorUtility.SetDirty(character);
-        }
-
-        // Flip toggle
-        EditorGUI.BeginChangeCheck();
-        bool newFlipped = EditorGUILayout.Toggle("Flip?", character.isFlipped);
-        if (EditorGUI.EndChangeCheck())
-        {
-            Undo.RecordObject(character, "Toggle Flip");
-            character.isFlipped = newFlipped;
-            character.UpdateFrame();
-        }
-
-        GUILayout.Space(10);
-        GUILayout.Label("Play Available States", EditorStyles.boldLabel);
-
-        // Dynamically list only the states this character actually has
-        if (character != null && character.GetAvailableStates() != null)
-        {
-            foreach (var state in character.GetAvailableStates())
-            {
-                if (GUILayout.Button($"Play {state}"))
-                {
-                    Undo.RecordObject(character, $"Play {state}");
-                    character.Play(state);
-                    EditorUtility.SetDirty(character);
-                }
-            }
-        }
-
-        GUILayout.Space(10);
-        if (GUILayout.Button("Reset"))
-        {
-            Undo.RecordObject(character, "Reset Character");
-            character.ResetCharacter();
-            EditorUtility.SetDirty(character);
-        }
     }
 }

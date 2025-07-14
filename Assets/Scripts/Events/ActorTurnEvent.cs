@@ -7,5 +7,5 @@ namespace Assets.Scripts.Events
     /// Event raised when a specific actor's turn starts.
     /// </summary>
     [CreateAssetMenu(menuName = "Game Events/Actor Turn Event")]
-    public class ActorTurnEvent : GameEvent<IBattleActor> { }
+    public class ActorTurnEvent : GameEvent<(IBattleActor, bool)> { }
 }

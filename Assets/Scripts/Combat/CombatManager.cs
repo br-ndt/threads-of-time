@@ -47,11 +47,11 @@ namespace Assets.Scripts.Combat
             if (context.IsCriticalHit)
             {
                 Debug.Log("CRITICAL HIT!");
-                attackerSprite?.Play(BattleSpriteState.Critical);
+                attackerSprite.Play(BattleSpriteState.Critical);
             }
             else
             {
-                attackerSprite?.Play(BattleSpriteState.Attack);
+                attackerSprite.Play(BattleSpriteState.Attack);
             }
 
             StartCoroutine(DelayDefenderAnim(0.35f, defenderSprite, context.FinalDamage, defender));
@@ -71,12 +71,12 @@ namespace Assets.Scripts.Combat
 
             if (damage <= 0)
             {
-                sprite?.Play(BattleSpriteState.Jump);
+                sprite.Play(BattleSpriteState.Jump);
                 Debug.Log("Attack missed or was resisted.");
             }
             else
             {
-                sprite?.Play(BattleSpriteState.Hurt);
+                sprite.Play(BattleSpriteState.Hurt);
             }
 
             defenderGO.GetComponent<Health>().TakeDamage(damage);

@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5856cd34fb816e4ca7910db236bd604, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentSpeed: 5
+  battleEndEvent: {fileID: 11400000, guid: b3f8916cf3a04d740a4af3b923304ac9, type: 2}
 --- !u!114 &5073244825228915015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,6 +62,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 10
   healthChangeEvent: {fileID: 11400000, guid: 2d96fb58e4180994496dd7e8356781e1, type: 2}
+  deathEvent: {fileID: 11400000, guid: 809a2119d0470424398db7c0a272dfb6, type: 2}
 --- !u!114 &4034031417699831309
 MonoBehaviour:
   m_ObjectHideFlags: 0

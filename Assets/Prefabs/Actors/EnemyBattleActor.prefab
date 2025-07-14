@@ -113,10 +113,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8571156594963144139}
+  - component: {fileID: 8850064676503516830}
   - component: {fileID: -113811368960870682}
   - component: {fileID: -4146723054200114947}
   - component: {fileID: -5711479384858804326}
-  - component: {fileID: 8850064676503516830}
   m_Layer: 0
   m_Name: EnemyBattleActor
   m_TagString: Untagged
@@ -141,6 +141,20 @@ Transform:
   - {fileID: 1607818808811562675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8850064676503516830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6628492642499365167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80e0753909d780545b48086b2a63106c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actorTurnEvent: {fileID: 11400000, guid: 801582570dfb0a344af0b9b72b530fcb, type: 2}
+  deathEvent: {fileID: 11400000, guid: 809a2119d0470424398db7c0a272dfb6, type: 2}
 --- !u!114 &-113811368960870682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 100
   healthChangeEvent: {fileID: 11400000, guid: 2d96fb58e4180994496dd7e8356781e1, type: 2}
+  deathEvent: {fileID: 11400000, guid: 809a2119d0470424398db7c0a272dfb6, type: 2}
 --- !u!114 &-4146723054200114947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,22 +217,6 @@ MonoBehaviour:
   overallResistanceValue: 1
   overallResistanceMultiplier: 0.1
   dodgeChanceModifier: 0.05
---- !u!114 &8850064676503516830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6628492642499365167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80e0753909d780545b48086b2a63106c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _currentSpeed: 5
-  targetOverride: {fileID: 0}
-  _resistance: {fileID: 0}
-  spriteCharacter: {fileID: 0}
 --- !u!1 &7107711886014014973
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1607818808811562675
 Transform:
   m_ObjectHideFlags: 0
@@ -322,3 +321,4 @@ MonoBehaviour:
   frequency: 5
   rotateAmplitude: 60
   rotateFrequency: 1.5
+  actorTurnEvent: {fileID: 11400000, guid: 801582570dfb0a344af0b9b72b530fcb, type: 2}

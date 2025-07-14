@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6348954341829214766
 Transform:
   m_ObjectHideFlags: 0
@@ -104,6 +104,7 @@ MonoBehaviour:
   frequency: 5
   rotateAmplitude: 60
   rotateFrequency: 1.5
+  actorTurnEvent: {fileID: 11400000, guid: 801582570dfb0a344af0b9b72b530fcb, type: 2}
 --- !u!1 &4461377619667093371
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,8 +218,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8571156594963144139}
-  - component: {fileID: 512291356573785816}
   - component: {fileID: 5457850886735519948}
+  - component: {fileID: 512291356573785816}
+  - component: {fileID: 2993810265165469967}
   - component: {fileID: 9107584532421858348}
   m_Layer: 0
   m_Name: PlayerBattleActor
@@ -244,6 +246,21 @@ Transform:
   - {fileID: 6348954341829214766}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5457850886735519948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6628492642499365167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5856cd34fb816e4ca7910db236bd604, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actorTurnEvent: {fileID: 11400000, guid: 801582570dfb0a344af0b9b72b530fcb, type: 2}
+  deathEvent: {fileID: 11400000, guid: 809a2119d0470424398db7c0a272dfb6, type: 2}
+  battleEndEvent: {fileID: 11400000, guid: b3f8916cf3a04d740a4af3b923304ac9, type: 2}
 --- !u!114 &512291356573785816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,7 +275,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 100
   healthChangeEvent: {fileID: 11400000, guid: 2d96fb58e4180994496dd7e8356781e1, type: 2}
---- !u!114 &5457850886735519948
+  deathEvent: {fileID: 11400000, guid: 809a2119d0470424398db7c0a272dfb6, type: 2}
+--- !u!114 &2993810265165469967
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -267,11 +285,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 6628492642499365167}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5856cd34fb816e4ca7910db236bd604, type: 3}
+  m_Script: {fileID: 11500000, guid: 34f55f9c843e8b247b79e54bf2840943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentSpeed: 5
-  spriteCharacter: {fileID: 0}
+  combatCalculationEvent: {fileID: 11400000, guid: 8b16f38731f303b4b914bafbb9acf714, type: 2}
+  rangeDamageModifiers:
+    keys: 
+    values: []
+  flatDamageModifiers:
+    keys: 
+    values: []
+  multDamageModifiers:
+    keys: 
+    values: []
+  overallDamageModifier: 1
+  overallDamageMultiplier: 0.1
+  criticalChanceBonus: 0.05
 --- !u!114 &9107584532421858348
 MonoBehaviour:
   m_ObjectHideFlags: 0

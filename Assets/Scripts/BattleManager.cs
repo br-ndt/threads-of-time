@@ -177,7 +177,7 @@ public class BattleManager : MonoBehaviour
             var enemyActor = enemyGO.GetComponent<EnemyBattleActor>();
             if (enemyActor != null)
             {
-                enemyActor.Initialize(enemyConfig, i);
+                enemyActor.Initialize(enemyConfig);
                 activeActors.Add(enemyActor);
                 enemyActors.Add(enemyActor);
                 Debug.Log($"Spawned Enemy: {enemyActor.ActorName}");
@@ -218,8 +218,7 @@ public class BattleManager : MonoBehaviour
                     continue;
                 }
 
-                currentActor.OnTurnStart(); // Notify the actor their turn has begun
-                actorTurnEvent.Raise(currentActor); // Notify UI and other systems
+                actorTurnEvent.Raise((currentActor, true)); // Notify UI and other systems
 
                 if (currentActor.IsPlayerControlled)
                 {
@@ -240,8 +239,7 @@ public class BattleManager : MonoBehaviour
                     yield return StartCoroutine(PerformEnemyAction(currentActor as EnemyBattleActor)); // Cast to EnemyBattleActor for AI logic
                 }
 
-                currentActor.OnTurnEnd(); // Notify the actor their turn has ended
-                                          // Optional: Raise a 'TurnEndedEvent' here for broader system notifications
+                actorTurnEvent.Raise((currentActor, false));
 
                 // Remove defeated actors from active list
                 activeActors.RemoveAll(actor => !actor.IsAlive);
@@ -258,15 +256,6 @@ public class BattleManager : MonoBehaviour
 
         if (playerWon)
         {
-            foreach (var playerActor in playerActors)
-            {
-                if (playerActor is PlayerBattleActor player && player.spriteCharacter != null)
-                {
-                    player.spriteCharacter.Play(BattleSpriteState.Run);
-                    player.spriteCharacter.speedMult = 2f;
-                }
-            }
-
             audioSource.resource = victoryTune;
             audioSource.time = 49f;
             audioSource.Play();
@@ -291,7 +280,7 @@ public class BattleManager : MonoBehaviour
         foreach (var actor in sortedActors)
         {
             turnOrderQueue.Enqueue(actor);
-            Debug.Log($"  - {actor.ActorName} (Speed: {actor.CurrentSpeed})");
+            Debug.Log($"  - {actor.DisplayName} (Speed: {actor.CurrentSpeed})");
         }
         yield return null; // Allow a frame to pass if needed
     }
@@ -310,14 +299,14 @@ public class BattleManager : MonoBehaviour
                     IBattleActor targetActor = action.TargetActor.GetComponent<IBattleActor>();
                     if (targetActor != null && targetActor.IsAlive)
                     {
-                        Debug.Log($"{playerActor.ActorName} attacking {targetActor.ActorName} with {action.AttackDefinition.attackName}...");
+                        Debug.Log($"{playerActor.DisplayName} attacking {targetActor.DisplayName} with {action.AttackDefinition.attackName}...");
                         combatCalculator.PerformAttack(playerActor.GameObject, targetActor.GameObject, action.AttackDefinition);
 
                         // Await animation or effects if desired
                         yield return new WaitForSeconds(1.5f); // Simulate action time
                         if (!targetActor.IsAlive)
                         {
-                            Debug.Log($"{targetActor.ActorName} was defeated!");
+                            Debug.Log($"{targetActor.DisplayName} was defeated!");
                             // Trigger death animation/effects
                         }
                     }
@@ -354,6 +343,7 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator PerformEnemyAction(EnemyBattleActor enemyActor)
     {
+        Debug.Log(enemyActor);
         CurrentBattleState = BattleState.PerformingAction;
         Debug.Log($"<color=red>{enemyActor.ActorName} is performing its action...</color>");
 
@@ -398,7 +388,6 @@ public class BattleManager : MonoBehaviour
         return BattleEndResult.None;
     }
 
-    // Example: When battle ends
     public void HandleLeaveBattle(bool didWin)
     {
         Debug.Log("<color=blue>BattleManager: Battle sequence ending. Transitioning back to Overworld.</color>");
@@ -411,16 +400,13 @@ public class BattleManager : MonoBehaviour
 
         audioSource.Stop();
 
-        // This is the correct GameStateChangeEvent from GameStateMachine.cs
-        // GameStateChangeEvent should be raised from the GameStateMachine directly if that's its role.
-        // Or, BattleManager can raise a request via the assigned gameStateChangeEvent SO.
         if (requestGameStateChange != null)
         {
             requestGameStateChange.Raise((GameState.Overworld, null)); // Request transition back to overworld
         }
         else
         {
-            Debug.LogError("gameStateChangeEvent not assigned to BattleManager! Cannot transition back to overworld.");
+            Debug.LogError("requestGameStateChange not assigned to BattleManager! Cannot transition back to overworld.");
         }
     }
 
