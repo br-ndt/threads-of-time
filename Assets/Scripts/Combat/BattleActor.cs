@@ -104,7 +104,7 @@ namespace Assets.Scripts.Combat
 
             if (direction != Vector3.zero) // avoid zero length
             {
-                Quaternion rotation = Quaternion.LookRotation(-direction, Vector3.up);
+                Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
                 transform.rotation = rotation;
             }
         }

@@ -6,6 +6,7 @@ using Assets.Scripts.States;
 using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Combat;
+using Assets.Scripts.Audio;
 
 public class BattleManager : MonoBehaviour
 {
@@ -50,11 +51,6 @@ public class BattleManager : MonoBehaviour
     // Reference to the CombatManager for performing attacks
     private CombatManager combatCalculator;
 
-    private AudioSource audioSource;
-    private AudioClip currentTrack;
-    [SerializeField] private List<AudioClip> tracklist;
-    [SerializeField] private AudioClip victoryTune;
-
     private void Awake()
     {
         // Get reference to the CombatManager (assuming it's also a component in the BattleScene, or globally accessible)
@@ -84,15 +80,6 @@ public class BattleManager : MonoBehaviour
             battleLeaveEvent.OnEventRaised += HandleLeaveBattle;
         }
 
-        audioSource = GetComponent<AudioSource>();
-        currentTrack = tracklist[Random.Range(0, tracklist.Count)];
-
-        // silently preload the victory tune
-        audioSource.clip = victoryTune;
-        audioSource.volume = 0f;
-        audioSource.Play();
-        audioSource.Pause();
-        audioSource.volume = 0.4f;
     }
 
     private void OnDisable()
@@ -199,8 +186,7 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log("<color=orange>--- Battle Loop Started ---</color>");
 
-        audioSource.clip = currentTrack;
-        audioSource.Play();
+        AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Battle);
 
         while (CheckBattleEndConditions() == BattleEndResult.None)
         {
@@ -258,16 +244,16 @@ public class BattleManager : MonoBehaviour
         BattleEndResult result = CheckBattleEndConditions();
         bool playerWon = result == BattleEndResult.PlayersWin;
 
-        audioSource.Stop();
 
         if (playerWon)
         {
-            audioSource.resource = victoryTune;
-            audioSource.time = 49f;
-            audioSource.Play();
+            AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Victory);
+        } else
+        {
+            AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Defeat);
         }
 
-        CurrentBattleState = BattleState.BattleEnd;
+            CurrentBattleState = BattleState.BattleEnd;
         battleEndEvent.Raise(playerWon); // Announce battle outcome
         Debug.Log($"<color=orange>--- Battle Ended: {(playerWon ? "VICTORY" : "DEFEAT")} ---</color>");
     }
@@ -406,7 +392,7 @@ public class BattleManager : MonoBehaviour
         turnOrderQueue.Clear();
         currentActor = null;
 
-        audioSource.Stop();
+        AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Overworld);
 
         if (requestGameStateChange != null)
         {

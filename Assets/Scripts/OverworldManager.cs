@@ -5,6 +5,7 @@ using Assets.Scripts.Configs;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.TextCore.Text;
+using Assets.Scripts.Audio;
 
 public class OverworldManager : MonoBehaviour
 {
@@ -56,12 +57,14 @@ public class OverworldManager : MonoBehaviour
 
     void Awake()
     {
-        spriteCharacter = player.GetComponent<SpriteCharacter2D>();
+        spriteCharacter = player.GetComponentInChildren<SpriteCharacter2D>();
     }
 
     void Start()
     {
         player.transform.position = RoundToNearestTile(player.transform.position);
+
+        AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Overworld);
     }
 
     void Update()
@@ -74,6 +77,7 @@ public class OverworldManager : MonoBehaviour
             if (horizontalInput != 0)
             {
                 targetPosition = player.transform.position + new Vector3(horizontalInput * tileSize, 0, 0);
+                spriteCharacter.isFlipped = horizontalInput < 0;
                 StartCoroutine(MovePlayer());
             }
             else if (verticalInput != 0)
@@ -113,7 +117,6 @@ public class OverworldManager : MonoBehaviour
     {
         isMoving = true;
         spriteCharacter.Play(BattleSpriteState.Walk);
-        spriteCharacter.isFlipped = player.transform.position.x < targetPosition.x;
 
         // TODO check for collision
 

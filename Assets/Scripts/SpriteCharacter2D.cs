@@ -69,7 +69,6 @@ public class SpriteCharacter2D : MonoBehaviour
 
     private void Start()
     {
-        transform.localRotation = Quaternion.Euler(new Vector3(90f, -168f, 0f));
         Play(BattleSpriteState.Idle);
     }
 
@@ -85,7 +84,7 @@ public class SpriteCharacter2D : MonoBehaviour
             {
                 if (isFlipped) isFlipped = false;
                 TargetMaterial.SetTexture("_BaseMap", placeholderTex);
-                TargetMaterial.SetTextureScale("_BaseMap", new Vector2(isFlipped ? -1f : 1f, 1f));
+                TargetMaterial.SetTextureScale("_BaseMap", Vector2.one);
                 TargetMaterial.SetTextureOffset("_BaseMap", Vector2.zero);
                 TargetMaterial.color = Color.white;
             }

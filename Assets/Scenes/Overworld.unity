@@ -332,7 +332,7 @@ Transform:
   m_GameObject: {fileID: 755225730}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.05}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -639,7 +639,7 @@ MonoBehaviour:
   specificCutsceneConfig: {fileID: 11400000, guid: 9c13896d6e02a8747873a84245ad55ee, type: 2}
   moveSpeed: 5
   tileSize: 1
-  player: {fileID: 1256669806}
+  player: {fileID: 755225730}
 --- !u!1 &1120783585
 GameObject:
   m_ObjectHideFlags: 0
