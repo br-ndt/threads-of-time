@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1006739e94d1cc5498693ccd99b66396, type: 3}
   m_Name: Dennis
   m_EditorClassIdentifier: 
-  heroName: Dennis
+  actorName: Dennis
   avatar: {fileID: 21300000, guid: b2a14d812c41297409a1a2e4ff73b567, type: 3}
   attacks:
   - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}

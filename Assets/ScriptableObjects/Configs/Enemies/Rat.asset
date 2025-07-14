@@ -12,26 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
   m_Name: Rat
   m_EditorClassIdentifier: 
-  enemyName: Rat
+  actorName: Rat
   avatar: {fileID: 21300000, guid: cfc92da0ce1302844a83d189d7c8980d, type: 3}
   attacks:
   - {fileID: 11400000, guid: abe16fa87ed20ae40814753d1f171b07, type: 2}
+  animations: []
   maxHealth: 4
   baseSpeed: 10
   flatDamageModifiers:
     keys: 01000000
     values:
     - 1
-    defaultValue: 0
   damageMultipliers:
     keys: 
     values: []
-    defaultValue: 0
   flatResistances:
     keys: 
     values: []
-    defaultValue: 0
   resistanceMultipliers:
     keys: 
     values: []
-    defaultValue: 0

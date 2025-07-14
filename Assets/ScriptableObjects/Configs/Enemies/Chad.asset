@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
   m_Name: Chad
   m_EditorClassIdentifier: 
-  enemyName: Chad
+  actorName: Chad
   avatar: {fileID: 849523945, guid: a047bba5089541f45bc7c358e2814513, type: 3}
   attacks:
   - {fileID: 11400000, guid: 27faa49bdfe5bbb4a99ba1f68f4929a2, type: 2}

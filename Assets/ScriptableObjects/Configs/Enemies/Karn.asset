@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
   m_Name: Karn
   m_EditorClassIdentifier: 
-  enemyName: Karn
+  actorName: Karn
   avatar: {fileID: 1852288289, guid: feda4f15cd257b34db448d04759051a3, type: 3}
   attacks:
   - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}

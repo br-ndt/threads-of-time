@@ -9,7 +9,6 @@ namespace Assets.Scripts.Overworld
         [SerializeField] private GameStateChangeEvent hitTriggerEvent;
         void OnTriggerEnter(Collider other)
         {
-            Debug.Log("ON TRIGGER ENTER CALLED!");
             OverworldEnemy enemy = other.GetComponent<OverworldEnemy>();
             if (hitTriggerEvent != null && enemy != null)
             {

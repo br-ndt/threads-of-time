@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
   m_Name: Cultist of Light
   m_EditorClassIdentifier: 
-  enemyName: Cultist of Light
+  actorName: Cultist of Light
   avatar: {fileID: 1433662724, guid: 8f67e8312f710af4c88df1314ac6de87, type: 3}
   attacks:
   - {fileID: 11400000, guid: 36884b678bcb95244a0764b43f7000e0, type: 2}
