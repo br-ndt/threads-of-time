@@ -191,7 +191,7 @@ public class BattleManager : MonoBehaviour
             CurrentBattleState = BattleState.CalculatingTurnOrder;
             yield return StartCoroutine(CalculateTurnOrder());
 
-            while (turnOrderQueue.Count > 0 && CheckBattleEndConditions() == BattleEndResult.None)
+            while (CurrentBattleState != BattleState.BattleEnd && turnOrderQueue.Count > 0 && CheckBattleEndConditions() == BattleEndResult.None)
             {
                 currentActor = turnOrderQueue.Dequeue();
 
@@ -202,10 +202,7 @@ public class BattleManager : MonoBehaviour
                     continue;
                 }
 
-                if (CurrentBattleState != BattleState.BattleEnd)
-                {
-                    actorTurnEvent.Raise((currentActor, true)); // Notify UI and other systems
-                }
+                actorTurnEvent.Raise((currentActor, true)); // Notify UI and other systems
 
                 if (currentActor.IsPlayerControlled)
                 {
@@ -226,10 +223,7 @@ public class BattleManager : MonoBehaviour
                     yield return StartCoroutine(PerformEnemyAction(currentActor as EnemyBattleActor)); // Cast to EnemyBattleActor for AI logic
                 }
 
-                if (CurrentBattleState != BattleState.BattleEnd)
-                {
-                    actorTurnEvent.Raise((currentActor, false));
-                }
+                actorTurnEvent.Raise((currentActor, false));
 
                 // Remove defeated actors from active list
                 activeActors.RemoveAll(actor => !actor.IsAlive);
