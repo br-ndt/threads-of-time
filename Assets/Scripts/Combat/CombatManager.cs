@@ -22,12 +22,15 @@ namespace Assets.Scripts.Combat
         private SpriteCharacter2D attackerSprite;
         private SpriteCharacter2D defenderSprite;
 
+        [Header("Attack Animation")]
+        [SerializeField] private readonly float moveSpeed = 20f;
+        [SerializeField] private readonly float distanceBuffer = 1.5f;
+
         /// <summary>
         /// Initiates an attack calculation and applies its effects.
         /// </summary>
         public void PerformAttack(GameObject attacker, GameObject defender, AttackDefinition attackDefinition)
         {
-
             // 1. Create a new context for this specific calculation
             CombatCalculationContext context = new(
                 attacker, defender, Instantiate(attackDefinition)
@@ -43,44 +46,77 @@ namespace Assets.Scripts.Combat
             attackerSprite = attacker.GetComponentInChildren<SpriteCharacter2D>();
             defenderSprite = defender.GetComponentInChildren<SpriteCharacter2D>();
 
-            // Always play attack animation on attacker
-            if (context.IsCriticalHit)
-            {
-                Debug.Log("CRITICAL HIT!");
-                attackerSprite.Play(BattleSpriteState.Critical);
-            }
-            else
-            {
-                attackerSprite.Play(BattleSpriteState.Attack);
-            }
-
-            StartCoroutine(DelayDefenderAnim(0.35f, defenderSprite, context.FinalDamage, defender));
-
-            // 4. Use the final calculated values
-            Debug.Log($"Attack '{context.Definition.attackName}' by {context.Attacker.name} on {context.Defender.name}:");
-            Debug.Log($"Final Damage: {context.FinalDamage:F2}"); // F2 for 2 decimal places
-
-            // 5. Apply effects to health, trigger animations, sound effects, etc.
-            // defender.GetComponent<Health>().TakeDamage(context.FinalDamage);
-            // Example: if (context.ApplyPoison) defender.GetComponent<StatusEffects>().ApplyPoison(context.BasePoisonDamage + context.FlatPoisonDamageBonus);
+            // 4. Begin attack sequence
+            StartCoroutine(AnimateAttackSequence(attacker, defender, context));
         }
 
-        private IEnumerator DelayDefenderAnim(float delay, SpriteCharacter2D sprite, float damage, GameObject defenderGO)
+        private IEnumerator AnimateAttackSequence(GameObject attacker, GameObject defender, CombatCalculationContext context)
         {
-            yield return new WaitForSeconds(delay);
+            Vector3 startPosition = attacker.transform.position;
 
-            if (damage <= 0)
-            {
-                sprite.Play(BattleSpriteState.Defend);
-                Debug.Log("Attack missed or was resisted.");
-            }
+            var attackerSprite = attacker.GetComponentInChildren<SpriteCharacter2D>();
+
+            // Face the defender
+            attackerSprite.isFlipped = attacker.transform.position.x > defender.transform.position.x;
+
+            // Move toward target
+            yield return StartCoroutine(MoveTowardsTarget(attacker, defender));
+
+            // Play attack animation
+            if (context.IsCriticalHit)
+                attackerSprite.Play(BattleSpriteState.Critical);
             else
-            {
-                sprite.Play(BattleSpriteState.Hurt);
-            }
+                attackerSprite.Play(BattleSpriteState.Attack);
 
-            defenderGO.GetComponent<Health>().TakeDamage(damage);
+            yield return new WaitForSeconds(0.45f);
+
+            // Defender reacts
+            if (context.FinalDamage <= 0)
+                defenderSprite.Play(BattleSpriteState.Defend);
+            else
+                defenderSprite.Play(BattleSpriteState.Hurt);
+
+            // 5. Damage gets applied here
+            defender.GetComponent<Health>().TakeDamage(context.FinalDamage);
+
+            // Flip back before moving back to start
+            attackerSprite.isFlipped = !attackerSprite.isFlipped;
+
+            // Move back
+            yield return StartCoroutine(MoveBackToPosition(attacker, startPosition));
+
+            // Restore facing to original
+            attackerSprite.isFlipped = !attackerSprite.isFlipped;
+
+            if (FindFirstObjectByType<BattleManager>().CurrentBattleState != BattleState.BattleEnd)
+            {
+                attackerSprite.Play(BattleSpriteState.Idle);
+            }
         }
+
+        private IEnumerator MoveTowardsTarget(GameObject attacker, GameObject defender)
+        {
+            attackerSprite.Play(BattleSpriteState.Run);
+            Vector3 targetPosition = defender.transform.position -
+                                     (defender.transform.position - attacker.transform.position).normalized * distanceBuffer;
+
+            while (Vector3.Distance(attacker.transform.position, targetPosition) > 0.05f)
+            {
+                attacker.transform.position = Vector3.MoveTowards(attacker.transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                yield return null;
+            }
+        }
+
+        private IEnumerator MoveBackToPosition(GameObject attacker, Vector3 startPosition)
+        {
+            attackerSprite.Play(BattleSpriteState.Run);
+            while (Vector3.Distance(attacker.transform.position, startPosition) > 0.001f)
+            {
+                attacker.transform.position = Vector3.MoveTowards(attacker.transform.position, startPosition, moveSpeed * Time.deltaTime);
+                yield return null;
+            }
+        }
+
 
     }
 

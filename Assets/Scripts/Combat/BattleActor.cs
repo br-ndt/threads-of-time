@@ -48,6 +48,26 @@ namespace Assets.Scripts.Combat
             deathEvent.OnEventRaised -= HandleDeath;
         }
 
+        private void Update()
+        {
+            FaceCamera();
+        }
+
+        private void FaceCamera()
+        {
+            if (Camera.main == null)
+                return;
+
+            Vector3 direction = Camera.main.transform.position - transform.position;
+            direction.y = 0;
+
+            if (direction != Vector3.zero)
+            {
+                Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
+                transform.rotation = rotation;
+            }
+        }
+
         private void HandleDeath(IBattleActor actor)
         {
             if ((Object)actor == this)
@@ -70,7 +90,7 @@ namespace Assets.Scripts.Combat
             if (mat != null && mat.HasProperty("_Color"))
             {
                 Color originalColor = mat.color;
-                float fadeDuration = 3f;
+                float fadeDuration = 1.2f;
                 float elapsed = 0f;
 
                 while (elapsed < fadeDuration)
@@ -87,26 +107,6 @@ namespace Assets.Scripts.Combat
 
             gameObject.SetActive(false);
             Debug.Log($"{gameObject.name} has faded out smoothly and been disabled.");
-        }
-
-        private void Start()
-        {
-            StartCoroutine(OrientToCamera());
-        }
-
-        private IEnumerator OrientToCamera()
-        {
-            // Wait one frame to ensure Camera.main is available
-            yield return null;
-
-            Vector3 direction = Camera.main.transform.position - transform.position;
-            direction.y = 0; // eliminate vertical difference
-
-            if (direction != Vector3.zero) // avoid zero length
-            {
-                Quaternion rotation = Quaternion.LookRotation(direction, Vector3.up);
-                transform.rotation = rotation;
-            }
         }
 
         public void HandleTurnEvent((IBattleActor actor, bool isStarting) payload)

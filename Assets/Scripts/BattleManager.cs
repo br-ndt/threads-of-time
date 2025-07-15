@@ -333,7 +333,11 @@ public class BattleManager : MonoBehaviour
         Debug.Log($"<color=red>{enemyActor.ActorName} is performing its action...</color>");
 
         // Simple AI: Find a living player target
-        IBattleActor playerTarget = playerActors.FirstOrDefault(a => a.IsAlive);
+        IBattleActor playerTarget = playerActors
+            .Where(a => a.IsAlive)
+            .OrderBy(_ => Random.value) // shuffle with LINQ
+            .FirstOrDefault();
+
         if (playerTarget != null)
         {
             PlayerAction aiAction = enemyActor.ChooseAIAction(playerTarget); // Enemy AI chooses
