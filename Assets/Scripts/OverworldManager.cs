@@ -83,16 +83,6 @@ public class OverworldManager : MonoBehaviour
         player.transform.position = RoundToNearestTile(player.transform.position);
     }
 
-    private void HandleConversationStart(ConversationConfig config)
-    {
-        canMove = false;
-    }
-
-    private void HandleConversationEnd()
-    {
-        canMove = true;
-    }
-
     void Update()
     {
         if (!isMoving && canMove)
@@ -121,7 +111,7 @@ public class OverworldManager : MonoBehaviour
     {
         if (payload.state != GameState.Overworld)
         {
-            canMove = false;
+            StopMovingImmediately();
         }
     }
 
@@ -134,6 +124,24 @@ public class OverworldManager : MonoBehaviour
         {
             canMove = true;
         }
+    }
+
+    private void HandleConversationStart(ConversationConfig config)
+    {
+        StopMovingImmediately();
+    }
+
+    private void HandleConversationEnd()
+    {
+        canMove = true;
+    }
+
+    private void StopMovingImmediately()
+    {
+        canMove = false;
+        isMoving = false;
+        spriteCharacter.Play(BattleSpriteState.Idle);
+        StopAllCoroutines();
     }
 
     /// <summary>
