@@ -81,8 +81,6 @@ public class OverworldManager : MonoBehaviour
     void Start()
     {
         player.transform.position = RoundToNearestTile(player.transform.position);
-
-        AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Overworld);
     }
 
     private void HandleConversationStart(ConversationConfig config)

@@ -186,8 +186,6 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log("<color=orange>--- Battle Loop Started ---</color>");
 
-        AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Battle);
-
         while (CheckBattleEndConditions() == BattleEndResult.None)
         {
             CurrentBattleState = BattleState.CalculatingTurnOrder;
@@ -368,12 +366,10 @@ public class BattleManager : MonoBehaviour
 
         if (allPlayersDefeated)
         {
-            AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Defeat);
             return BattleEndResult.PlayersLose;
         }
         if (allEnemiesDefeated)
         {
-            AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Victory);
             return BattleEndResult.PlayersWin;
         }
         return BattleEndResult.None;
@@ -388,9 +384,6 @@ public class BattleManager : MonoBehaviour
         enemyActors.Clear();
         turnOrderQueue.Clear();
         currentActor = null;
-
-        AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Overworld);
-
         if (requestGameStateChange != null)
         {
             requestGameStateChange.Raise((GameState.Overworld, null)); // Request transition back to overworld

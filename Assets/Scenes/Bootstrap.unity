@@ -410,6 +410,7 @@ Transform:
   m_Children:
   - {fileID: 854126224}
   - {fileID: 1340022316}
+  - {fileID: 1506745173}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &656660479
@@ -712,6 +713,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   masterVolume: 0.257
   trackFadeDuration: 0.266
+  gameStateChanged: {fileID: 11400000, guid: 1033d8ae536ebe048b2a79f2f1b09eb6, type: 2}
+  battleEndEvent: {fileID: 11400000, guid: b3f8916cf3a04d740a4af3b923304ac9, type: 2}
   overworldTracklist:
   - {fileID: 8300000, guid: cf156c273c61736468707fc4bde79286, type: 3}
   battleTracklist:
@@ -732,7 +735,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 656660478}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &1506745174
 AudioSource:
@@ -927,4 +930,3 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 656660478}
-  - {fileID: 1506745173}

@@ -1,21 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Combat;
+using Assets.Scripts.Configs;
+using Assets.Scripts.Events;
+using Assets.Scripts.States;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 
-namespace Assets.Scripts.Audio { 
+namespace Assets.Scripts.Audio
+{
     public class AudioManager : MonoBehaviour
     {
-        public static AudioManager Instance { get; private set; }
-        public string CurrentScene => SceneManager.GetActiveScene().name;
         public enum AudioContext { None, Overworld, Battle, Victory, Defeat }
-
         private AudioSource bgmSource;
-
         [SerializeField, Range(0, 1)] private float masterVolume = 0.4f;
         [SerializeField, Range(0.15f, 0.75f)] private float trackFadeDuration = 0.75f;
-
+        [Header("Event Channels")]
+        [SerializeField] private GameStateChangeEvent gameStateChanged;
+        [SerializeField] private BattleEndEvent battleEndEvent;
         [Header("BGM Lists")]
         [SerializeField] private List<AudioClip> overworldTracklist;
         [SerializeField] private List<AudioClip> battleTracklist;
@@ -27,17 +30,18 @@ namespace Assets.Scripts.Audio {
 
         private Coroutine fadeCoroutine;
 
-        private void Awake()
+        private void OnEnable()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
+            gameStateChanged.OnEventRaised += HandleGameStateChange;
+            // battleStartEvent.OnEventRaised += HandleBattleStart;
+            battleEndEvent.OnEventRaised += HandleBattleEnd;
+        }
+
+        private void OnDisable()
+        {
+            gameStateChanged.OnEventRaised -= HandleGameStateChange;
+            // battleStartEvent.OnEventRaised -= HandleBattleStart;
+            battleEndEvent.OnEventRaised -= HandleBattleEnd;
         }
 
         private void Start()
@@ -69,7 +73,31 @@ namespace Assets.Scripts.Audio {
             bgmSource.Pause();
         }
 
-        public void PlayBGM(AudioContext ctx)
+        private void HandleGameStateChange((GameState state, GameConfig config) payload)
+        {
+            AudioContext ctx = AudioContext.None;
+            switch (payload.state)
+            {
+                case GameState.Battle:
+                    ctx = AudioContext.Battle;
+                    break;
+                case GameState.Overworld:
+                    ctx = AudioContext.Overworld;
+                    break;
+                // add more here if need be
+                default:
+                    break;
+            }
+            Debug.Log(ctx);
+            PlayBGM(ctx);
+        }
+
+        private void HandleBattleEnd(bool didPlayerWin)
+        {
+            PlayBGM(didPlayerWin ? AudioContext.Victory : AudioContext.Defeat);
+        }
+
+        private void PlayBGM(AudioContext ctx)
         {
             AudioClip selectedClip = null;
             startTime = 0f;
