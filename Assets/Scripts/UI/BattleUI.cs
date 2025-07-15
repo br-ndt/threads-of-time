@@ -102,7 +102,7 @@ namespace Assets.Scripts.UI
             }
             if (battleEndEvent != null)
             {
-                battleEndEvent.OnEventRaised += HandleBattleEnded;
+                battleEndEvent.OnEventRaised += HandleBattleEnd;
             }
             if (availableAttacksEvent != null)
             {
@@ -134,7 +134,7 @@ namespace Assets.Scripts.UI
             }
             if (battleEndEvent != null)
             {
-                battleEndEvent.OnEventRaised -= HandleBattleEnded;
+                battleEndEvent.OnEventRaised -= HandleBattleEnd;
             }
             if (availableAttacksEvent != null)
             {
@@ -279,7 +279,7 @@ namespace Assets.Scripts.UI
             enemyAreaPanel.SetActive(false);
         }
 
-        private void HandleBattleEnded(bool playerWon)
+        private void HandleBattleEnd(bool playerWon)
         {
             Debug.Log($"BattleUI received Battle Ended: {(playerWon ? "Win" : "Loss")}");
             attackMenu.SetActive(false);

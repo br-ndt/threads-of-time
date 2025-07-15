@@ -2,6 +2,7 @@ using UnityEngine;
 using Assets.Scripts.Events;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Utility;
 
 namespace Assets.Scripts.Combat
 {

@@ -1,9 +1,13 @@
 using UnityEngine;
 
-public class HideInGameplay : MonoBehaviour
+
+namespace Assets.Scripts.Utility
 {
-    private void Awake()
+    public class HideInGameplay : MonoBehaviour
     {
-        gameObject.SetActive(false);
+        private void Awake()
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

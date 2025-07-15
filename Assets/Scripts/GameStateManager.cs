@@ -193,7 +193,6 @@ namespace Assets.Scripts.States
                     Debug.LogWarning($"Unhandled GameState: {newState}. No scene loaded.");
                     yield break;
             }
-            Debug.Log(sceneToLoad);
 
             if (!string.IsNullOrEmpty(sceneToLoad))
             {

@@ -389,7 +389,7 @@ GameObject:
   - component: {fileID: 656660479}
   - component: {fileID: 656660480}
   m_Layer: 0
-  m_Name: GameStateMachine
+  m_Name: GlobalGameController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

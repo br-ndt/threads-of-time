@@ -32,17 +32,6 @@ namespace Assets.Scripts.Utility
             }
         }
 
-        // OnBeforeSerialize is generally used to sync a runtime dictionary back to the serialized lists.
-        // For this version of the class, where operations happen directly on keys/values lists,
-        // this method is usually not strictly necessary for correctness, but can be used for validation
-        // or ensuring unique keys before serialization.
-        public void OnBeforeSerialize()
-        {
-            // Optional: You could add logic here to ensure no duplicate keys exist
-            // in 'keys' list before serialization, if your other methods allow them.
-            // However, the OnAfterDeserialize logic ensures uniqueness upon load.
-        }
-
         /// <summary>
         /// Converts this SerializableDictionary to a standard System.Collections.Generic.Dictionary.
         /// This is useful for performing operations not easily done with the serialized lists,
