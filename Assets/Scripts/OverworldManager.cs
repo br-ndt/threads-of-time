@@ -12,6 +12,8 @@ public class OverworldManager : MonoBehaviour
     [Header("Event Channels")]
     [SerializeField] private GameStateChangeEvent requestGameStateChange;
     [SerializeField] private GameStateChangeEvent gameStateChanged;
+    [SerializeField] private ConversationStartEvent conversationStartEvent;
+    [SerializeField] private ConversationEndEvent conversationEndEvent;
 
     [Header("Battle & Cutscene Configurations")]
     [SerializeField] private List<BattleConfig> possibleBattles;
@@ -41,6 +43,14 @@ public class OverworldManager : MonoBehaviour
         {
             requestGameStateChange.OnEventRaised += HandleGameStateRequested;
         }
+        if (conversationStartEvent != null)
+        {
+            conversationStartEvent.OnEventRaised += HandleConversationStart;
+        }
+        if (conversationEndEvent != null)
+        {
+            conversationEndEvent.OnEventRaised += HandleConversationEnd;
+        }
     }
 
     void OnDisable()
@@ -52,6 +62,14 @@ public class OverworldManager : MonoBehaviour
         if (requestGameStateChange != null)
         {
             requestGameStateChange.OnEventRaised -= HandleGameStateRequested;
+        }
+        if (conversationStartEvent != null)
+        {
+            conversationStartEvent.OnEventRaised -= HandleConversationStart;
+        }
+        if (conversationEndEvent != null)
+        {
+            conversationEndEvent.OnEventRaised -= HandleConversationEnd;
         }
     }
 
@@ -65,6 +83,16 @@ public class OverworldManager : MonoBehaviour
         player.transform.position = RoundToNearestTile(player.transform.position);
 
         AudioManager.Instance.PlayBGM(AudioManager.AudioContext.Overworld);
+    }
+
+    private void HandleConversationStart(ConversationConfig config)
+    {
+        canMove = false;
+    }
+
+    private void HandleConversationEnd()
+    {
+        canMove = true;
     }
 
     void Update()
