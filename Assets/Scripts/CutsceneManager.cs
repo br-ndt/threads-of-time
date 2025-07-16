@@ -55,7 +55,7 @@ public class CutsceneManager : MonoBehaviour
         Debug.Log("--- Playing Cutscene ---");
 
         // Example of programmatic cutscene logic
-        Debug.Log($"Cutscene ID: {currentCutsceneConfig.cutsceneID}");
+        Debug.Log($"Cutscene ID: {currentCutsceneConfig.sceneActionID}");
 
         for (int i = 0; i < currentCutsceneConfig.dialogueLines.Count; i++)
         {
@@ -69,8 +69,8 @@ public class CutsceneManager : MonoBehaviour
         // Transition back after cutscene finishes
         if (requestGameStateChange != null)
         {
-            Debug.Log($"Loading next scene: {currentCutsceneConfig.gameStateOnEnd}...");
-            requestGameStateChange.Raise((currentCutsceneConfig.gameStateOnEnd, currentCutsceneConfig.nextSceneBattle));
+            Debug.Log($"Loading next scene: {currentCutsceneConfig.sceneChange.newState}...");
+            requestGameStateChange.Raise((currentCutsceneConfig.sceneChange.newState, currentCutsceneConfig.sceneChange.newStateConfig));
         }
     }
 }

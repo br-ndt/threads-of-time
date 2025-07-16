@@ -194,13 +194,13 @@ public class ConversationUI : MonoBehaviour
         {
             dialogueContainer.SetActive(false);
         }
-        if (currentConfig.gameStateOnEnd == GameState.Battle && currentConfig.nextSceneBattle != null && requestGameStateChange != null)
+        if (requestGameStateChange != null)
         {
-            requestGameStateChange.Raise((GameState.Battle, currentConfig.nextSceneBattle));
+            requestGameStateChange.Raise((currentConfig.sceneChange.newState, currentConfig.sceneChange.newStateConfig));
         }
         else
         {
-            requestGameStateChange.Raise((currentConfig.gameStateOnEnd, null));
+            requestGameStateChange.Raise((currentConfig.sceneChange.newState, null));
         }
         conversationEndEvent.Raise();
         currentConfig = null;

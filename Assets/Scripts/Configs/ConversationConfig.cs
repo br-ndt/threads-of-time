@@ -24,15 +24,12 @@ namespace Assets.Scripts.Configs
     }
 
     /// <summary>
-    /// Configuration for a specific cutscene.
+    /// Configuration for a specific conversation.
     /// </summary>
     [CreateAssetMenu(menuName = "Game Configs/Conversation Config")]
-    public class ConversationConfig : GameConfig
+    public class ConversationConfig : SceneActionConfig
     {
         public bool skippable;
-        public string cutsceneID; // Unique ID for this cutscene
-        public List<ConversationSpeaker> speakers; // Example dialogue
-        public GameState gameStateOnEnd = GameState.Overworld; // Optional: scene to load after conversation
-        public BattleConfig nextSceneBattle;
+        public List<ConversationSpeaker> speakers;
     }
 }

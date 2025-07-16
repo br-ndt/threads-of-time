@@ -7,10 +7,10 @@ namespace Assets.Scripts.Configs
     /// Configuration for a specific battle.
     /// </summary>
     [CreateAssetMenu(menuName = "Game Configs/Battle Config")]
-    public class BattleConfig : GameConfig
+    public class BattleConfig : SceneActionConfig
     {
         [Header("Enemies")]
-        public List<EnemyConfig> enemies = new(); // TODO: List of enemy prefab IDs or data IDs
+        public List<EnemyConfig> enemies = new();
 
         [Header("Heroes")]
         public List<HeroConfig> heroes = new();
@@ -20,7 +20,8 @@ namespace Assets.Scripts.Configs
         public string battleMusicID; // ID for battle music
 
         [Header("Rewards")]
+        // placeholder
         public int goldReward;
-        public List<string> itemRewards = new List<string>(); // Example: Item IDs
+        public List<string> itemRewards = new List<string>();
     }
 }
