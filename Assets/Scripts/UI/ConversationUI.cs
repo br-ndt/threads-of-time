@@ -134,6 +134,7 @@ public class ConversationUI : MonoBehaviour
             // If there are no more lines, go to the next speaker.
             currentSpeakerIndex++;
             avatar.sprite = currentConfig.speakers[currentSpeakerIndex].Sprite != null ? currentConfig.speakers[currentSpeakerIndex].Sprite : fallbackAvatar;
+            speakerNameText.text = currentConfig.speakers[currentSpeakerIndex].Name;
             currentLineIndex = 0;
             // Start the typing effect for the next line
             if (typingCoroutine != null)
