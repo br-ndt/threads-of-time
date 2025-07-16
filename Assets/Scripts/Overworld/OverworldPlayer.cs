@@ -1,6 +1,7 @@
 using Assets.Scripts.Configs;
 using Assets.Scripts.Events;
 using Assets.Scripts.States;
+using Assets.Scripts.Triggers;
 using UnityEngine;
 
 namespace Assets.Scripts.Overworld
@@ -9,10 +10,12 @@ namespace Assets.Scripts.Overworld
     {
         [SerializeField] private GameStateChangeEvent gameStateChangeEvent;
         [SerializeField] private ConversationStartEvent conversationStartEvent;
+        [SerializeField] private TriggerCheckEvent triggerCheckEvent;
+        [SerializeField] private RecordTriggerEvent recordTriggerEvent;
         void OnTriggerEnter(Collider other)
         {
             OverworldEnemy enemy = other.GetComponent<OverworldEnemy>();
-            if (enemy != null && (enemy.ActionConfig != null))
+            if (enemy != null && (enemy.ActionConfig != null || enemy.TriggerConfig != null))
             {
                 Debug.Log("Player entered overworld trigger!");
                 if (enemy.ActionConfig != null)
@@ -22,9 +25,22 @@ namespace Assets.Scripts.Overworld
                     {
                         gameStateChangeEvent.Raise((GameState.Battle, enemy.ActionConfig));
                     }
-                    else
+                    if (enemy.ActionConfig is ConversationConfig)
                     {
                         conversationStartEvent.Raise(enemy.ActionConfig as ConversationConfig);
+                    }
+                }
+                if (enemy.TriggerConfig != null)
+                {
+                    TriggerCheckContext context = new(enemy.TriggerConfig.requiredTriggers);
+                    triggerCheckEvent.Raise(context);
+                    if (context.IsValid)
+                    {
+                        foreach (TriggerEvent trigger in enemy.TriggerConfig.emittedTriggers)
+                        {
+                            trigger.Raise(true);
+                        }
+                        recordTriggerEvent.Raise((enemy.TriggerConfig.emittedTriggers, true));
                     }
                 }
             }

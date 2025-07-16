@@ -388,6 +388,7 @@ GameObject:
   - component: {fileID: 656660478}
   - component: {fileID: 656660479}
   - component: {fileID: 656660480}
+  - component: {fileID: 656660481}
   m_Layer: 0
   m_Name: GlobalGameController
   m_TagString: Untagged
@@ -451,6 +452,20 @@ MonoBehaviour:
   overworldCameraID: OverworldCamera
   battleCameraID: BattleCamera
   cutsceneCameraID: CutsceneCamera
+--- !u!114 &656660481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656660477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7114e41d03bb6b34aa71cfeffb3ed310, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggerCheckEvent: {fileID: 11400000, guid: 61f6fd46ee6b66649b1e04a4661d21cc, type: 2}
+  recordTriggerEvent: {fileID: 11400000, guid: d2a18c19914cbb54eaad20bd37924d1c, type: 2}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

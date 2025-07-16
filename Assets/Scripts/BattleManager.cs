@@ -6,7 +6,6 @@ using Assets.Scripts.States;
 using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Combat;
-using Assets.Scripts.Audio;
 
 public class BattleManager : MonoBehaviour
 {
@@ -29,8 +28,10 @@ public class BattleManager : MonoBehaviour
     private BattleEndEvent battleEndEvent; // Raises when battle ends
     [SerializeField]
     private BattleEndEvent battleLeaveEvent; // Raises when player leaves the battle
+    [SerializeField]
+    private RecordTriggerEvent recordTriggerEvent; // Raises to record gameplay triggers
 
-    [Header("Battle Elements (Programmatic)")]
+    [Header("Battle Elements")]
     public GameObject enemyPrefab; // Assign an enemy prefab for instantiation
     public GameObject playerCharacterPrefab; // Assign a player character prefab for instantiation
     public Transform[] playerSpawnPoints; // Assign empty transforms in your scene
@@ -237,6 +238,16 @@ public class BattleManager : MonoBehaviour
         bool playerWon = result == BattleEndResult.PlayersWin;
 
         CurrentBattleState = BattleState.BattleEnd;
+        if (playerWon && currentBattleConfig.onCompleteTrigger != null)
+        {
+            currentBattleConfig.onCompleteTrigger.Raise(true);
+            recordTriggerEvent.Raise((new List<TriggerEvent>() { currentBattleConfig.onCompleteTrigger }, true));
+        }
+        else if (!playerWon && currentBattleConfig.onFailTrigger != null)
+        {
+            currentBattleConfig.onFailTrigger.Raise(true);
+            recordTriggerEvent.Raise((new List<TriggerEvent>() { currentBattleConfig.onFailTrigger }, true));
+        }
         battleEndEvent.Raise(playerWon); // Announce battle outcome
         Debug.Log($"<color=orange>--- Battle Ended: {(playerWon ? "VICTORY" : "DEFEAT")} ---</color>");
     }

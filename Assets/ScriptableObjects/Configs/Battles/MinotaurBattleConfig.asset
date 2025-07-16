@@ -12,14 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba227f296623a254281d6337ebf453c3, type: 3}
   m_Name: MinotaurBattleConfig
   m_EditorClassIdentifier: 
-  enemies:
-  - {fileID: 11400000, guid: d9fc8075c3151ea4ba9c538820bbd6c2, type: 2}
-  - {fileID: 11400000, guid: 2522300b27cce5e4d804f3fea63f4652, type: 2}
-  - {fileID: 11400000, guid: fe29dde5299b17641867c946b6a85739, type: 2}
+  sceneActionID: MinotaurBattleConfig
+  onCompleteTrigger: {fileID: 11400000, guid: 1f3348ddd92380b4c837a9de8b8da7ca, type: 2}
+  onFailTrigger: {fileID: 0}
+  sceneChange:
+    newState: 0
+    newStateConfig: {fileID: 0}
   heroes:
   - {fileID: 11400000, guid: e97812f1e7979144b8363b1c8da07f1f, type: 2}
   - {fileID: 11400000, guid: 01d8fb29b3ebbb1488ae8302dff3d823, type: 2}
   - {fileID: 11400000, guid: 24a22b532795b30478b5e18f7dc19c8f, type: 2}
+  enemies:
+  - {fileID: 11400000, guid: d9fc8075c3151ea4ba9c538820bbd6c2, type: 2}
+  - {fileID: 11400000, guid: 2522300b27cce5e4d804f3fea63f4652, type: 2}
+  - {fileID: 11400000, guid: fe29dde5299b17641867c946b6a85739, type: 2}
   battleBackgroundSceneName: ATranquilForest
   battleMusicID: Battle1
   goldReward: 16

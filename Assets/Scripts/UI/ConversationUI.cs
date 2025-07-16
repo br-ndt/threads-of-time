@@ -5,17 +5,20 @@ using TMPro;
 using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
 using System.Collections.Generic;
-using Assets.Scripts.States; // Required for TextMeshPro
+using Assets.Scripts.States;
+using Unity.VisualScripting; // Required for TextMeshPro
 
 /// <summary>
 /// Manages the Conversation UI, including displaying dialogue, speaker names, and handling user input.
 /// </summary>
 public class ConversationUI : MonoBehaviour
 {
+    [Header("Event Channels")]
     [SerializeField] ConversationStartEvent conversationStartEvent;
     [SerializeField] ConversationProgressEvent conversationProgressEvent;
     [SerializeField] ConversationEndEvent conversationEndEvent;
-    [SerializeField] private GameStateChangeEvent requestGameStateChange;
+    [SerializeField] GameStateChangeEvent requestGameStateChange;
+    [SerializeField] RecordTriggerEvent recordTriggerEvent;
     // --- UI ELEMENT REFERENCES ---
     // Assign these in the Unity Inspector
     [Header("UI Elements")]
@@ -33,6 +36,10 @@ public class ConversationUI : MonoBehaviour
 
     [Tooltip("The Button the player clicks to advance the conversation.")]
     public Button continueButton;
+    [Tooltip("The area where responses buttons will occupy")]
+    public GameObject responsesContainer;
+    [Tooltip("The prefab for the response buttons")]
+    public GameObject responseButtonPrefab;
 
     [Header("Typing Effect Settings")]
     [Tooltip("The speed at which the text types out, in characters per second.")]
@@ -41,11 +48,13 @@ public class ConversationUI : MonoBehaviour
 
     [SerializeField] private Sprite fallbackAvatar;
 
-    private ConversationConfig currentConfig;
+    public ConversationConfig currentConfig;
     private int currentSpeakerIndex = 0;
     private int currentLineIndex = 0;
     private bool isTyping = false;
     private Coroutine typingCoroutine;
+    private List<GameObject> spawnedResponseButtons = new(); // To manage spawned target buttons
+
 
     private void OnEnable()
     {
@@ -72,6 +81,15 @@ public class ConversationUI : MonoBehaviour
         }
     }
 
+    private void ClearResponseButtons()
+    {
+        foreach (GameObject buttonGO in spawnedResponseButtons)
+        {
+            if (buttonGO != null) Destroy(buttonGO);
+        }
+        spawnedResponseButtons.Clear();
+    }
+
     /// <summary>
     /// Starts a new conversation.
     /// </summary>
@@ -79,6 +97,7 @@ public class ConversationUI : MonoBehaviour
     /// <param name="dialogueLines">An array of strings, where each string is a line of dialogue.</param>
     public void HandleConversationStart(ConversationConfig config)
     {
+        ClearResponseButtons();
         if (config.speakers == null || config.speakers.Count == 0)
         {
             Debug.LogError("Cannot start conversation with no dialogue lines.");
@@ -95,6 +114,7 @@ public class ConversationUI : MonoBehaviour
         }
 
         avatar.sprite = currentConfig.speakers[currentSpeakerIndex].Sprite != null ? currentConfig.speakers[currentSpeakerIndex].Sprite : fallbackAvatar;
+        CheckIfResponsesType();
 
         // Show the dialogue UI
         if (dialogueContainer != null)
@@ -111,6 +131,8 @@ public class ConversationUI : MonoBehaviour
     /// </summary>
     public void DisplayNextLine()
     {
+        responsesContainer.SetActive(false);
+        ClearResponseButtons();
         // If text is currently typing out, finish it instantly.
         if (isTyping)
         {
@@ -126,8 +148,6 @@ public class ConversationUI : MonoBehaviour
             {
                 StopCoroutine(typingCoroutine);
             }
-            typingCoroutine = StartCoroutine(TypeLine(currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex]));
-            currentLineIndex++;
         }
         else if (currentSpeakerIndex < currentConfig.speakers.Count - 1)
         {
@@ -136,18 +156,57 @@ public class ConversationUI : MonoBehaviour
             avatar.sprite = currentConfig.speakers[currentSpeakerIndex].Sprite != null ? currentConfig.speakers[currentSpeakerIndex].Sprite : fallbackAvatar;
             speakerNameText.text = currentConfig.speakers[currentSpeakerIndex].Name;
             currentLineIndex = 0;
+
             // Start the typing effect for the next line
             if (typingCoroutine != null)
             {
                 StopCoroutine(typingCoroutine);
             }
-            typingCoroutine = StartCoroutine(TypeLine(currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex]));
-            currentLineIndex++;
         }
         else
         {
             // If there are no more speakers, end the conversation.
             EndConversation();
+            return;
+        }
+        CheckIfResponsesType();
+
+        typingCoroutine = StartCoroutine(TypeLine(currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex].Content));
+        currentLineIndex++;
+    }
+
+    private void CheckIfResponsesType()
+    {
+        if (currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex] is ConversationResponses)
+        {
+            continueButton.enabled = false;
+            foreach (ConversationResponse response in (currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex] as ConversationResponses).Responses)
+            {
+                GameObject buttonGO = Instantiate(responseButtonPrefab, responsesContainer.transform);
+                Button responseButton = buttonGO.GetComponent<Button>();
+                TMP_Text buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
+
+                responseButton.onClick.AddListener(() => OnResponseButtonClicked(response.ConvoIfChosen, response.TriggerIfChosen));
+                buttonText.text = response.Content;
+                spawnedResponseButtons.Add(buttonGO); // Keep track for cleaning up
+            }
+            responsesContainer.SetActive(true);
+        }
+    }
+
+    private void OnResponseButtonClicked(ConversationConfig convoIfChosen, TriggerEvent triggerIfChosen)
+    {
+        if (triggerIfChosen != null)
+        {
+            recordTriggerEvent.Raise((new List<TriggerEvent>() { triggerIfChosen }, true));
+            triggerIfChosen.Raise(true);
+        }
+        if (convoIfChosen != null)
+        {
+            currentConfig = convoIfChosen;
+            currentLineIndex = 0;
+            currentSpeakerIndex = 0;
+            HandleConversationStart(convoIfChosen);
         }
     }
 
@@ -158,7 +217,8 @@ public class ConversationUI : MonoBehaviour
     private IEnumerator TypeLine(string line)
     {
         isTyping = true;
-        dialogueText.text = ""; // Clear previous text
+        dialogueText.text = ""; // Clear previous text\
+        continueButton.enabled = true;
         continueButton.interactable = false; // Disable button while typing
 
         foreach (char letter in line.ToCharArray())
@@ -168,7 +228,7 @@ public class ConversationUI : MonoBehaviour
         }
 
         isTyping = false;
-        continueButton.interactable = true; // Re-enable button
+        continueButton.interactable = true; 
     }
 
     /// <summary>
@@ -181,9 +241,17 @@ public class ConversationUI : MonoBehaviour
             StopCoroutine(typingCoroutine);
         }
         // The currentLineIndex was already incremented, so we access the previous line.
-        dialogueText.text = currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex - 1];
+        dialogueText.text = currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex - 1].Content;
         isTyping = false;
-        continueButton.interactable = true;
+        if (currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex - 1] is ConversationResponses)
+        {
+            continueButton.enabled = false;
+            responsesContainer.SetActive(true);
+        }
+        else
+        {
+            continueButton.interactable = true;
+        }
     }
 
     /// <summary>

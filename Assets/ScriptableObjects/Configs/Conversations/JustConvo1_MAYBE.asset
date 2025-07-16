@@ -10,30 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb6fdf6dbef37e44989938aaf8807b6, type: 3}
-  m_Name: CultistBattolConvo
+  m_Name: JustConvo1_MAYBE
   m_EditorClassIdentifier: 
-  sceneActionID: cultistBattolConvo
+  sceneActionID: justConvo1_Maybe
   onCompleteTrigger: {fileID: 0}
   onFailTrigger: {fileID: 0}
   sceneChange:
-    newState: 2
-    newStateConfig: {fileID: 11400000, guid: 7a13889e710a9094d8a6c1656ee66e6b, type: 2}
-  skippable: 1
+    newState: 0
+    newStateConfig: {fileID: 0}
+  skippable: 0
   speakers:
-  - _name: Cultist
+  - _name: Guy
     _messages:
-    - rid: 9073573830717079613
+    - rid: 9073573830717079628
     _sprite: {fileID: 21300000, guid: 05acc2dd3d1042244a0cd9737215ce0c, type: 3}
-  - _name: Dubh
-    _messages: []
-    _sprite: {fileID: 21300000, guid: 591cc7e1700ec624c9f3f90161d2092d, type: 3}
   references:
     version: 2
     RefIds:
-    - rid: 9073573830717079613
-      type: {class: ConversationResponses, ns: Assets.Scripts.Configs, asm: Assembly-CSharp}
+    - rid: 9073573830717079628
+      type: {class: ConversationMessage, ns: Assets.Scripts.Configs, asm: Assembly-CSharp}
       data:
-        _content: 
-        _responses:
-        - _content: 
-          _triggerIfChosen: {fileID: 0}
+        _content: Classic option 4!

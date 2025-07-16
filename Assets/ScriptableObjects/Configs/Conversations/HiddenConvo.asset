@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb6fdf6dbef37e44989938aaf8807b6, type: 3}
+  m_Name: HiddenConvo
+  m_EditorClassIdentifier: 
+  sceneActionID: hiddenConvo
+  onCompleteTrigger: {fileID: 0}
+  onFailTrigger: {fileID: 0}
+  sceneChange:
+    newState: 2
+    newStateConfig: {fileID: 11400000, guid: 6d6643c996bc978449d2326faa319ea7, type: 2}
+  skippable: 0
+  speakers:
+  - _name: Tulip
+    _messages:
+    - rid: 9073573830717079621
+    _sprite: {fileID: 21300000, guid: 0026911e289dada4c81abc7bddd149c8, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: 9073573830717079621
+      type: {class: ConversationMessage, ns: Assets.Scripts.Configs, asm: Assembly-CSharp}
+      data:
+        _content: Look out, an ambush!

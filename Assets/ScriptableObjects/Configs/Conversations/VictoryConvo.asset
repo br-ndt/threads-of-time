@@ -10,20 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb6fdf6dbef37e44989938aaf8807b6, type: 3}
-  m_Name: JustConvo
+  m_Name: VictoryConvo
   m_EditorClassIdentifier: 
-  sceneActionID: justConvo
+  sceneActionID: VictoryConvo
+  onCompleteTrigger: {fileID: 0}
+  onFailTrigger: {fileID: 0}
   sceneChange:
     newState: 0
     newStateConfig: {fileID: 0}
   skippable: 0
   speakers:
-  - _name: Guy
+  - _name: Raul
     _messages:
-    - Hey man.
-    - Do you like pizza?
-    _sprite: {fileID: 21300000, guid: 05acc2dd3d1042244a0cd9737215ce0c, type: 3}
-  - _name: Rat
-    _messages:
-    - SQUEAK!
-    _sprite: {fileID: 21300000, guid: cfc92da0ce1302844a83d189d7c8980d, type: 3}
+    - rid: 9073573830717079627
+    _sprite: {fileID: 21300000, guid: c1c6c7a5f7325c649806e70ba62a0fd8, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: 9073573830717079627
+      type: {class: ConversationMessage, ns: Assets.Scripts.Configs, asm: Assembly-CSharp}
+      data:
+        _content: We dunked those noob!!!

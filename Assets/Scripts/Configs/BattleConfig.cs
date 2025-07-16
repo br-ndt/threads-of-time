@@ -9,11 +9,11 @@ namespace Assets.Scripts.Configs
     [CreateAssetMenu(menuName = "Game Configs/Battle Config")]
     public class BattleConfig : SceneActionConfig
     {
+        [Header("Heroes")]
+        public List<HeroConfig> heroes = new();
         [Header("Enemies")]
         public List<EnemyConfig> enemies = new();
 
-        [Header("Heroes")]
-        public List<HeroConfig> heroes = new();
 
         [Header("Environment")]
         public string battleBackgroundSceneName; // Name of the scene for the battle background

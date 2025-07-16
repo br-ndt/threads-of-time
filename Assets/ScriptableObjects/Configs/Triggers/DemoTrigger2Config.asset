@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2b7ad2225167fe41a754ae606f2f9ad, type: 3}
+  m_Name: DemoTrigger2Config
+  m_EditorClassIdentifier: 
+  sceneActionID: DemoTrigger2
+  followUp: {fileID: 0}
+  sceneChange:
+    newState: 0
+    newStateConfig: {fileID: 0}
+  requiredTriggers:
+  - {fileID: 11400000, guid: f4be1312b522f974fb0bf302b4446d93, type: 2}
+  emittedTriggers:
+  - {fileID: 11400000, guid: 1f3348ddd92380b4c837a9de8b8da7ca, type: 2}

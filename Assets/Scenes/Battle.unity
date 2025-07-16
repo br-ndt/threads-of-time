@@ -3631,6 +3631,7 @@ MonoBehaviour:
   playerActionChosenEvent: {fileID: 11400000, guid: 5cab0e35a440fd6499128c43d6199c71, type: 2}
   battleEndEvent: {fileID: 11400000, guid: b3f8916cf3a04d740a4af3b923304ac9, type: 2}
   battleLeaveEvent: {fileID: 11400000, guid: a115a7973ac5b934895d5796db0effa8, type: 2}
+  recordTriggerEvent: {fileID: 11400000, guid: d2a18c19914cbb54eaad20bd37924d1c, type: 2}
   enemyPrefab: {fileID: 6628492642499365167, guid: df68abb7aa653b7499d8aa7bf6024523, type: 3}
   playerCharacterPrefab: {fileID: 6628492642499365167, guid: c30e91d6ef2b4dd4cb8b01173bdf0ea5, type: 3}
   playerSpawnPoints:
@@ -3642,9 +3643,6 @@ MonoBehaviour:
   - {fileID: 430817292}
   - {fileID: 1760113340}
   currentBattleConfig: {fileID: 0}
-  tracklist:
-  - {fileID: 8300000, guid: 2fd5b13e24ab45b4ca3db38926f2472c, type: 3}
-  victoryTune: {fileID: 8300000, guid: 381f321b5fd476647a8ca0f88e477d44, type: 3}
 --- !u!4 &1595353082
 Transform:
   m_ObjectHideFlags: 0
