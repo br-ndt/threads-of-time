@@ -13,23 +13,21 @@ MonoBehaviour:
   m_Name: PreciseStrike
   m_EditorClassIdentifier: 
   attackName: Precise Strike
-  baseDamageByType:
+  baseDamageRangeByType:
     keys: 00000000
     values:
-    - 3
-    defaultValue: 0
-  damageRangeByType:
-    keys: 00000000
-    values:
-    - 6
-    defaultValue: 0
-  damageModifierByType:
+    - min: 10
+      max: 16
+  baseDamageModifierByType:
     keys: 
     values: []
-    defaultValue: 0
-  overallDamageModifier: 1
+  damageMultiplierByType:
+    keys: 
+    values: []
+  overallDamageModifier: 0
+  overallDamageMultiplier: 1
+  overallResistanceModifier: 0
   overallResistanceMultiplier: 0
-  overallResistanceValue: 0
-  baseCritChance: 0.3
+  baseCritChance: 0.5
   critChanceBonus: 0
-  dodgeChance: 0.05
+  dodgeChance: 0.025

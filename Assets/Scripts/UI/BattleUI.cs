@@ -25,7 +25,7 @@ namespace Assets.Scripts.UI
 
         [Header("UI Elements")]
         [SerializeField] private GameObject bottomPanel; // Panel with Attack, Defend, Run buttons
-        [SerializeField] private Text turnInfoText; // Displays whose turn it is
+        [SerializeField] private TMP_Text turnInfoText; // Displays whose turn it is
         [SerializeField] private GameObject actionsPanel;
         [SerializeField] private Button attackButton;
         [SerializeField] private Button defendButton;
@@ -40,7 +40,7 @@ namespace Assets.Scripts.UI
         [Header("Target Selection")]
         [SerializeField] private GameObject targetMenu; // Parent panel for target selection
         [SerializeField] private GameObject targetButtonArea; // Parent for target buttons
-        [SerializeField] private GameObject targetButtonPrefab; // Prefab for enemy target buttons
+        [SerializeField] private GameObject targetInfoPrefab; // Prefab for enemy target buttons
         [SerializeField] private Button targetSelectionCancelButton; // To cancel target selection
 
         [Header("Player Actors")] // UI Elements for Player Actors
@@ -54,7 +54,7 @@ namespace Assets.Scripts.UI
         private Dictionary<IBattleActor, GameObject> spawnedEnemyInfos = new();
 
         [Header("Battle Result")]
-        [SerializeField] private Text battleResultText; // For win/loss message
+        [SerializeField] private TMP_Text battleResultText; // For win/loss message
         [SerializeField] private Button returnToOverworldButton;
 
         // References to current battle actors for target selection (e.g., enemy buttons)
@@ -289,6 +289,7 @@ namespace Assets.Scripts.UI
             ClearAllActorInfoPanels(); // Clear all actor info panels
             bottomPanel.SetActive(false);
 
+            battleResultText.color = playerWon ? Color.white : Color.red;
             battleResultText.text = playerWon ? "VICTORY!" : "DEFEAT!";
             battleResultText.gameObject.SetActive(true);
             returnToOverworldButton.gameObject.SetActive(true);
@@ -334,10 +335,10 @@ namespace Assets.Scripts.UI
             foreach (IBattleActor targetActor in targets)
             {
                 // Instantiate a new button from prefab
-                GameObject buttonGO = Instantiate(targetButtonPrefab, targetButtonArea.transform);
-                Button targetButton = buttonGO.GetComponent<Button>();
-                TMP_Text buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
-                Image buttonImg = buttonGO.transform.Find("Border").Find("Avatar").GetComponent<Image>();
+                GameObject targetGO = Instantiate(targetInfoPrefab, targetButtonArea.transform);
+                Button targetButton = targetGO.GetComponentInChildren<Button>();
+                TMP_Text buttonText = targetButton.GetComponentInChildren<TMP_Text>();
+                Image buttonImg = targetGO.transform.Find("Avatar").GetComponent<Image>();
 
                 if (targetButton != null && buttonText != null && buttonImg != null)
                 {
@@ -345,7 +346,7 @@ namespace Assets.Scripts.UI
                     buttonImg.sprite = targetActor.Avatar;
                     GameObject targetGameObject = targetActor.GameObject;
                     targetButton.onClick.AddListener(() => OnTargetButtonClicked(targetGameObject));
-                    spawnedTargetButtons.Add(buttonGO); // Keep track for cleaning up
+                    spawnedTargetButtons.Add(targetGO); // Keep track for cleaning up
                 }
                 else
                 {
@@ -389,7 +390,7 @@ namespace Assets.Scripts.UI
 
             attackMenu.SetActive(false);
             targetMenu.SetActive(true);
-            ClearAttackButtons();
+            // ClearAttackButtons();
         }
 
         private void OnCancelAttackSelection()
@@ -397,7 +398,7 @@ namespace Assets.Scripts.UI
             Debug.Log("Attack selection cancelled. Returning to main actions.");
             attackMenu.SetActive(false);
             actionsPanel.SetActive(true);
-            ClearAttackButtons();
+            // ClearAttackButtons();
         }
 
         private void OnDefendButtonClicked()
@@ -420,8 +421,8 @@ namespace Assets.Scripts.UI
         {
             Debug.Log("Target selection cancelled.");
             targetMenu.SetActive(false);
-            actionsPanel.SetActive(true);
-            ClearTargetButtons();
+            attackMenu.SetActive(true);
+            // ClearTargetButtons();
         }
 
         private void OnTargetButtonClicked(GameObject targetGameObject)
@@ -430,6 +431,7 @@ namespace Assets.Scripts.UI
             {
                 playerActionChosenEvent.Raise(new PlayerAction(selectedAttackDefinition, targetGameObject));
                 targetMenu.SetActive(false);
+                ClearAttackButtons();
                 ClearTargetButtons();
             }
             else

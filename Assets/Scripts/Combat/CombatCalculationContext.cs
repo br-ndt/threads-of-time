@@ -97,7 +97,7 @@ namespace Assets.Scripts.Combat
             Debug.Log($"Flat Bonus (Damage - Resistance): {Definition.overallDamageModifier - Definition.overallResistanceModifier:F2}");
             Debug.Log($"Overall Multi: {(Definition.overallDamageMultiplier - Definition.overallResistanceMultiplier) * 100}%");
             FinalDamage += Definition.overallDamageModifier - Definition.overallResistanceModifier;
-            FinalDamage *= Math.Clamp(Definition.overallDamageMultiplier - Definition.overallResistanceMultiplier, 0, FinalDamage); // this errors out when overall resistance is higher than overall damage
+            FinalDamage *= Math.Max(Definition.overallDamageMultiplier - Definition.overallResistanceMultiplier, 0);
             FinalDamage = (float)Math.Floor(FinalDamage);
             Debug.Log($"Final Damage: {FinalDamage}");
         }

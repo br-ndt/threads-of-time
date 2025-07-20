@@ -24,7 +24,7 @@ MonoBehaviour:
   damageMultiplierByType:
     keys: 
     values: []
-  overallDamageModifier: 1
+  overallDamageModifier: 0
   overallDamageMultiplier: 1
   overallResistanceModifier: 0
   overallResistanceMultiplier: 0

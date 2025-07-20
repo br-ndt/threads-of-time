@@ -13,21 +13,23 @@ MonoBehaviour:
   m_Name: RadiantStrike
   m_EditorClassIdentifier: 
   attackName: Radiant Strike
-  baseDamageByType:
-    keys: 0000000005000000
+  baseDamageRangeByType:
+    keys: 0000000003000000
     values:
-    - 2
-    - 2
-  damageRangeByType:
-    keys: 00000000
-    values:
-    - 6
-  damageModifierByType:
+    - min: 1
+      max: 10
+    - min: 1
+      max: 6
+  baseDamageModifierByType:
     keys: 
     values: []
-  overallDamageModifier: 1
+  damageMultiplierByType:
+    keys: 
+    values: []
+  overallDamageModifier: 0
+  overallDamageMultiplier: 1
+  overallResistanceModifier: 0
   overallResistanceMultiplier: 0
-  overallResistanceValue: 0
   baseCritChance: 0.15
   critChanceBonus: 0
   dodgeChance: 0.05

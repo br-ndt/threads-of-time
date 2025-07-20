@@ -1,48 +1,78 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 
+[ExecuteInEditMode]
 public class Backdrop : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> backgrounds;
+    [SerializeField] private List<Sprite> backgroundSprites;
+    [SerializeField] private SpriteRenderer targetRenderer;
+    [SerializeField] private Camera targetCamera;
 
     private int currentIndex = 0;
 
     private void Awake()
     {
-        HideAll();
-        if (backgrounds.Count > 0)
+        if (backgroundSprites.Count > 0)
         {
-            backgrounds[0].SetActive(true);
+            currentIndex = Random.Range(0, backgroundSprites.Count);
+            SetSprite(backgroundSprites[currentIndex]);
         }
     }
 
     public void Next()
     {
-        backgrounds[currentIndex].SetActive(false);
-        currentIndex++;
-        if (currentIndex >= backgrounds.Count)
-            currentIndex = 0;
-        backgrounds[currentIndex].SetActive(true);
+        if (backgroundSprites.Count == 0) return;
+        currentIndex = (currentIndex + 1) % backgroundSprites.Count;
+        SetSprite(backgroundSprites[currentIndex]);
     }
 
     public void Prev()
     {
-        backgrounds[currentIndex].SetActive(false);
-        currentIndex--;
-        if (currentIndex < 0)
-            currentIndex = backgrounds.Count - 1;
-        backgrounds[currentIndex].SetActive(true);
+        if (backgroundSprites.Count == 0) return;
+        currentIndex = (currentIndex - 1 + backgroundSprites.Count) % backgroundSprites.Count;
+        SetSprite(backgroundSprites[currentIndex]);
     }
 
-    private void HideAll()
+    public void Randomize()
     {
-        foreach (var bg in backgrounds)
+        if (backgroundSprites.Count == 0) return;
+
+        int newIndex;
+        do
         {
-            if (bg != null)
-                bg.SetActive(false);
-        }
+            newIndex = Random.Range(0, backgroundSprites.Count);
+        } while (newIndex == currentIndex && backgroundSprites.Count > 1);
+
+        currentIndex = newIndex;
+        SetSprite(backgroundSprites[currentIndex]);
     }
+
+    private void SetSprite(Sprite sprite)
+    {
+        targetRenderer.sprite = sprite;
+        FitSpriteToCamera(targetRenderer, targetCamera);
+    }
+
+    private void FitSpriteToCamera(SpriteRenderer renderer, Camera cam)
+    {
+        if (renderer.sprite == null || cam == null) return;
+
+
+        float targetWidth = 2f * cam.orthographicSize * cam.aspect;
+        float targetHeight = cam.orthographicSize;
+
+        float spriteWidth = renderer.sprite.bounds.size.x;
+        float spriteHeight = renderer.sprite.bounds.size.y;
+
+        float scaleX = targetWidth / spriteWidth;
+        float scaleY = targetHeight / spriteHeight;
+
+        renderer.transform.localScale = new Vector3(scaleX, scaleY, 1f);
+
+        renderer.transform.position = new Vector3(0f, 6.2f, 15f);
+    }
+
 }
 
 [CustomEditor(typeof(Backdrop))]
@@ -58,14 +88,9 @@ public class BackdropEditor : Editor
         EditorGUILayout.LabelField("Backdrop Controls", EditorStyles.boldLabel);
 
         EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Prev"))
-        {
-            backdrop.Prev();
-        }
-        if (GUILayout.Button("Next"))
-        {
-            backdrop.Next();
-        }
+        if (GUILayout.Button("Prev")) backdrop.Prev();
+        if (GUILayout.Button("Next")) backdrop.Next();
+        if (GUILayout.Button("Random")) backdrop.Randomize();
         EditorGUILayout.EndHorizontal();
     }
 }

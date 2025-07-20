@@ -13,20 +13,23 @@ MonoBehaviour:
   m_Name: InfectedBite
   m_EditorClassIdentifier: 
   attackName: Infected Bite
-  baseDamageByType:
+  baseDamageRangeByType:
     keys: 0000000001000000
     values:
-    - 1
-    - 5
-  damageRangeByType:
+    - min: 1
+      max: 4
+    - min: 1
+      max: 4
+  baseDamageModifierByType:
     keys: 
     values: []
-  damageModifierByType:
+  damageMultiplierByType:
     keys: 
     values: []
-  overallDamageModifier: 1
+  overallDamageModifier: 0
+  overallDamageMultiplier: 1
+  overallResistanceModifier: 0
   overallResistanceMultiplier: 0
-  overallResistanceValue: 0
   baseCritChance: 0.05
   critChanceBonus: 0
   dodgeChance: 0.05

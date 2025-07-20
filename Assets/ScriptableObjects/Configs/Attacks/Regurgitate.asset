@@ -13,23 +13,21 @@ MonoBehaviour:
   m_Name: Regurgitate
   m_EditorClassIdentifier: 
   attackName: Regurgitate
-  baseDamageByType:
+  baseDamageRangeByType:
     keys: 01000000
     values:
-    - 5
-    defaultValue: 0
-  damageRangeByType:
-    keys: 01000000
-    values:
-    - 5
-    defaultValue: 0
-  damageModifierByType:
+    - min: 10
+      max: 16
+  baseDamageModifierByType:
     keys: 
     values: []
-    defaultValue: 0
-  overallDamageModifier: 1
+  damageMultiplierByType:
+    keys: 
+    values: []
+  overallDamageModifier: 0
+  overallDamageMultiplier: 1
+  overallResistanceModifier: 0
   overallResistanceMultiplier: 0
-  overallResistanceValue: 0
   baseCritChance: 0.12
   critChanceBonus: 0
   dodgeChance: 0.05
