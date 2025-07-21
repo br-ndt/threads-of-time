@@ -23,10 +23,6 @@ namespace Assets.Scripts.States
         [SerializeField] string cutscene = "Cutscene";
         [SerializeField] string[] dynamicSceneKeys = new string[] { "Battle", "Cutscene" };
 
-        [Header("Scene Lights")]
-        [SerializeField] private GameObject overworldDirectionaLight;
-        [SerializeField] private GameObject battleDirectionalLight;
-
         // Current state and its associated configuration
         public GameState CurrentState { get; private set; } = GameState.None;
         public GameConfig CurrentConfig { get; private set; }
@@ -63,7 +59,7 @@ namespace Assets.Scripts.States
         private void Start()
         {
             // Initial state setup (e.g., load the overworld scene at start)
-            StartCoroutine(PerformTransition(GameState.Overworld, null));
+            StartCoroutine(PerformTransition(GameState.TitleScreen, null));
         }
 
         // Listener for the GameStateChangeEvent.

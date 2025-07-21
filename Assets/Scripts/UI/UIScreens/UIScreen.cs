@@ -9,10 +9,26 @@ namespace Assets.Scripts.UI.UIScreens
     public abstract class UIScreen : MonoBehaviour
     {
         protected CanvasGroup _canvasGroup;
+
+        [SerializeField] private PauseEvent pauseEvent;
+
         private void Start()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
         }
+
+        private void OnEnable()
+        {
+            pauseEvent.OnEventRaised += OnPausePressed;
+        }
+
+        private void OnDisable()
+        {
+            pauseEvent.OnEventRaised -= OnPausePressed;
+        }
+
+        public abstract void OnPausePressed(bool paused);
+
         public virtual void Show()
         {
             gameObject.SetActive(true);

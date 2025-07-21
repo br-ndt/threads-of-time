@@ -15,8 +15,8 @@ namespace Assets.Scripts.UI
         [SerializeField] private GameStateChangeEvent _gameStateRequestedEvent;
         [SerializeField] private GameStateChangeEvent _gameStateChangedEvent;
 
+        [SerializeField] private UIScreen titleScreen;
         [SerializeField] private UIScreen bootstrapScreen;
-        //[SerializeField] private UIScreen titleScreen;
         [SerializeField] private UIScreen battleScreen;
         [SerializeField] private UIScreen overworldScreen;
         [SerializeField] private UIScreen loadingScreen;
@@ -27,8 +27,8 @@ namespace Assets.Scripts.UI
         {
             loadingScreen.gameObject.SetActive(true);
 
+            allScreens.Add(titleScreen);
             allScreens.Add(bootstrapScreen);
-            //allScreens.Add(titleScreen);
             allScreens.Add(battleScreen);
             allScreens.Add(overworldScreen);
             allScreens.Add(loadingScreen);
@@ -73,6 +73,9 @@ namespace Assets.Scripts.UI
 
             switch (payload.newState)
             {
+                case (GameState.TitleScreen):
+                    nextScreen = titleScreen;
+                    break;
                 case (GameState.Menu):
                     nextScreen = bootstrapScreen;
                     break;
@@ -85,7 +88,6 @@ namespace Assets.Scripts.UI
                 case GameState.Overworld:
                     nextScreen = overworldScreen;
                     break;
-                case (GameState.TitleScreen):
                 case GameState.GameOver:
                 case GameState.None:
                 default:

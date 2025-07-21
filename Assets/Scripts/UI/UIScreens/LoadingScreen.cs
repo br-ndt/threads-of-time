@@ -43,5 +43,9 @@ namespace Assets.Scripts.UI.UIScreens
             base.Hide();
         }
 
+        public override void OnPausePressed(bool paused)
+        {
+            Debug.Log("pressed Pause in Loading Screen");
+        }
     }
 }
