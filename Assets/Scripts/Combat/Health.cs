@@ -46,6 +46,16 @@ namespace Assets.Scripts.Combat
             }
         }
 
+        public void Initialize(int currentHealth, int maxHealth)
+        {
+            if (!initialized)
+            {
+                MaxHealth = maxHealth;
+                CurrentHealth = currentHealth;
+                initialized = true;
+            }
+        }
+
         public void TakeDamage(float damage)
         {
             CurrentHealth -= damage;

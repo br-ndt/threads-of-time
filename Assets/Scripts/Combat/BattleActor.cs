@@ -12,6 +12,7 @@ namespace Assets.Scripts.Combat
     [RequireComponent(typeof(Resistance))]
     public abstract class BattleActor<T> : MonoBehaviour, IBattleActor where T : ActorConfig
     {
+        protected string _actorID;
         protected string _displayName;
         protected int _currentSpeed;
         protected T _actorConfig;
@@ -30,8 +31,8 @@ namespace Assets.Scripts.Combat
         public GameObject GameObject => this.gameObject;
         public List<AttackDefinition> Attacks => _attacks;
         public Sprite Avatar => _avatar;
-        public string ActorName => gameObject.name + "-" + System.Guid.NewGuid().ToString(); // used for ID 
-        public string DisplayName => gameObject.name; // used for UI, but falls back to GO name
+        public string ActorID => _actorID; // used for ID 
+        public string DisplayName => _displayName; // used for UI, but falls back to GO name
         public int CurrentSpeed => _currentSpeed;
         public bool IsAlive => _isAlive;
         public bool IsPlayerControlled => _isPlayerControlled;
@@ -116,20 +117,20 @@ namespace Assets.Scripts.Combat
                 if (payload.isStarting)
                 {
                     string color = _isPlayerControlled ? "cyan" : "red";
-                    Debug.Log($"<color={color}>{ActorName}'s Turn!</color> Awaiting player input...");
+                    Debug.Log($"<color={color}>{DisplayName}'s Turn!</color> Awaiting player input...");
                 }
                 else
                 {
-                    Debug.Log($"{ActorName}'s Turn Ended.");
+                    Debug.Log($"{DisplayName}'s Turn Ended.");
                 }
             }
         }
 
         /// <summary>
-        /// Initializes the hero actor with data from an HeroConfigSO.
+        /// Initializes the actor with data from an ActorConfigSO.
         /// This should be called immediately after instantiation.
         /// </summary>
-        /// <param name="config">The HeroConfigSO to use for this actor.</param>
+        /// <param name="config">The ActorConfigSO to use for this actor.</param>
         public void Initialize(T config)
         {
             _actorConfig = config;
@@ -143,14 +144,15 @@ namespace Assets.Scripts.Combat
             }
 
             // Set base stats from config
+            _actorID = config.actorID;
             _displayName = config.actorName;
             _avatar = config.avatar;
             _attacks = config.attacks;
-            _health.Initialize(config.maxHealth);
+            _health.Initialize(config.baseHealth);
             _resistance.Initialize(config.flatResistances, config.resistanceMultipliers);
             _currentSpeed = config.baseSpeed;
 
-            gameObject.name = config.actorName; // Update GameObject name for clarity in hierarchy
+            gameObject.name = config.actorID; // Update GameObject name for clarity in hierarchy
             Debug.Log($"Initialized {gameObject.name} with config: {config.actorName}");
         }
     }

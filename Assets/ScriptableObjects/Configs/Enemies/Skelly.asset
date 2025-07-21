@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
   m_Name: Skelly
   m_EditorClassIdentifier: 
+  actorID: Skelly_1
   actorName: Skelly
   avatar: {fileID: 257241536, guid: ae193d8a5738e4f448628eee4e96d6e9, type: 3}
   attacks:
@@ -27,7 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 31506afb4e4091840b7ee3df0f99d2ac, type: 2}
   - {fileID: 11400000, guid: 22a3e2d41f272eb4497bcfb927bc5c63, type: 2}
   - {fileID: 11400000, guid: f33373cd86a0fd1449c07af07ebe990d, type: 2}
-  maxHealth: 10
+  baseHealth: 2
   baseSpeed: 10
   flatDamageModifiers:
     keys: 00000000
@@ -42,3 +43,4 @@ MonoBehaviour:
   resistanceMultipliers:
     keys: 
     values: []
+  experienceValue: 10

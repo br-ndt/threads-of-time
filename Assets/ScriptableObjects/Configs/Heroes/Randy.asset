@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1006739e94d1cc5498693ccd99b66396, type: 3}
   m_Name: Randy
   m_EditorClassIdentifier: 
+  actorID: randy
   actorName: Randy
   avatar: {fileID: -1272963070, guid: 658991ac625d31142ae0660e8464a916, type: 3}
   attacks:
@@ -29,7 +30,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 426d0daa17947244ba08a2160f04b7cc, type: 2}
   - {fileID: 11400000, guid: 9aa154b51679a1644a3f25ad8b0c84a4, type: 2}
   - {fileID: 11400000, guid: 097aa46db3586b041a44850e166242f2, type: 2}
-  maxHealth: 30
+  baseHealth: 10
   baseSpeed: 15
   flatDamageModifiers:
     keys: 0000000002000000
@@ -47,3 +48,74 @@ MonoBehaviour:
     keys: 00000000
     values:
     - 0.99
+  progressions:
+    keys: 00000000
+    values:
+    - serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  attacksByLevel:
+    keys: 
+    values: []
+  expToLevel:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 15.570501
+      value: 40270.64
+      inSlope: 7008.7007
+      outSlope: 14628.29
+      tangentMode: 65
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 17.60457
+      value: 70025.59
+      inSlope: 14628.29
+      outSlope: 21480.414
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 19
+      value: 100000
+      inSlope: 21480.414
+      outSlope: 2
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

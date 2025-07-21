@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
   m_Name: Skop
   m_EditorClassIdentifier: 
+  actorID: Skelly_3
   actorName: Skop
   avatar: {fileID: -2141602299, guid: 99f3fb7546718f84895bca27eff85b81, type: 3}
   attacks:
@@ -27,7 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 70ad2982e20800148b13c5a8555e5b02, type: 2}
   - {fileID: 11400000, guid: 6611393dccf1a214b9cc35ecd93d9822, type: 2}
   - {fileID: 11400000, guid: 40828502904a41743be899ab0affda43, type: 2}
-  maxHealth: 10
+  baseHealth: 2
   baseSpeed: 10
   flatDamageModifiers:
     keys: 00000000
@@ -42,3 +43,4 @@ MonoBehaviour:
   resistanceMultipliers:
     keys: 
     values: []
+  experienceValue: 10

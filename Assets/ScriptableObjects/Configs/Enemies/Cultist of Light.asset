@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
   m_Name: Cultist of Light
   m_EditorClassIdentifier: 
+  actorID: Cultist_Light
   actorName: Cultist of Light
   avatar: {fileID: 1433662724, guid: 8f67e8312f710af4c88df1314ac6de87, type: 3}
   attacks:
@@ -27,7 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 752bf7a057169ab4ab80a9228093d065, type: 2}
   - {fileID: 11400000, guid: 7f4124595508ae9498d7b3381ce18fb6, type: 2}
   - {fileID: 11400000, guid: 228403a142f6ccc4ea0d0a4862e2a551, type: 2}
-  maxHealth: 20
+  baseHealth: 10
   baseSpeed: 10
   flatDamageModifiers:
     keys: 03000000
@@ -43,3 +44,4 @@ MonoBehaviour:
     keys: 03000000
     values:
     - 0.8
+  experienceValue: 0

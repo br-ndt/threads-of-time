@@ -1,3 +1,4 @@
+using System;
 using Assets.Scripts.Configs;
 using UnityEngine;
 
@@ -37,5 +38,19 @@ namespace Assets.Scripts.Combat
         public float critChanceBonus = 0.00f; // 0%;
         [Tooltip("The base dodge chance of this ability. Usually 0 and reliant on defender's dodge, but can be used to apply lack of accuracy.")]
         public float dodgeChance = 0.05f; // 5%
+
+        private void OnEnable()
+        {
+            // This is the critical fix. It ensures the nested dictionaries
+            // are never null, allowing AttackDefinition to be serialized correctly.
+            if (baseDamageRangeByType == null)
+                baseDamageRangeByType = new();
+
+            if (baseDamageModifierByType == null)
+                baseDamageModifierByType = new();
+
+            if (damageMultiplierByType == null)
+                damageMultiplierByType = new();
+        }
     }
 }

@@ -6,5 +6,8 @@ namespace Assets.Scripts.Configs
     /// Configuration for a specific enemy.
     /// </summary>
     [CreateAssetMenu(menuName = "Game Configs/Enemy Config")]
-    public class EnemyConfig : ActorConfig { }
+    public class EnemyConfig : ActorConfig
+    {
+        public int experienceValue;
+    }
 }

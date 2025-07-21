@@ -10,7 +10,7 @@ namespace Assets.Scripts.Configs
     public class BattleConfig : SceneActionConfig
     {
         [Header("Heroes")]
-        public List<HeroConfig> heroes = new();
+        public List<HeroConfig> staticHeroes = new();
         [Header("Enemies")]
         public List<EnemyConfig> enemies = new();
 

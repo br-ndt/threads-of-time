@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1006739e94d1cc5498693ccd99b66396, type: 3}
   m_Name: Raul
   m_EditorClassIdentifier: 
+  actorID: raul
   actorName: Raul
   avatar: {fileID: 21300000, guid: c1c6c7a5f7325c649806e70ba62a0fd8, type: 3}
   attacks:
@@ -27,7 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e13a35bac7930fa42b2850c42bd59cf0, type: 2}
   - {fileID: 11400000, guid: d141174f6d299134dabd47b8b6e24a1b, type: 2}
   - {fileID: 11400000, guid: e87b0f57b955c454f8e82458f64d328f, type: 2}
-  maxHealth: 7
+  baseHealth: 10
   baseSpeed: 7
   flatDamageModifiers:
     keys: 000000000100000002000000030000000400000005000000060000000700000008000000
@@ -77,3 +78,74 @@ MonoBehaviour:
     - 0
     - 0
     - 0
+  progressions:
+    keys: 00000000
+    values:
+    - serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  attacksByLevel:
+    keys: 
+    values: []
+  expToLevel:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 15.570501
+      value: 40270.64
+      inSlope: 7008.7007
+      outSlope: 14628.29
+      tangentMode: 65
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 17.60457
+      value: 70025.59
+      inSlope: 14628.29
+      outSlope: 21480.414
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 19
+      value: 100000
+      inSlope: 21480.414
+      outSlope: 2
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

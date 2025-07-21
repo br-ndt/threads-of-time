@@ -1470,6 +1470,7 @@ GameObject:
   - component: {fileID: 656660480}
   - component: {fileID: 656660481}
   - component: {fileID: 656660482}
+  - component: {fileID: 656660483}
   m_Layer: 0
   m_Name: GlobalGameController
   m_TagString: Untagged
@@ -1515,6 +1516,8 @@ MonoBehaviour:
   dynamicSceneKeys:
   - Battle
   - Cutscene
+  overworldDirectionaLight: {fileID: 0}
+  battleDirectionalLight: {fileID: 0}
 --- !u!114 &656660480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1563,6 +1566,27 @@ MonoBehaviour:
   battleScreen: {fileID: 629020313}
   overworldScreen: {fileID: 186530649}
   loadingScreen: {fileID: 2057363935}
+--- !u!114 &656660483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656660477}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1d570b89c98f394d97905a360d59af6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  INACTIVE_EXP_COEFFICIENT: 12
+  addHeroEvent: {fileID: 11400000, guid: 59566be3a733f194e8e58d139262d42f, type: 2}
+  setupBattleEvent: {fileID: 11400000, guid: f1eda1da12b8a3a46b7ff3ed0ddfbc54, type: 2}
+  healthChangeEvent: {fileID: 11400000, guid: 2d96fb58e4180994496dd7e8356781e1, type: 2}
+  experienceGainEvent: {fileID: 11400000, guid: 11223ffe5d588a14793788075929b220, type: 2}
+  demoHeroes:
+  - {fileID: 11400000, guid: e97812f1e7979144b8363b1c8da07f1f, type: 2}
+  - {fileID: 11400000, guid: 01d8fb29b3ebbb1488ae8302dff3d823, type: 2}
+  - {fileID: 11400000, guid: 24a22b532795b30478b5e18f7dc19c8f, type: 2}
 --- !u!1 &661573540
 GameObject:
   m_ObjectHideFlags: 0

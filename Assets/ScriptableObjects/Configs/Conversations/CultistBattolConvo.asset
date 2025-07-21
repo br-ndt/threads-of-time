@@ -34,8 +34,8 @@ MonoBehaviour:
     - rid: 3696043933290201147
       type: {class: ConversationMessage, ns: Assets.Scripts.Configs, asm: Assembly-CSharp}
       data:
-        _content: 
+        _content: Okay brudder... if you say so.
     - rid: 3696043933290201148
       type: {class: ConversationMessage, ns: Assets.Scripts.Configs, asm: Assembly-CSharp}
       data:
-        _content: 
+        _content: HA! We are going to dunk you!!

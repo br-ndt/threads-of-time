@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
   m_Name: Skilliam
   m_EditorClassIdentifier: 
+  actorID: Skelly_2
   actorName: Skilliam
   avatar: {fileID: 1688729308, guid: 5d2553da0b4ce634eb1d385d73c994bf, type: 3}
   attacks:
@@ -27,7 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aff346d5f7dfca34cb1b5ad0b28a7a2e, type: 2}
   - {fileID: 11400000, guid: a94537d72b19abd4486e13adff30faad, type: 2}
   - {fileID: 11400000, guid: ab3ca1584728738459009d0bbd729f26, type: 2}
-  maxHealth: 10
+  baseHealth: 2
   baseSpeed: 10
   flatDamageModifiers:
     keys: 00000000
@@ -42,3 +43,4 @@ MonoBehaviour:
   resistanceMultipliers:
     keys: 
     values: []
+  experienceValue: 10

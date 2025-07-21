@@ -9,6 +9,7 @@ namespace Assets.Scripts.Configs
     /// </summary>
     public abstract class ActorConfig : GameConfig
     {
+        [SerializeField] public string actorID = "Actor1";
         [SerializeField] public string actorName = "Actor";
         [SerializeField] public Sprite avatar;
         [Header("Attribs")]
@@ -16,7 +17,7 @@ namespace Assets.Scripts.Configs
         [Header("Anims")]
         public List<SpriteBookConfig> animations;
         [Header("Stats")]
-        public int maxHealth = 10;
+        public int baseHealth = 10;
         public int baseSpeed = 10;
         [SerializeField] public DamageFloatDictionary flatDamageModifiers = new();
         [SerializeField] public DamageFloatDictionary damageMultipliers = new();

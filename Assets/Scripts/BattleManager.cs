@@ -6,6 +6,7 @@ using Assets.Scripts.States;
 using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Combat;
+using System;
 
 public class BattleManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class BattleManager : MonoBehaviour
     private GameStateChangeEvent gameStateChanged; // Listens for GameState changes
     [SerializeField]
     private GameStateChangeEvent requestGameStateChange;
+    [SerializeField]
+    private SetupBattleEvent setupBattleEvent;
     [SerializeField]
     private BattleStartEvent battleStartEvent; // Raises when battle starts
     [SerializeField]
@@ -30,6 +33,8 @@ public class BattleManager : MonoBehaviour
     private BattleEndEvent battleLeaveEvent; // Raises when player leaves the battle
     [SerializeField]
     private RecordTriggerEvent recordTriggerEvent; // Raises to record gameplay triggers
+    [SerializeField]
+    private IntegerGameEvent experienceGainEvent; // Raises when battle is won to assign experience
 
     [Header("Battle Elements")]
     public GameObject enemyPrefab; // Assign an enemy prefab for instantiation
@@ -43,11 +48,12 @@ public class BattleManager : MonoBehaviour
     // Core Battle State
     public BattleState CurrentBattleState { get; private set; } = BattleState.CalculatingTurnOrder;
     private List<IBattleActor> activeActors = new List<IBattleActor>(); // All participants in battle
-    private List<IBattleActor> playerActors = new List<IBattleActor>(); // Actors controlled by player
-    private List<IBattleActor> enemyActors = new List<IBattleActor>(); // Actors controlled by computer
+    private List<HeroBattleActor> playerActors = new List<HeroBattleActor>(); // Actors controlled by player
+    private List<EnemyBattleActor> enemyActors = new List<EnemyBattleActor>(); // Actors controlled by computer
     private Queue<IBattleActor> turnOrderQueue = new Queue<IBattleActor>(); // Current turn sequence
     private IBattleActor currentActor; // The actor whose turn it is
     private PlayerAction playerChosenAction; // Stores the action chosen by the player
+    private int experienceValue;
 
     // Reference to the CombatManager for performing attacks
     private CombatManager combatCalculator;
@@ -128,37 +134,41 @@ public class BattleManager : MonoBehaviour
         Debug.Log("--- Starting Battle Setup ---");
 
         // Clear previous actors if any
+        experienceValue = 0;
         activeActors.Clear();
         playerActors.Clear();
         enemyActors.Clear();
         turnOrderQueue.Clear();
 
-        // 1. Instantiate Player Characters (from BattleConfig or a default party)
-        // For simplicity, let's just add one predefined player actor for now
-        for (int i = 0; i < currentBattleConfig.heroes.Count; i++)
+        SetupBattleContext context = new(currentBattleConfig.staticHeroes, currentBattleConfig.enemies);
+
+        setupBattleEvent.Raise(context);
+        experienceValue = context.Enemies.Select(enemy => enemy.experienceValue).Sum();
+
+        // context now holds the heroes and enemies
+        for (int i = 0; i < Math.Min(3, context.Heroes.Count); i++)
         {
-            var heroConfig = currentBattleConfig.heroes[i];
+            var hero = context.Heroes[i];
             GameObject playerGO = Instantiate(playerCharacterPrefab);
             playerGO.transform.position = playerSpawnPoints[i].position;
 
-            var playerActor = playerGO.GetComponent<PlayerBattleActor>();
+            var playerActor = playerGO.GetComponent<HeroBattleActor>();
             if (playerActor != null)
             {
-                playerActor.Initialize(heroConfig);
+                playerActor.Initialize(hero);
                 activeActors.Add(playerActor);
                 playerActors.Add(playerActor);
-                Debug.Log($"Spawned Player: {playerActor.ActorName}");
+                Debug.Log($"Spawned Player: {playerActor.DisplayName}");
             }
             else
             {
-                Debug.LogError("PlayerCharacterPrefab does not have a PlayerBattleActor component!");
+                Debug.LogError("PlayerCharacterPrefab does not have a HeroBattleActor component!");
             }
         }
 
-        // 2. Instantiate Enemies based on BattleConfig
-        for (int i = 0; i < currentBattleConfig.enemies.Count && i < enemySpawnPoints.Length; i++)
+        for (int i = 0; i < context.Enemies.Count && i < enemySpawnPoints.Length; i++)
         {
-            var enemyConfig = currentBattleConfig.enemies[i];
+            var enemyConfig = context.Enemies[i];
             GameObject enemyGO = Instantiate(enemyPrefab);
             enemyGO.transform.position = enemySpawnPoints[i].position;
 
@@ -168,7 +178,7 @@ public class BattleManager : MonoBehaviour
                 enemyActor.Initialize(enemyConfig);
                 activeActors.Add(enemyActor);
                 enemyActors.Add(enemyActor);
-                Debug.Log($"Spawned Enemy: {enemyActor.ActorName}");
+                Debug.Log($"Spawned Enemy: {enemyActor.DisplayName}");
             }
             else
             {
@@ -199,7 +209,7 @@ public class BattleManager : MonoBehaviour
                 // If actor is defeated, skip their turn
                 if (!currentActor.IsAlive)
                 {
-                    Debug.Log($"{currentActor.ActorName} is defeated, skipping turn.");
+                    Debug.Log($"{currentActor.DisplayName} is defeated, skipping turn.");
                     continue;
                 }
 
@@ -208,9 +218,9 @@ public class BattleManager : MonoBehaviour
                 if (currentActor.IsPlayerControlled)
                 {
                     CurrentBattleState = BattleState.PlayerTurn;
-                    Debug.Log($"<color=green>Waiting for {currentActor.ActorName}'s input...</color>");
-                    availableAttacksEvent.Raise((currentActor as PlayerBattleActor).Attacks);
-                    availableTargetsEvent.Raise(enemyActors.Where(e => e.IsAlive).ToList());
+                    Debug.Log($"<color=green>Waiting for {currentActor.DisplayName}'s input...</color>");
+                    availableAttacksEvent.Raise((currentActor as HeroBattleActor).Attacks);
+                    availableTargetsEvent.Raise(enemyActors.Where(e => e.IsAlive).Select(actor => (IBattleActor)actor).ToList());
                     playerChosenAction = new PlayerAction(PlayerAction.PlayerActionType.None); // Reset action
 
                     // Wait until player action is chosen (event handler will set playerChosenAction)
@@ -249,6 +259,7 @@ public class BattleManager : MonoBehaviour
             recordTriggerEvent.Raise((new List<TriggerEvent>() { currentBattleConfig.onFailTrigger }, true));
         }
         battleEndEvent.Raise(playerWon); // Announce battle outcome
+        experienceGainEvent.Raise(experienceValue);
         Debug.Log($"<color=orange>--- Battle Ended: {(playerWon ? "VICTORY" : "DEFEAT")} ---</color>");
     }
 
@@ -275,7 +286,7 @@ public class BattleManager : MonoBehaviour
     private IEnumerator PerformPlayerAction(IBattleActor playerActor, PlayerAction action)
     {
         CurrentBattleState = BattleState.PerformingAction;
-        Debug.Log($"<color=green>{playerActor.ActorName} chose to {action.ActionType}!</color>");
+        Debug.Log($"<color=green>{playerActor.DisplayName} chose to {action.ActionType}!</color>");
 
         switch (action.ActionType)
         {
@@ -308,12 +319,12 @@ public class BattleManager : MonoBehaviour
                 }
                 break;
             case PlayerAction.PlayerActionType.Defend:
-                Debug.Log($"{playerActor.ActorName} is defending!");
+                Debug.Log($"{playerActor.DisplayName} is defending!");
                 // Apply defense buff
                 yield return new WaitForSeconds(1f);
                 break;
             case PlayerAction.PlayerActionType.Run:
-                Debug.Log($"{playerActor.ActorName} attempts to run!");
+                Debug.Log($"{playerActor.DisplayName} attempts to run!");
                 // Implement escape logic
                 SpriteCharacter2D sprite = playerActor.GameObject.GetComponentInChildren<SpriteCharacter2D>();
                 sprite.isFlipped = !sprite.isFlipped;
@@ -333,30 +344,30 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log(enemyActor);
         CurrentBattleState = BattleState.PerformingAction;
-        Debug.Log($"<color=red>{enemyActor.ActorName} is performing its action...</color>");
+        Debug.Log($"<color=red>{enemyActor.DisplayName} is performing its action...</color>");
 
         // Simple AI: Find a living player target
         IBattleActor playerTarget = playerActors
             .Where(a => a.IsAlive)
-            .OrderBy(_ => Random.value) // shuffle with LINQ
+            .OrderBy(_ => UnityEngine.Random.value) // shuffle with LINQ
             .FirstOrDefault();
 
         if (playerTarget != null)
         {
             PlayerAction aiAction = enemyActor.ChooseAIAction(playerTarget); // Enemy AI chooses
-            Debug.Log($"{enemyActor.ActorName} attacking {playerTarget.ActorName} with {aiAction.AttackDefinition.attackName}...");
+            Debug.Log($"{enemyActor.DisplayName} attacking {playerTarget.DisplayName} with {aiAction.AttackDefinition.attackName}...");
             combatCalculator.PerformAttack(enemyActor.GameObject, playerTarget.GameObject, aiAction.AttackDefinition);
 
             yield return new WaitForSeconds(1.5f); // Simulate action time
             if (!playerTarget.IsAlive)
             {
-                Debug.Log($"{playerTarget.ActorName} was defeated!");
+                Debug.Log($"{playerTarget.DisplayName} was defeated!");
                 // Trigger death animation/effects
             }
         }
         else
         {
-            Debug.Log($"{enemyActor.ActorName} has no valid targets to attack.");
+            Debug.Log($"{enemyActor.DisplayName} has no valid targets to attack.");
         }
         yield return null;
     }
@@ -384,6 +395,7 @@ public class BattleManager : MonoBehaviour
     {
         Debug.Log("<color=blue>BattleManager: Battle sequence ending. Transitioning back to Overworld.</color>");
         // Grant rewards, update player state, clear battle specific objects
+        experienceValue = 0;
         activeActors.Clear();
         playerActors.Clear();
         enemyActors.Clear();

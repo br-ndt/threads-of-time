@@ -192,7 +192,7 @@ namespace Assets.Scripts.UI
 
         private void HandleHealthChanged((IBattleActor actor, float currentHealth, float maxHealth) payload)
         {
-            Debug.Log($"UI received Health Change for {payload.actor.ActorName}: {payload.currentHealth}/{payload.maxHealth}");
+            Debug.Log($"UI received Health Change for {payload.actor.DisplayName}: {payload.currentHealth}/{payload.maxHealth}");
 
             GameObject infoPanelGO = payload.actor.IsPlayerControlled
                 ? spawnedHeroInfos.GetValueOrDefault(payload.actor)
@@ -262,7 +262,7 @@ namespace Assets.Scripts.UI
             TMP_Text title = infoGO.transform.Find("Title").GetComponent<TMP_Text>();
             Image avatarImg = infoGO.transform.Find("Avatar").GetComponent<Image>();
 
-            infoGO.name = actor.ActorName; // Use ActorName for internal lookup consistency
+            infoGO.name = actor.DisplayName; // Use DisplayName for internal lookup consistency
             title.text = actor.DisplayName;
             avatarImg.sprite = actor.Avatar;
 

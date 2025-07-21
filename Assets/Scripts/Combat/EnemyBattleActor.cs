@@ -10,6 +10,18 @@ namespace Assets.Scripts.Combat
     /// </summary>
     public class EnemyBattleActor : BattleActor<EnemyConfig>
     {
+        public int experienceValue;
+
+        /// <summary>
+        /// Initializes the enemy with data from an EnemyConfigSO.
+        /// This should be called immediately after instantiation.
+        /// </summary>
+        /// <param name="config">The EnemyConfigSO to use for this enemy.</param>
+        public new void Initialize(EnemyConfig config)
+        {
+            base.Initialize(config);
+        }
+
         // This method will be called by BattleManager to get AI's chosen action
         public PlayerAction ChooseAIAction(IBattleActor playerTarget)
         {
@@ -21,7 +33,7 @@ namespace Assets.Scripts.Combat
             }
             else
             {
-                Debug.LogWarning($"{ActorName} has no default attack defined in its config! Cannot choose action.");
+                Debug.LogWarning($"{DisplayName} has no default attack defined in its config! Cannot choose action.");
                 return new PlayerAction(PlayerAction.PlayerActionType.Defend); // Fallback
             }
         }

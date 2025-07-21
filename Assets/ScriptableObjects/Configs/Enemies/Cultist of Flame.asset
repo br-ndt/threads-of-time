@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea5dae65b861e9a479019952a51c0ff7, type: 3}
   m_Name: Cultist of Flame
   m_EditorClassIdentifier: 
+  actorID: Cultist_Flame
   actorName: Cultist of Flame
   avatar: {fileID: -881069322, guid: 9a59cc95632e52b4ca630801f58a4927, type: 3}
   attacks:
@@ -27,7 +28,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f56e84bbde5fd664295a87d1149cdff9, type: 2}
   - {fileID: 11400000, guid: c60f24d66e2b5ee4392f0ce60afb6e61, type: 2}
   - {fileID: 11400000, guid: 5913c69d8862c1b4a92e57e365e83b8a, type: 2}
-  maxHealth: 12
+  baseHealth: 10
   baseSpeed: 10
   flatDamageModifiers:
     keys: 07000000
@@ -43,3 +44,4 @@ MonoBehaviour:
     keys: 07000000
     values:
     - 0.8
+  experienceValue: 0

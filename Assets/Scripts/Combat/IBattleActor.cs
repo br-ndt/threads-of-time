@@ -8,7 +8,7 @@ namespace Assets.Scripts.Combat
         GameObject GameObject { get; } // Reference to the Unity GameObject
         Sprite Avatar { get; }
         List<AttackDefinition> Attacks { get; }
-        string ActorName { get; }
+        string ActorID { get; }
         string DisplayName { get; }
         int CurrentSpeed { get; } // Used for turn order calculation
         bool IsPlayerControlled { get; }
