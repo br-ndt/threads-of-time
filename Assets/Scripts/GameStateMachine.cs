@@ -123,11 +123,11 @@ namespace Assets.Scripts.States
                     break;
                 case GameState.Battle:
                     sceneToLoad = battle;
-                    loadMode = LoadSceneMode.Single;
+                    loadMode = LoadSceneMode.Additive;
                     break;
                 case GameState.Cutscene:
                     sceneToLoad = cutscene;
-                    loadMode = LoadSceneMode.Single;
+                    loadMode = LoadSceneMode.Additive;
                     break;
                 case GameState.Menu:
                     // sceneToLoad = "MenuScene"; loadMode = LoadSceneMode.Additive;

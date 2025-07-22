@@ -8,7 +8,7 @@ namespace Assets.Scripts.Overworld
 {
     public class OverworldPlayer : MonoBehaviour
     {
-        [SerializeField] private GameStateChangeEvent gameStateChangeEvent;
+        [SerializeField] private GameStateChangeEvent requestGameStateChange;
         [SerializeField] private ConversationStartEvent conversationStartEvent;
         [SerializeField] private TriggerCheckEvent triggerCheckEvent;
         [SerializeField] private RecordTriggerEvent recordTriggerEvent;
@@ -23,7 +23,7 @@ namespace Assets.Scripts.Overworld
                     // if it's not a BattleConfig, it is a ConversationConfig. see OverworldEnemy
                     if (enemy.ActionConfig is BattleConfig)
                     {
-                        gameStateChangeEvent.Raise((GameState.Battle, enemy.ActionConfig));
+                        requestGameStateChange.Raise((GameState.Battle, enemy.ActionConfig));
                     }
                     if (enemy.ActionConfig is ConversationConfig)
                     {
