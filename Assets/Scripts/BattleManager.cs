@@ -149,6 +149,10 @@ public class BattleManager : MonoBehaviour
         for (int i = 0; i < Math.Min(3, context.Heroes.Count); i++)
         {
             var hero = context.Heroes[i];
+            if (hero.CurrentHealth <= 0)
+            {
+                continue;
+            }
             GameObject playerGO = Instantiate(playerCharacterPrefab);
             playerGO.transform.position = playerSpawnPoints[i].position;
 

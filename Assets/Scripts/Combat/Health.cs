@@ -38,12 +38,7 @@ namespace Assets.Scripts.Combat
 
         public void Initialize(int maxHealth)
         {
-            if (!initialized)
-            {
-                MaxHealth = maxHealth;
-                CurrentHealth = maxHealth;
-                initialized = true;
-            }
+            Initialize(maxHealth, maxHealth);
         }
 
         public void Initialize(int currentHealth, int maxHealth)
@@ -53,6 +48,11 @@ namespace Assets.Scripts.Combat
                 MaxHealth = maxHealth;
                 CurrentHealth = currentHealth;
                 initialized = true;
+                if (!IsAlive)
+                {
+                    Debug.Log($"{gameObject.name} was dead as the battle began...");
+                    deathEvent.Raise(_actor);
+                }
             }
         }
 
@@ -71,7 +71,6 @@ namespace Assets.Scripts.Combat
             if (!IsAlive)
             {
                 Debug.Log($"{gameObject.name} has been defeated!");
-                // You'd trigger death animations, effects, disable actor, etc. 
                 deathEvent.Raise(_actor);
             }
         }
