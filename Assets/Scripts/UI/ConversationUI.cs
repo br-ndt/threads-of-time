@@ -5,8 +5,6 @@ using TMPro;
 using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
 using System.Collections.Generic;
-using Assets.Scripts.States;
-using Unity.VisualScripting; // Required for TextMeshPro
 
 /// <summary>
 /// Manages the Conversation UI, including displaying dialogue, speaker names, and handling user input.
@@ -77,7 +75,7 @@ public class ConversationUI : MonoBehaviour
         // Add a listener to the continue button to call the DisplayNextLine method when clicked.
         if (continueButton != null)
         {
-            continueButton.onClick.AddListener(DisplayNextLine);
+            continueButton.onClick.AddListener(HandleButtonPress);
         }
     }
 
@@ -88,6 +86,7 @@ public class ConversationUI : MonoBehaviour
             if (buttonGO != null) Destroy(buttonGO);
         }
         spawnedResponseButtons.Clear();
+        continueButton.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -127,61 +126,62 @@ public class ConversationUI : MonoBehaviour
     }
 
     /// <summary>
+    /// Event handler for pressing the "A" button.
+    /// </summary>
+    public void HandleButtonPress()
+    {
+        ClearResponseButtons();
+        if (isTyping)
+        {
+            CompleteLine();
+        }
+        else
+        {
+            currentLineIndex++;
+        }
+        if (currentLineIndex >= currentConfig.speakers[currentSpeakerIndex].Messages.Count)
+        {
+            DisplayNextSpeaker();
+        }
+        else
+        {
+            DisplayNextLine();
+        }
+    }
+
+    /// <summary>
+    /// Displays the next speaker in the conversation.
+    /// </summary>
+    public void DisplayNextSpeaker()
+    {
+        currentSpeakerIndex++;
+        if (currentSpeakerIndex >= currentConfig.speakers.Count)
+        {
+            EndConversation();
+            return;
+        }
+        avatar.sprite = currentConfig.speakers[currentSpeakerIndex].Sprite != null ? currentConfig.speakers[currentSpeakerIndex].Sprite : fallbackAvatar;
+        speakerNameText.text = currentConfig.speakers[currentSpeakerIndex].Name;
+        currentLineIndex = 0;
+        DisplayNextLine();
+    }
+
+    /// <summary>
     /// Displays the next line in the conversation or ends the conversation if it's the last line.
     /// </summary>
     public void DisplayNextLine()
     {
-        responsesContainer.SetActive(false);
-        ClearResponseButtons();
-        // If text is currently typing out, finish it instantly.
-        if (isTyping)
-        {
-            CompleteLine();
-            return;
-        }
-
-        // If we have more lines to display
-        if (currentLineIndex < currentConfig.speakers[currentSpeakerIndex].Messages.Count)
-        {
-            // Start the typing effect for the next line
-            if (typingCoroutine != null)
-            {
-                StopCoroutine(typingCoroutine);
-            }
-        }
-        else if (currentSpeakerIndex < currentConfig.speakers.Count - 1)
-        {
-            // If there are no more lines, go to the next speaker.
-            currentSpeakerIndex++;
-            avatar.sprite = currentConfig.speakers[currentSpeakerIndex].Sprite != null ? currentConfig.speakers[currentSpeakerIndex].Sprite : fallbackAvatar;
-            speakerNameText.text = currentConfig.speakers[currentSpeakerIndex].Name;
-            currentLineIndex = 0;
-
-            // Start the typing effect for the next line
-            if (typingCoroutine != null)
-            {
-                StopCoroutine(typingCoroutine);
-            }
-        }
-        else
-        {
-            // If there are no more speakers, end the conversation.
-            EndConversation();
-            return;
-        }
         CheckIfResponsesType();
-
         typingCoroutine = StartCoroutine(TypeLine(currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex].Content));
-        currentLineIndex++;
     }
 
     private void CheckIfResponsesType()
     {
         if (currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex] is ConversationResponses)
         {
-            continueButton.enabled = false;
             foreach (ConversationResponse response in (currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex] as ConversationResponses).Responses)
             {
+                // TODO: use a pool or something
                 GameObject buttonGO = Instantiate(responseButtonPrefab, responsesContainer.transform);
                 Button responseButton = buttonGO.GetComponent<Button>();
                 TMP_Text buttonText = buttonGO.GetComponentInChildren<TMP_Text>();
@@ -217,9 +217,7 @@ public class ConversationUI : MonoBehaviour
     private IEnumerator TypeLine(string line)
     {
         isTyping = true;
-        dialogueText.text = ""; // Clear previous text\
-        continueButton.enabled = true;
-        continueButton.interactable = false; // Disable button while typing
+        dialogueText.text = "";
 
         foreach (char letter in line.ToCharArray())
         {
@@ -228,7 +226,7 @@ public class ConversationUI : MonoBehaviour
         }
 
         isTyping = false;
-        continueButton.interactable = true; 
+        RenderButtons();
     }
 
     /// <summary>
@@ -240,17 +238,26 @@ public class ConversationUI : MonoBehaviour
         {
             StopCoroutine(typingCoroutine);
         }
-        // The currentLineIndex was already incremented, so we access the previous line.
-        dialogueText.text = currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex - 1].Content;
+
+        dialogueText.text = currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex].Content;
         isTyping = false;
-        if (currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex - 1] is ConversationResponses)
+        RenderButtons();
+    }
+
+    /// <summary>
+    /// Shows the appropriate buttons based on the current line.
+    /// </summary>
+    public void RenderButtons()
+    {
+        if (currentConfig.speakers[currentSpeakerIndex].Messages[currentLineIndex] is ConversationResponses)
         {
-            continueButton.enabled = false;
+            continueButton.gameObject.SetActive(false);
             responsesContainer.SetActive(true);
         }
         else
         {
-            continueButton.interactable = true;
+            continueButton.gameObject.SetActive(true);
+            responsesContainer.SetActive(false);
         }
     }
 
