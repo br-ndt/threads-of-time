@@ -1,4 +1,3 @@
-// File: Editor/AttackProgressionDictionaryDrawer.cs
 using UnityEditor;
 using UnityEngine;
 using Assets.Scripts.Configs;
@@ -24,15 +23,12 @@ public class AttackProgressionDictionaryDrawer : PropertyDrawer
 
             for (int i = 0; i < keysProp.arraySize; i++)
             {
-                // Calculate the total height for this single dictionary entry
                 var valueElement = valuesProp.GetArrayElementAtIndex(i);
                 var attacksListProperty = valueElement.FindPropertyRelative("Attacks");
                 float entryHeight = EditorGUI.GetPropertyHeight(attacksListProperty, true);
 
-                // Define the Rect for the top line of the entry
                 Rect lineRect = new Rect(position.x, currentY, position.width, EditorGUIUtility.singleLineHeight);
                 
-                // --- NEW: Split the line for Key, Value Foldout, and Remove Button ---
                 float keyWidth = 80f; // Fixed width for "Level [  #  ]"
                 float valueWidth = lineRect.width - keyWidth - RemoveButtonWidth - IndentWidth() - 5f;
 
@@ -40,11 +36,9 @@ public class AttackProgressionDictionaryDrawer : PropertyDrawer
                 Rect valueRect = new Rect(keyRect.xMax, lineRect.y, valueWidth, lineRect.height);
                 Rect removeRect = new Rect(valueRect.xMax + 5, lineRect.y, RemoveButtonWidth, lineRect.height);
                 
-                // Draw the "Level" label and the integer key field
                 EditorGUI.LabelField(new Rect(keyRect.x, keyRect.y, 40, keyRect.height), "Level");
                 EditorGUI.PropertyField(new Rect(keyRect.x + 40, keyRect.y, keyWidth - 40, keyRect.height), keysProp.GetArrayElementAtIndex(i), GUIContent.none);
                 
-                // Draw the "Attacks" list. PropertyField will handle the foldout and drawing children.
                 EditorGUI.PropertyField(valueRect, attacksListProperty, new GUIContent("Attacks"), true);
 
                 if (GUI.Button(removeRect, "X"))
@@ -54,11 +48,9 @@ public class AttackProgressionDictionaryDrawer : PropertyDrawer
                     break;
                 }
                 
-                // Advance Y position by the total height of this entry
                 currentY += entryHeight + EditorGUIUtility.standardVerticalSpacing;
             }
 
-            // --- Add Button ---
             Rect addButtonRect = new Rect(position.x + (position.width - 50f) / 2, currentY, 50f, 20f);
             if (GUI.Button(addButtonRect, "Add"))
             {
@@ -79,7 +71,7 @@ public class AttackProgressionDictionaryDrawer : PropertyDrawer
             totalHeight += EditorGUIUtility.standardVerticalSpacing;
 
             var valuesProp = property.FindPropertyRelative("values");
-            if (valuesProp != null) // Safety check
+            if (valuesProp != null) 
             {
                 for (int i = 0; i < valuesProp.arraySize; i++)
                 {
@@ -88,7 +80,7 @@ public class AttackProgressionDictionaryDrawer : PropertyDrawer
                 }
             }
             
-            totalHeight += 20f + EditorGUIUtility.standardVerticalSpacing; // Add button height
+            totalHeight += 20f + EditorGUIUtility.standardVerticalSpacing;
         }
         return totalHeight;
     }

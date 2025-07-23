@@ -23,5 +23,6 @@ namespace Assets.Scripts.Configs
         [SerializeField] public DamageFloatDictionary damageMultipliers = new();
         [SerializeField] public DamageFloatDictionary flatResistances = new();
         [SerializeField] public DamageFloatDictionary resistanceMultipliers = new();
+        [SerializeField] public ConditionBooleanDictionary conditionImmunities = new();
     }
 }

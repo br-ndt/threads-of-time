@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Combat;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Events;
 using UnityEngine;
@@ -31,8 +30,8 @@ namespace Assets.Scripts.Combat
         public GameObject GameObject => this.gameObject;
         public List<AttackDefinition> Attacks => _attacks;
         public Sprite Avatar => _avatar;
-        public string ActorID => _actorID; // used for ID 
-        public string DisplayName => _displayName; // used for UI, but falls back to GO name
+        public string ActorID => _actorID; 
+        public string DisplayName => _displayName; 
         public int CurrentSpeed => _currentSpeed;
         public bool IsAlive => _isAlive;
         public bool IsPlayerControlled => _isPlayerControlled;
