@@ -14,6 +14,7 @@ namespace Assets.Scripts.Combat
         [Header("Event Channel")]
         [SerializeField] private CombatCalculationEvent attackCalculationEvent;
         [SerializeField] private CombatCalculationEvent defendCalculationEvent;
+        [SerializeField] private ConditionApplyEvent conditionApplyEvent;
 
         [Header("Debug References")]
         [SerializeField] private GameObject characterA; // Assign Character A in Inspector
@@ -29,63 +30,73 @@ namespace Assets.Scripts.Combat
         /// <summary>
         /// Initiates an attack calculation and applies its effects.
         /// </summary>
-        public void PerformAttack(GameObject attacker, GameObject defender, AttackDefinition attackDefinition)
+        public void PerformAttack(IBattleActor attacker, IBattleActor defender, AttackDefinition attackDefinition, bool skipAnimate = false)
         {
-            // 1. Create a new context for this specific calculation
             CombatCalculationContext context = new(
                 attacker, defender, Instantiate(attackDefinition)
             );
 
-            // 2. Raise the event, allowing all listeners to modify the context
             attackCalculationEvent.Raise(context);
             defendCalculationEvent.Raise(context);
 
-            // 3. After all listeners have run, calculate the final values
             context.CalculateFinalValues();
 
-            attackerSprite = attacker.GetComponentInChildren<SpriteCharacter2D>();
-            defenderSprite = defender.GetComponentInChildren<SpriteCharacter2D>();
 
-            // 4. Begin attack sequence
-            StartCoroutine(AnimateAttackSequence(attacker, defender, context));
+            // TODO(tbrandt): make this more robust, handle per-actor etc
+            if (skipAnimate)
+            {
+                defender.GameObject.GetComponent<Health>().TakeDamage(context.FinalDamage);
+                if (context.ConditionsToApply.Count > 0)
+                {
+                    conditionApplyEvent.Raise((defender, context.ConditionsToApply));
+                }
+            }
+            else
+            {
+                StartCoroutine(AnimateAttackSequence(attacker, defender, context));
+            }
         }
 
-        private IEnumerator AnimateAttackSequence(GameObject attacker, GameObject defender, CombatCalculationContext context)
+        private IEnumerator AnimateAttackSequence(IBattleActor attacker, IBattleActor defender, CombatCalculationContext context)
         {
-            Vector3 startPosition = attacker.transform.position;
+            attackerSprite = attacker.GameObject.GetComponentInChildren<SpriteCharacter2D>();
+            defenderSprite = defender.GameObject.GetComponentInChildren<SpriteCharacter2D>();
+            Vector3 startPosition = attacker.GameObject.transform.position;
 
-            var attackerSprite = attacker.GetComponentInChildren<SpriteCharacter2D>();
+            attackerSprite.isFlipped = attacker.GameObject.transform.position.x > defender.GameObject.transform.position.x;
 
-            // Face the defender
-            attackerSprite.isFlipped = attacker.transform.position.x > defender.transform.position.x;
-
-            // Move toward target
             yield return StartCoroutine(MoveTowardsTarget(attacker, defender));
 
-            // Play attack animation
             if (context.IsCriticalHit)
+            {
                 attackerSprite.Play(BattleSpriteState.Critical);
+            }
             else
+            {
                 attackerSprite.Play(BattleSpriteState.Attack);
+            }
 
             yield return new WaitForSeconds(0.45f);
 
-            // Defender reacts
             if (context.FinalDamage <= 0)
+            {
                 defenderSprite.Play(BattleSpriteState.Defend);
+            }
             else
+            {
                 defenderSprite.Play(BattleSpriteState.Hurt);
+            }
 
-            // 5. Damage gets applied here
-            defender.GetComponent<Health>().TakeDamage(context.FinalDamage);
+            defender.GameObject.GetComponent<Health>().TakeDamage(context.FinalDamage);
+            if (context.ConditionsToApply.Count > 0)
+            {
+                conditionApplyEvent.Raise((defender, context.ConditionsToApply));
+            }
 
-            // Flip back before moving back to start
             attackerSprite.isFlipped = !attackerSprite.isFlipped;
 
-            // Move back
             yield return StartCoroutine(MoveBackToPosition(attacker, startPosition));
 
-            // Restore facing to original
             attackerSprite.isFlipped = !attackerSprite.isFlipped;
 
             if (FindFirstObjectByType<BattleManager>().CurrentBattleState != BattleState.BattleEnd)
@@ -94,25 +105,25 @@ namespace Assets.Scripts.Combat
             }
         }
 
-        private IEnumerator MoveTowardsTarget(GameObject attacker, GameObject defender)
+        private IEnumerator MoveTowardsTarget(IBattleActor attacker, IBattleActor defender)
         {
             attackerSprite.Play(BattleSpriteState.Run);
-            Vector3 targetPosition = defender.transform.position -
-                                     (defender.transform.position - attacker.transform.position).normalized * distanceBuffer;
+            Vector3 targetPosition = defender.GameObject.transform.position -
+                                     (defender.GameObject.transform.position - attacker.GameObject.transform.position).normalized * distanceBuffer;
 
-            while (Vector3.Distance(attacker.transform.position, targetPosition) > 0.05f)
+            while (Vector3.Distance(attacker.GameObject.transform.position, targetPosition) > 0.05f)
             {
-                attacker.transform.position = Vector3.MoveTowards(attacker.transform.position, targetPosition, moveSpeed * Time.deltaTime);
+                attacker.GameObject.transform.position = Vector3.MoveTowards(attacker.GameObject.transform.position, targetPosition, moveSpeed * Time.deltaTime);
                 yield return null;
             }
         }
 
-        private IEnumerator MoveBackToPosition(GameObject attacker, Vector3 startPosition)
+        private IEnumerator MoveBackToPosition(IBattleActor attacker, Vector3 startPosition)
         {
             attackerSprite.Play(BattleSpriteState.Run);
-            while (Vector3.Distance(attacker.transform.position, startPosition) > 0.001f)
+            while (Vector3.Distance(attacker.GameObject.transform.position, startPosition) > 0.001f)
             {
-                attacker.transform.position = Vector3.MoveTowards(attacker.transform.position, startPosition, moveSpeed * Time.deltaTime);
+                attacker.GameObject.transform.position = Vector3.MoveTowards(attacker.GameObject.transform.position, startPosition, moveSpeed * Time.deltaTime);
                 yield return null;
             }
         }

@@ -38,6 +38,8 @@ namespace Assets.Scripts.Combat
         public float critChanceBonus = 0.00f; // 0%;
         [Tooltip("The base dodge chance of this ability. Usually 0 and reliant on defender's dodge, but can be used to apply lack of accuracy.")]
         public float dodgeChance = 0.05f; // 5%
+        [Tooltip("The chance of applying each effect, and its duration, if any.")]
+        public ConditionStatsDictionary conditionStats = new();
 
         private void OnEnable()
         {

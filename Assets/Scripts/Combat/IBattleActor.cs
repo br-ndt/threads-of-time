@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Assets.Scripts.Configs;
 using UnityEngine; // For GameObject
 
 namespace Assets.Scripts.Combat
@@ -13,6 +14,7 @@ namespace Assets.Scripts.Combat
         int CurrentSpeed { get; } // Used for turn order calculation
         bool IsPlayerControlled { get; }
         bool IsAlive { get; }
+        ActiveConditionsDictionary ActiveConditions { get; }
 
         void HandleTurnEvent((IBattleActor actor, bool isStarting) payload); // Event Listener to ActorTurnEvent raised by BattleManager when it's this actor's turn
 

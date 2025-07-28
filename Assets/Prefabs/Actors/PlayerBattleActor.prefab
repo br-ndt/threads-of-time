@@ -261,6 +261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorTurnEvent: {fileID: 11400000, guid: 801582570dfb0a344af0b9b72b530fcb, type: 2}
   deathEvent: {fileID: 11400000, guid: 809a2119d0470424398db7c0a272dfb6, type: 2}
+  conditionApplyEvent: {fileID: 11400000, guid: 5827acba876698d41b79872b07bafa37, type: 2}
   battleEndEvent: {fileID: 11400000, guid: b3f8916cf3a04d740a4af3b923304ac9, type: 2}
 --- !u!114 &512291356573785816
 MonoBehaviour:
@@ -299,6 +300,9 @@ MonoBehaviour:
   multDamageModifiers:
     keys: 
     values: []
+  conditionModifiers:
+    keys: 
+    values: []
   overallDamageModifier: 1
   overallDamageMultiplier: 0.1
   criticalChanceBonus: 0.05
@@ -319,6 +323,12 @@ MonoBehaviour:
     keys: 
     values: []
   multResistanceModifiers:
+    keys: 
+    values: []
+  conditionImmunities:
+    keys: 
+    values: 
+  conditionResistanceModifiers:
     keys: 
     values: []
   overallResistanceValue: 1

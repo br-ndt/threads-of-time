@@ -7,6 +7,8 @@ using Assets.Scripts.Events;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Combat;
 using System;
+using Unity.Collections;
+using Unity.VisualScripting;
 
 public class BattleManager : MonoBehaviour
 {
@@ -208,12 +210,47 @@ public class BattleManager : MonoBehaviour
 
             while (CurrentBattleState != BattleState.BattleEnd && turnOrderQueue.Count > 0 && CheckBattleEndConditions() == BattleEndResult.None)
             {
+                bool skipTurn = false;
                 currentActor = turnOrderQueue.Dequeue();
 
-                // If actor is defeated, skip their turn
+                // If actor is stunned, skip their turn before ticking down conditions
+                if (currentActor.ActiveConditions.Keys.Contains(Condition.Stunned))
+                {
+                    Debug.Log($"{currentActor.DisplayName} is incapacitated, skipping turn.");
+                    skipTurn = true;
+                }
+                List<Condition> conditionsToClear = new();
+                foreach (KeyValuePair<Condition, ActiveCondition> kvp in currentActor.ActiveConditions)
+                {
+                    // PLACEHOLDER
+                    if (kvp.Key == Condition.Burning)
+                    {
+                        Debug.Log($"<color=red>{currentActor.DisplayName} takes fire damage!</color>");
+                        AttackDefinition burnDamage = new();
+                        burnDamage.baseDamageModifierByType[DamageType.ADDO] = currentActor.ActiveConditions[kvp.Key].Damage;
+                        combatCalculator.PerformAttack(null, currentActor, burnDamage, true);
+                    }
+
+
+                    kvp.Value.TickTurn();
+                    if (kvp.Value.Turns <= 0)
+                    {
+                        conditionsToClear.Add(kvp.Key);
+                    }
+                }
+                foreach (Condition condition in conditionsToClear)
+                {
+                    currentActor.ActiveConditions.Remove(condition);
+                }
+                // After ticking conditions, check if actor is alive. If not, skip their turn
                 if (!currentActor.IsAlive)
                 {
-                    Debug.Log($"{currentActor.DisplayName} is defeated, skipping turn.");
+                    Debug.Log($"{currentActor.DisplayName} is dead, skipping turn.");
+                    skipTurn = true;
+                }
+
+                if (skipTurn)
+                {
                     continue;
                 }
 
@@ -302,7 +339,7 @@ public class BattleManager : MonoBehaviour
                     if (targetActor != null && targetActor.IsAlive)
                     {
                         Debug.Log($"{playerActor.DisplayName} attacking {targetActor.DisplayName} with {action.AttackDefinition.attackName}...");
-                        combatCalculator.PerformAttack(playerActor.GameObject, targetActor.GameObject, action.AttackDefinition);
+                        combatCalculator.PerformAttack(playerActor, targetActor, action.AttackDefinition);
 
                         // Await animation or effects if desired
                         yield return new WaitForSeconds(1.5f); // Simulate action time
@@ -360,7 +397,7 @@ public class BattleManager : MonoBehaviour
         {
             PlayerAction aiAction = enemyActor.ChooseAIAction(playerTarget); // Enemy AI chooses
             Debug.Log($"{enemyActor.DisplayName} attacking {playerTarget.DisplayName} with {aiAction.AttackDefinition.attackName}...");
-            combatCalculator.PerformAttack(enemyActor.GameObject, playerTarget.GameObject, aiAction.AttackDefinition);
+            combatCalculator.PerformAttack(enemyActor, playerTarget, aiAction.AttackDefinition, false);
 
             yield return new WaitForSeconds(1.5f); // Simulate action time
             if (!playerTarget.IsAlive)

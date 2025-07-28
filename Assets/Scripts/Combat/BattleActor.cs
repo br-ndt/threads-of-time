@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Configs;
 using Assets.Scripts.Events;
+using Assets.Scripts.States;
 using UnityEngine;
 
 namespace Assets.Scripts.Combat
@@ -22,30 +24,35 @@ namespace Assets.Scripts.Combat
         protected bool _isPlayerControlled;
         protected bool _isAlive = true;
         protected List<AttackDefinition> _attacks;
+        protected ActiveConditionsDictionary _activeConditions;
 
         [Header("Event Channels")]
         [SerializeField] private ActorTurnEvent actorTurnEvent;
         [SerializeField] private DeathEvent deathEvent;
+        [SerializeField] private ConditionApplyEvent conditionApplyEvent;
 
-        public GameObject GameObject => this.gameObject;
+        public GameObject GameObject => gameObject;
         public List<AttackDefinition> Attacks => _attacks;
         public Sprite Avatar => _avatar;
-        public string ActorID => _actorID; 
-        public string DisplayName => _displayName; 
+        public string ActorID => _actorID;
+        public string DisplayName => _displayName;
         public int CurrentSpeed => _currentSpeed;
         public bool IsAlive => _isAlive;
+        public ActiveConditionsDictionary ActiveConditions => _activeConditions;
         public bool IsPlayerControlled => _isPlayerControlled;
 
         protected void OnEnable()
         {
             actorTurnEvent.OnEventRaised += HandleTurnEvent;
             deathEvent.OnEventRaised += HandleDeath;
+            conditionApplyEvent.OnEventRaised += HandleConditionApply;
         }
 
         protected void OnDisable()
         {
             actorTurnEvent.OnEventRaised -= HandleTurnEvent;
             deathEvent.OnEventRaised -= HandleDeath;
+            conditionApplyEvent.OnEventRaised -= HandleConditionApply;
         }
 
         private void Update()
@@ -125,6 +132,25 @@ namespace Assets.Scripts.Combat
             }
         }
 
+        public void HandleConditionApply((IBattleActor target, ConditionStatsDictionary stats) payload)
+        {
+            if (this != payload.target)
+            {
+                return;
+            }
+            foreach (Condition condition in payload.stats.Keys)
+            {
+                if (_activeConditions.Keys.Contains(condition))
+                {
+                    _activeConditions[condition].AddTurns(payload.stats[condition].Turns);
+                }
+                else
+                {
+                    _activeConditions[condition] = new ActiveCondition(payload.stats[condition].Turns, 5); // FIX LOL
+                }
+            }
+        }
+
         /// <summary>
         /// Initializes the actor with data from an ActorConfigSO.
         /// This should be called immediately after instantiation.
@@ -136,6 +162,7 @@ namespace Assets.Scripts.Combat
             _health = GetComponent<Health>();
             _resistance = GetComponent<Resistance>();
             _spriteCharacter = GetComponentInChildren<SpriteCharacter2D>();
+            _activeConditions = new();
 
             if (_spriteCharacter != null)
             {

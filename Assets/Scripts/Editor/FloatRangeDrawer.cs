@@ -13,6 +13,10 @@ public class FloatRangeDrawer : PropertyDrawer
     {
         EditorGUI.BeginProperty(position, label, property);
 
+        // Use PrefixLabel to draw the label and get the remaining rect for controls.
+        // This is the standard way and handles indentation correctly.
+        Rect controlRect = EditorGUI.PrefixLabel(position, label);
+
         // Find the min and max properties within the FloatRange struct
         SerializedProperty minProp = property.FindPropertyRelative("min");
         SerializedProperty maxProp = property.FindPropertyRelative("max");
@@ -20,33 +24,33 @@ public class FloatRangeDrawer : PropertyDrawer
         float minValue = minProp.floatValue;
         float maxValue = maxProp.floatValue;
 
-        // Define the layout: 40% for labels, 60% for fields/slider
-        Rect labelRect = new Rect(position.x, position.y, position.width * 0.4f, position.height);
-        Rect fieldsRect = new Rect(position.x + position.width * 0.4f, position.y, position.width * 0.6f, position.height);
+        // --- Define Layout ---
+        // We'll give the number fields a fixed width and the slider will fill the rest.
+        const float fieldWidth = 50f;
+        const float spacing = 5f;
 
-        // Draw the main label for the range
-        EditorGUI.LabelField(labelRect, label);
+        // Calculate the Rect for each part of the control
+        Rect minFieldRect = new Rect(controlRect.x, controlRect.y, fieldWidth, controlRect.height);
+        Rect maxFieldRect = new Rect(controlRect.xMax - fieldWidth, controlRect.y, fieldWidth, controlRect.height);
+        Rect sliderRect = new Rect(minFieldRect.xMax + spacing, controlRect.y, controlRect.width - (fieldWidth * 2) - (spacing * 2), controlRect.height);
 
-        // Define layout for the two float fields
-        float fieldWidth = fieldsRect.width / 2 - 5;
-        Rect minFieldRect = new Rect(fieldsRect.x, fieldsRect.y, fieldWidth, fieldsRect.height);
-        Rect maxFieldRect = new Rect(fieldsRect.x + fieldWidth + 5, fieldsRect.y, fieldWidth, fieldsRect.height);
+        // --- Draw Controls ---
+        // The order doesn't matter here since the Rects do not overlap.
 
         // Draw the float fields for precise input
         minValue = EditorGUI.FloatField(minFieldRect, minValue);
         maxValue = EditorGUI.FloatField(maxFieldRect, maxValue);
 
-        // Draw the MinMaxSlider below the float fields
-        Rect sliderRect = new Rect(position.x, position.y, position.width, position.height); // Use full width for slider logic
-
-        // Let's define a visual range for the slider, e.g., 0-100.
-        // The actual values can go beyond this, but the slider will be capped.
+        // Define a visual range for the slider. For a more advanced version,
+        // you could create a custom attribute to define these limits in your code.
         float sliderVisualMin = 0f;
         float sliderVisualMax = 100f;
 
+        // Draw the MinMaxSlider in the space between the float fields
         EditorGUI.MinMaxSlider(sliderRect, ref minValue, ref maxValue, sliderVisualMin, sliderVisualMax);
-
-        // Ensure min is never greater than max
+        
+        // --- Apply Values ---
+        // Ensure min is never greater than max after slider or field input
         if (minValue > maxValue)
         {
             minValue = maxValue;

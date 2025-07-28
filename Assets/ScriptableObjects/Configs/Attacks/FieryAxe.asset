@@ -16,8 +16,8 @@ MonoBehaviour:
   baseDamageRangeByType:
     keys: 0000000002000000
     values:
-    - min: 1
-      max: 8
+    - min: 2
+      max: 12
     - min: 1
       max: 6
   baseDamageModifierByType:
@@ -33,3 +33,6 @@ MonoBehaviour:
   baseCritChance: 0.1
   critChanceBonus: 0
   dodgeChance: 0.05
+  conditionStats:
+    keys: 
+    values: []

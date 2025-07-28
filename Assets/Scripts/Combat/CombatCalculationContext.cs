@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Configs;
+using Assets.Scripts.States;
 using Assets.Scripts.Utility;
 using UnityEngine; // Just for Debug.Log for clarity, can be removed
 
@@ -23,21 +26,21 @@ namespace Assets.Scripts.Combat
             DamageType.STRUE
         };
         // General Combat Info
-        public GameObject Attacker { get; private set; }
-        public GameObject Defender { get; private set; }
+        public IBattleActor Attacker { get; private set; }
+        public IBattleActor Defender { get; private set; }
         public AttackDefinition Definition { get; private set; }
 
         // Final calculated values (can be read after all modifications)
         public float FinalDamage { get; private set; }
+        public ConditionStatsDictionary ConditionsToApply { get; private set; }
         public bool IsCriticalHit { get; private set; }
-        public bool ApplyPoison { get; private set; }
 
-        // TODO(tbrandt): make attacker and defender be custom monobehaviors
-        public CombatCalculationContext(GameObject attacker, GameObject defender, AttackDefinition attackDefinition)
+        public CombatCalculationContext(IBattleActor attacker, IBattleActor defender, AttackDefinition attackDefinition)
         {
             Attacker = attacker;
             Defender = defender;
             Definition = attackDefinition;
+            ConditionsToApply = new();
         }
 
         /// <summary>
@@ -46,15 +49,11 @@ namespace Assets.Scripts.Combat
         /// </summary>
         public void CalculateFinalValues()
         {
-            // Critical Hit Check
-            // A simple example: flat base crit chance + bonuses.
-            // In a real game, this might involve defender's crit evasion, etc.
             float toHit = UnityEngine.Random.value;
             Debug.Log($"To Hit: {toHit:F2}");
 
             if (toHit < Definition.dodgeChance)
             {
-                // We missed;
                 Debug.Log("MISS!");
                 return;
             }
@@ -90,7 +89,6 @@ namespace Assets.Scripts.Combat
             }
             if (IsCriticalHit)
             {
-                // Example: Critical hits do 1.5x damage
                 FinalDamage *= 1.5f;
                 Debug.Log("CRITICAL HIT!");
             }
@@ -100,6 +98,24 @@ namespace Assets.Scripts.Combat
             FinalDamage *= Math.Max(Definition.overallDamageMultiplier - Definition.overallResistanceMultiplier, 0);
             FinalDamage = (float)Math.Floor(FinalDamage);
             Debug.Log($"Final Damage: {FinalDamage}");
+
+            foreach (Condition key in Definition.conditionStats.Keys)
+            {
+                float chance = Definition.conditionStats[key].Chance;
+                if (chance >= 0)
+                {
+                    float toApply = UnityEngine.Random.value;
+                    if (toApply <= chance)
+                    {
+                        if (!ConditionsToApply.Keys.Contains(key))
+                        {
+                            Debug.Log($"Applying {key} for {Definition.conditionStats[key].Turns}");
+
+                            ConditionsToApply[key] = Definition.conditionStats[key];
+                        }
+                    }
+                }
+            }
         }
     }
 }

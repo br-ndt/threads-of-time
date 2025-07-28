@@ -50,6 +50,7 @@ namespace Assets.Scripts.Combat
             _health = GetComponent<Health>();
             _resistance = GetComponent<Resistance>();
             _spriteCharacter = GetComponentInChildren<SpriteCharacter2D>();
+            _activeConditions = new();
 
             if (_spriteCharacter != null)
             {

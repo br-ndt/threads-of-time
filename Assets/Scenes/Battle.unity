@@ -210,7 +210,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 6.2, z: 15}
-  m_LocalScale: {x: 5.4407406, y: 2.3703704, z: 1}
+  m_LocalScale: {x: 2.081916, y: 0.92592597, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 765474942}
@@ -259,7 +259,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 8d9079c9503915f4787ef3796d73e326, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 92bd5277592c7234eabe5679e868aaa8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1656,6 +1656,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackCalculationEvent: {fileID: 11400000, guid: 8b16f38731f303b4b914bafbb9acf714, type: 2}
   defendCalculationEvent: {fileID: 11400000, guid: 339caab3ef75cb9418c45d43ffa25460, type: 2}
+  conditionApplyEvent: {fileID: 11400000, guid: 5827acba876698d41b79872b07bafa37, type: 2}
   characterA: {fileID: 4634150142841713385, guid: 2fef18908ae185a4490e4b2d00a64492, type: 3}
   monsterZ: {fileID: 841406981154081762, guid: 064cfb1600550b648add72ee9f347639, type: 3}
 --- !u!82 &1595353084

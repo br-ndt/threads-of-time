@@ -31,8 +31,9 @@ MonoBehaviour:
   baseHealth: 10
   baseSpeed: 10
   flatDamageModifiers:
-    keys: 
-    values: []
+    keys: 00000000
+    values:
+    - 0
   damageMultipliers:
     keys: 
     values: []
@@ -51,6 +52,12 @@ MonoBehaviour:
     - 0.1
     - 0.1
     - 0.1
+  conditionImmunities:
+    keys: 00000000
+    values: 00
+  conditionResistChance:
+    keys: 
+    values: []
   progressions:
     keys: 00000000
     values:

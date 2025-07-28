@@ -80,6 +80,12 @@ MonoBehaviour:
     - 0
     - 0
     - 0
+  conditionImmunities:
+    keys: 01000000
+    values: 01
+  conditionResistChance:
+    keys: 
+    values: []
   progressions:
     keys: 00000000
     values:
