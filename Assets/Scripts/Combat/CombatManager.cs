@@ -14,14 +14,12 @@ namespace Assets.Scripts.Combat
         [Header("Event Channel")]
         [SerializeField] private CombatCalculationEvent attackCalculationEvent;
         [SerializeField] private CombatCalculationEvent defendCalculationEvent;
+        [SerializeField] private DamageTakenEvent damageTakenEvent;
         [SerializeField] private ConditionApplyEvent conditionApplyEvent;
 
         [Header("Debug References")]
         [SerializeField] private GameObject characterA; // Assign Character A in Inspector
         [SerializeField] private GameObject monsterZ;   // Assign Monster Z in Inspector
-
-        private SpriteCharacter2D attackerSprite;
-        private SpriteCharacter2D defenderSprite;
 
         [Header("Attack Animation")]
         [SerializeField] private readonly float moveSpeed = 20f;
@@ -45,7 +43,7 @@ namespace Assets.Scripts.Combat
             // TODO(tbrandt): make this more robust, handle per-actor etc
             if (skipAnimate)
             {
-                defender.GameObject.GetComponent<Health>().TakeDamage(context.FinalDamage);
+                damageTakenEvent.Raise((defender, context.FinalDamage));
                 if (context.ConditionsToApply.Count > 0)
                 {
                     conditionApplyEvent.Raise((defender, context.ConditionsToApply));
@@ -87,7 +85,7 @@ namespace Assets.Scripts.Combat
                 defenderSprite.Play(BattleSpriteState.Hurt);
             }
 
-            defender.GameObject.GetComponent<Health>().TakeDamage(context.FinalDamage);
+            damageTakenEvent.Raise((defender, context.FinalDamage));
             if (context.ConditionsToApply.Count > 0)
             {
                 conditionApplyEvent.Raise((defender, context.ConditionsToApply));

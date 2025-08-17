@@ -14,17 +14,32 @@ namespace Assets.Scripts.Combat
 
         public bool IsAlive => CurrentHealth > 0;
         [SerializeField] private HealthChangeEvent healthChangeEvent;
+        [SerializeField] private DamageTakenEvent damageTakenEvent;
         [SerializeField] private DeathEvent deathEvent;
 
         private bool initialized = false;
         private IBattleActor _actor; // Reference to the IBattleActor interface on this GameObject
-        private SpriteCharacter2D _sprite;
+
+        void OnEnable()
+        {
+            if (damageTakenEvent != null)
+            {
+                damageTakenEvent.OnEventRaised += HandleDamageTaken;
+            }
+        }
+
+        void OnDisable()
+        {
+            if (damageTakenEvent != null)
+            {
+                damageTakenEvent.OnEventRaised -= HandleDamageTaken;
+            }
+        }
 
         void Awake()
         {
             CurrentHealth = MaxHealth;
             _actor = GetComponent<IBattleActor>();
-            _sprite = GetComponentInChildren<SpriteCharacter2D>();
         }
 
         void Start()
@@ -33,6 +48,29 @@ namespace Assets.Scripts.Combat
             if (healthChangeEvent != null && _actor != null)
             {
                 healthChangeEvent.Raise((_actor, CurrentHealth, MaxHealth));
+            }
+        }
+
+        private void HandleDamageTaken((IBattleActor target, float damage) payload)
+        {
+            if (payload.target != _actor)
+            {
+                return;
+            }
+            CurrentHealth -= payload.damage;
+            CurrentHealth = Mathf.Max(CurrentHealth, 0); // Health can't go below 0
+            Debug.Log($"{gameObject.name} took {payload.damage:F2} damage. Health: {CurrentHealth:F2}");
+
+            // Raise the event after health changes
+            if (healthChangeEvent != null && _actor != null)
+            {
+                healthChangeEvent.Raise((_actor, CurrentHealth, MaxHealth));
+            }
+
+            if (!IsAlive)
+            {
+                Debug.Log($"{gameObject.name} has been defeated!");
+                deathEvent.Raise(_actor);
             }
         }
 
@@ -53,39 +91,6 @@ namespace Assets.Scripts.Combat
                     Debug.Log($"{gameObject.name} was dead as the battle began...");
                     deathEvent.Raise(_actor);
                 }
-            }
-        }
-
-        public void TakeDamage(float damage)
-        {
-            CurrentHealth -= damage;
-            CurrentHealth = Mathf.Max(CurrentHealth, 0); // Health can't go below 0
-            Debug.Log($"{gameObject.name} took {damage:F2} damage. Health: {CurrentHealth:F2}");
-
-            // Raise the event after health changes
-            if (healthChangeEvent != null && _actor != null)
-            {
-                healthChangeEvent.Raise((_actor, CurrentHealth, MaxHealth));
-            }
-
-            if (!IsAlive)
-            {
-                Debug.Log($"{gameObject.name} has been defeated!");
-                deathEvent.Raise(_actor);
-            }
-        }
-
-
-        public void Heal(float amount)
-        {
-            CurrentHealth += amount;
-            CurrentHealth = Mathf.Min(CurrentHealth, MaxHealth);
-            Debug.Log($"{gameObject.name} healed {amount:F2}. Health: {CurrentHealth:F2}");
-
-            // Raise the event after health changes
-            if (healthChangeEvent != null && _actor != null)
-            {
-                healthChangeEvent.Raise((_actor, CurrentHealth, MaxHealth));
             }
         }
     }

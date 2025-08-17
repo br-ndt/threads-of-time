@@ -277,6 +277,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 100
   healthChangeEvent: {fileID: 11400000, guid: 2d96fb58e4180994496dd7e8356781e1, type: 2}
+  damageTakenEvent: {fileID: 11400000, guid: 6a1158d4238b2024880ac6e2f631fd34, type: 2}
   deathEvent: {fileID: 11400000, guid: 809a2119d0470424398db7c0a272dfb6, type: 2}
 --- !u!114 &2993810265165469967
 MonoBehaviour:
