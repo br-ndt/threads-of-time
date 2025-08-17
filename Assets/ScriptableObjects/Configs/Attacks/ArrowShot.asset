@@ -10,19 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6684448ba08490a4b8ea66829c6277ee, type: 3}
-  m_Name: InfectedBite
+  m_Name: ArrowShot
   m_EditorClassIdentifier: 
-  attackName: Infected Bite
+  attackName: Arrow Shot
   baseDamageRangeByType:
-    keys: 0000000001000000
+    keys: 00000000
     values:
     - min: 1
-      max: 4
-    - min: 1
-      max: 4
+      max: 12
   baseDamageModifierByType:
-    keys: 
-    values: []
+    keys: 00000000
+    values:
+    - 1
   damageMultiplierByType:
     keys: 
     values: []
@@ -30,14 +29,10 @@ MonoBehaviour:
   overallDamageMultiplier: 1
   overallResistanceModifier: 0
   overallResistanceMultiplier: 0
-  isMelee: 1
+  isMelee: 0
   baseCritChance: 0.05
   critChanceBonus: 0
-  dodgeChance: 0.05
+  dodgeChance: 0.15
   conditionStats:
-    keys: 0100000004000000
-    values:
-    - _turns: 2
-      _chance: 0.5
-    - _turns: 1
-      _chance: 1
+    keys: 
+    values: []

@@ -79,7 +79,6 @@ namespace Assets.Scripts.Combat
         {
             if ((Object)actor == this)
             {
-                Debug.Log("Match");
                 _isAlive = false;
                 StartCoroutine(DieAndFade());
             }
@@ -87,7 +86,7 @@ namespace Assets.Scripts.Combat
 
         private IEnumerator DieAndFade()
         {
-            _spriteCharacter.Play(States.BattleSpriteState.Die);
+            _spriteCharacter.Play(BattleSpriteState.Die);
 
             yield return new WaitForSeconds(0.3f); // Let death animation start a moment
 

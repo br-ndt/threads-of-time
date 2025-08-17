@@ -10,16 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6684448ba08490a4b8ea66829c6277ee, type: 3}
-  m_Name: InfectedBite
+  m_Name: Firebolt
   m_EditorClassIdentifier: 
-  attackName: Infected Bite
+  attackName: Firebolt
   baseDamageRangeByType:
-    keys: 0000000001000000
+    keys: 02000000
     values:
     - min: 1
-      max: 4
-    - min: 1
-      max: 4
+      max: 10
   baseDamageModifierByType:
     keys: 
     values: []
@@ -31,13 +29,11 @@ MonoBehaviour:
   overallResistanceModifier: 0
   overallResistanceMultiplier: 0
   isMelee: 1
-  baseCritChance: 0.05
+  baseCritChance: 0
   critChanceBonus: 0
   dodgeChance: 0.05
   conditionStats:
-    keys: 0100000004000000
+    keys: 02000000
     values:
-    - _turns: 2
-      _chance: 0.5
     - _turns: 1
-      _chance: 1
+      _chance: 0.1

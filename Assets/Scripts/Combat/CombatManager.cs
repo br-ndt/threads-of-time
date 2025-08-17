@@ -57,13 +57,16 @@ namespace Assets.Scripts.Combat
 
         private IEnumerator AnimateAttackSequence(IBattleActor attacker, IBattleActor defender, CombatCalculationContext context)
         {
-            attackerSprite = attacker.GameObject.GetComponentInChildren<SpriteCharacter2D>();
-            defenderSprite = defender.GameObject.GetComponentInChildren<SpriteCharacter2D>();
+            var attackerSprite = attacker.GameObject.GetComponentInChildren<SpriteCharacter2D>();
+            var defenderSprite = defender.GameObject.GetComponentInChildren<SpriteCharacter2D>();
             Vector3 startPosition = attacker.GameObject.transform.position;
 
             attackerSprite.isFlipped = attacker.GameObject.transform.position.x > defender.GameObject.transform.position.x;
 
-            yield return StartCoroutine(MoveTowardsTarget(attacker, defender));
+            if (context.Definition.isMelee)
+            {
+                yield return StartCoroutine(MoveTowardsTarget(attacker, defender));
+            }
 
             if (context.IsCriticalHit)
             {
@@ -71,7 +74,14 @@ namespace Assets.Scripts.Combat
             }
             else
             {
-                attackerSprite.Play(BattleSpriteState.Attack);
+                if (context.Definition.isMelee)
+                {
+                    attackerSprite.Play(BattleSpriteState.Attack);
+                }
+                else
+                {
+                    attackerSprite.Play(BattleSpriteState.Ranged);
+                }
             }
 
             yield return new WaitForSeconds(0.45f);
@@ -91,11 +101,14 @@ namespace Assets.Scripts.Combat
                 conditionApplyEvent.Raise((defender, context.ConditionsToApply));
             }
 
-            attackerSprite.isFlipped = !attackerSprite.isFlipped;
+            if (context.Definition.isMelee)
+            {
+                attackerSprite.isFlipped = !attackerSprite.isFlipped;
 
-            yield return StartCoroutine(MoveBackToPosition(attacker, startPosition));
+                yield return StartCoroutine(MoveBackToPosition(attacker, startPosition));
 
-            attackerSprite.isFlipped = !attackerSprite.isFlipped;
+                attackerSprite.isFlipped = !attackerSprite.isFlipped;
+            }
 
             if (FindFirstObjectByType<BattleManager>().CurrentBattleState != BattleState.BattleEnd)
             {
@@ -105,6 +118,8 @@ namespace Assets.Scripts.Combat
 
         private IEnumerator MoveTowardsTarget(IBattleActor attacker, IBattleActor defender)
         {
+            var attackerSprite = attacker.GameObject.GetComponentInChildren<SpriteCharacter2D>();
+
             attackerSprite.Play(BattleSpriteState.Run);
             Vector3 targetPosition = defender.GameObject.transform.position -
                                      (defender.GameObject.transform.position - attacker.GameObject.transform.position).normalized * distanceBuffer;
@@ -118,6 +133,8 @@ namespace Assets.Scripts.Combat
 
         private IEnumerator MoveBackToPosition(IBattleActor attacker, Vector3 startPosition)
         {
+            var attackerSprite = attacker.GameObject.GetComponentInChildren<SpriteCharacter2D>();
+
             attackerSprite.Play(BattleSpriteState.Run);
             while (Vector3.Distance(attacker.GameObject.transform.position, startPosition) > 0.001f)
             {

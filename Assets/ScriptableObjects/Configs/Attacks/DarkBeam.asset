@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackName: Dark Beam
   baseDamageRangeByType:
-    keys: 02000000
+    keys: 07000000
     values:
-    - min: 10
-      max: 20
+    - min: 1
+      max: 10
   baseDamageModifierByType:
     keys: 
     values: []
@@ -28,6 +28,12 @@ MonoBehaviour:
   overallDamageMultiplier: 1
   overallResistanceModifier: 0
   overallResistanceMultiplier: 0
+  isMelee: 0
   baseCritChance: 0
   critChanceBonus: 0
   dodgeChance: 0.05
+  conditionStats:
+    keys: 04000000
+    values:
+    - _turns: 1
+      _chance: 0.1

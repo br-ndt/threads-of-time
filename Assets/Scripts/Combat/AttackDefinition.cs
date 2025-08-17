@@ -28,6 +28,8 @@ namespace Assets.Scripts.Combat
         public float overallResistanceModifier = 0f;
         [Tooltip("The damage resistance multiplier applied to the sum of all damage types, after resistance. Because this works additively with the overallDamageMultiplier, it should be 0 for most cases.")]
         public float overallResistanceMultiplier = 0f;
+        [Tooltip("Whether the actor should move while animating in this attack")]
+        public bool isMelee = true;
 
         [Header("Chances")]
         [Range(0f, 1f)]

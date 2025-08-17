@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be79fe96923eaf94b9f8d39b39fcbc05, type: 3}
   m_Name: SkeletonArcher_Attack5
   m_EditorClassIdentifier: 
-  animationType: 6
-  playbackType: 1
+  animationType: 7
   spriteSheet: {fileID: 2800000, guid: 7f59be2b0b0e9af498def3c288bbf55e, type: 3}
   columns: 15
   rows: 1
