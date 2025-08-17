@@ -2136,6 +2136,8 @@ MonoBehaviour:
   availableAttacksEvent: {fileID: 11400000, guid: 9ad0982e673e81640b14d5ea1c437acc, type: 2}
   availableTargetsEvent: {fileID: 11400000, guid: ae04e2784c1e04e408139db8fa84a73f, type: 2}
   healthChangeEvent: {fileID: 11400000, guid: 2d96fb58e4180994496dd7e8356781e1, type: 2}
+  conditionApplyEvent: {fileID: 11400000, guid: 5827acba876698d41b79872b07bafa37, type: 2}
+  conditionClearEvent: {fileID: 11400000, guid: 4192d932fc915b44fa2c1dda37143ea2, type: 2}
   bottomPanel: {fileID: 637608414}
   turnInfoText: {fileID: 1751845471}
   actionsPanel: {fileID: 1797425432}
@@ -2150,12 +2152,14 @@ MonoBehaviour:
   targetButtonArea: {fileID: 903269453}
   targetInfoPrefab: {fileID: 6838690878274383621, guid: 8d5722abfbd005c4b81a76175148669c, type: 3}
   targetSelectionCancelButton: {fileID: 1592777653}
+  conditionIconPrefab: {fileID: 3378494496314943801, guid: 00cc0a7ea5a6cf34e9b10c7da5eb692a, type: 3}
   heroInfoArea: {fileID: 1945245716}
   heroInfoPrefab: {fileID: 2355889334275037630, guid: 3c7bfae2b7c3d8a43a9bfe075764acb8, type: 3}
   enemyAreaPanel: {fileID: 1837191674}
   enemyInfoPanelPrefab: {fileID: 2355889334275037630, guid: 292684c10da0b654980bb47c2483c67d, type: 3}
   battleResultText: {fileID: 982938430}
   returnToOverworldButton: {fileID: 320102044}
+  conditionIconLibrary: {fileID: 11400000, guid: ed8235d25c495324eb580dbedfc4f1eb, type: 2}
 --- !u!224 &832953965
 RectTransform:
   m_ObjectHideFlags: 0

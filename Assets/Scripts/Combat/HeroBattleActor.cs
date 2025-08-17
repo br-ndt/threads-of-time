@@ -65,7 +65,7 @@ namespace Assets.Scripts.Combat
             _avatar = _actorConfig.avatar;
             _attacks = hero.AvailableAttacks;
             _health.Initialize(hero.CurrentHealth, hero.MaxHealth);
-            _resistance.Initialize(_actorConfig.flatResistances, _actorConfig.resistanceMultipliers); //
+            _resistance.Initialize(_actorConfig.flatResistances, _actorConfig.resistanceMultipliers, _actorConfig.conditionImmunities, _actorConfig.conditionResistChance); //
             _currentSpeed = _actorConfig.baseSpeed;
 
             gameObject.name = _actorConfig.actorID; // Update GameObject name for clarity in hierarchy

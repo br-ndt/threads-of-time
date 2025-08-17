@@ -134,10 +134,12 @@ namespace Assets.Scripts.Combat
 
         public void HandleConditionApply((IBattleActor target, ConditionStatsDictionary stats) payload)
         {
-            if (this != payload.target)
+            if (this != (Object)payload.target)
             {
                 return;
             }
+            Debug.Log($"{payload.target.DisplayName} receiving conditions from attack.");
+
             foreach (Condition condition in payload.stats.Keys)
             {
                 if (_activeConditions.Keys.Contains(condition))
@@ -146,7 +148,14 @@ namespace Assets.Scripts.Combat
                 }
                 else
                 {
-                    _activeConditions[condition] = new ActiveCondition(payload.stats[condition].Turns, 5); // FIX LOL
+                    if (condition == Condition.Burning || condition == Condition.Frozen || condition == Condition.Poisoned)
+                    {
+                        _activeConditions[condition] = new DamageOverTime(payload.stats[condition].Turns, 5); // FIX DAMAGE LOL
+                    }
+                    else
+                    {
+                        _activeConditions[condition] = new ActiveCondition(payload.stats[condition].Turns); // FIX DAMAGE LOL
+                    }
                 }
             }
         }
@@ -175,7 +184,7 @@ namespace Assets.Scripts.Combat
             _avatar = config.avatar;
             _attacks = config.attacks;
             _health.Initialize(config.baseHealth);
-            _resistance.Initialize(config.flatResistances, config.resistanceMultipliers);
+            _resistance.Initialize(config.flatResistances, config.resistanceMultipliers, config.conditionImmunities, config.conditionResistChance);
             _currentSpeed = config.baseSpeed;
 
             gameObject.name = config.actorID; // Update GameObject name for clarity in hierarchy

@@ -18,11 +18,12 @@ namespace Assets.Scripts.Configs
             _turns = turns;
         }
 
-        public void TickTurn()
+        public bool TickTurn()
         {
             _turns--;
+            return _turns <= 0;
         }
-        
+
         public void AddTurns(int turns)
         {
             _turns += turns;
@@ -32,7 +33,7 @@ namespace Assets.Scripts.Configs
     [Serializable]
     public class ConditionStats : HasDuration
     {
-        [SerializeField] float _chance;
+        [SerializeField] float _chance = 1;
 
         [SerializeField] public float Chance { get { return _chance; } set { _chance = value; } }
 
@@ -48,10 +49,16 @@ namespace Assets.Scripts.Configs
     [Serializable]
     public class ActiveCondition : HasDuration
     {
+        public ActiveCondition(int turns) : base(turns) { }
+    }
+
+    [Serializable]
+    public class DamageOverTime : ActiveCondition
+    {
         int _damage;
         [SerializeField] public int Damage => _damage;
 
-        public ActiveCondition(int turns, int damage) : base(turns)
+        public DamageOverTime(int turns, int damage) : base(turns)
         {
             _damage = damage;
         }

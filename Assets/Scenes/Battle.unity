@@ -210,7 +210,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 6.2, z: 15}
-  m_LocalScale: {x: 2.081916, y: 0.92592597, z: 1}
+  m_LocalScale: {x: 1.8513035, y: 0.92592597, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 765474942}
@@ -855,6 +855,86 @@ Transform:
   - {fileID: 472400239}
   m_Father: {fileID: 1347722838}
   m_LocalEulerAnglesHint: {x: 0, y: 27.014, z: 0}
+--- !u!1 &606162866
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 606162869}
+  - component: {fileID: 606162868}
+  - component: {fileID: 606162867}
+  m_Layer: 0
+  m_Name: FloatingTextController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!223 &606162867
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606162866}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &606162868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606162866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c33577762090a3340a790d3e1bf5d4ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 4637134619103691529, guid: b54c0f21a5e2f6d459da96b7e4de5781, type: 3}
+  textContainer: {fileID: 606162869}
+  initialPoolSize: 20
+  defaultDuration: 1
+  verticalOffset: 3
+  defaultDamageColor: {r: 1, g: 0, b: 0, a: 1}
+  defaultHealColor: {r: 0, g: 1, b: 0, a: 1}
+  damageTakenEvent: {fileID: 11400000, guid: 6a1158d4238b2024880ac6e2f631fd34, type: 2}
+--- !u!224 &606162869
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606162866}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -104.759995, y: 3.57}
+  m_SizeDelta: {x: 23.1, y: 7.1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &639952458
 GameObject:
   m_ObjectHideFlags: 0
@@ -1616,6 +1696,8 @@ MonoBehaviour:
   battleLeaveEvent: {fileID: 11400000, guid: a115a7973ac5b934895d5796db0effa8, type: 2}
   recordTriggerEvent: {fileID: 11400000, guid: d2a18c19914cbb54eaad20bd37924d1c, type: 2}
   experienceGainEvent: {fileID: 11400000, guid: 11223ffe5d588a14793788075929b220, type: 2}
+  conditionClearEvent: {fileID: 11400000, guid: 4192d932fc915b44fa2c1dda37143ea2, type: 2}
+  preTurnConditions: 020000000300000000000000
   enemyPrefab: {fileID: 6628492642499365167, guid: df68abb7aa653b7499d8aa7bf6024523, type: 3}
   playerCharacterPrefab: {fileID: 6628492642499365167, guid: c30e91d6ef2b4dd4cb8b01173bdf0ea5, type: 3}
   playerSpawnPoints:
@@ -1656,6 +1738,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackCalculationEvent: {fileID: 11400000, guid: 8b16f38731f303b4b914bafbb9acf714, type: 2}
   defendCalculationEvent: {fileID: 11400000, guid: 339caab3ef75cb9418c45d43ffa25460, type: 2}
+  damageTakenEvent: {fileID: 11400000, guid: 6a1158d4238b2024880ac6e2f631fd34, type: 2}
   conditionApplyEvent: {fileID: 11400000, guid: 5827acba876698d41b79872b07bafa37, type: 2}
   characterA: {fileID: 4634150142841713385, guid: 2fef18908ae185a4490e4b2d00a64492, type: 3}
   monsterZ: {fileID: 841406981154081762, guid: 064cfb1600550b648add72ee9f347639, type: 3}
@@ -1918,3 +2001,4 @@ SceneRoots:
   - {fileID: 1966284760}
   - {fileID: 1347722838}
   - {fileID: 765474942}
+  - {fileID: 606162869}

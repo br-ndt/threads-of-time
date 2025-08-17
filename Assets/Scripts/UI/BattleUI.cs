@@ -22,6 +22,8 @@ namespace Assets.Scripts.UI
         [SerializeField] private AvailableAttacksEvent availableAttacksEvent; // Listen for available targets
         [SerializeField] private AvailableTargetsEvent availableTargetsEvent; // Listen for available targets
         [SerializeField] private HealthChangeEvent healthChangeEvent;
+        [SerializeField] private ConditionApplyEvent conditionApplyEvent;
+        [SerializeField] private ConditionClearEvent conditionClearEvent;
 
         [Header("UI Elements")]
         [SerializeField] private GameObject bottomPanel; // Panel with Attack, Defend, Run buttons
@@ -42,6 +44,7 @@ namespace Assets.Scripts.UI
         [SerializeField] private GameObject targetButtonArea; // Parent for target buttons
         [SerializeField] private GameObject targetInfoPrefab; // Prefab for enemy target buttons
         [SerializeField] private Button targetSelectionCancelButton; // To cancel target selection
+        [SerializeField] private GameObject conditionIconPrefab; // For showing conditions on info panels
 
         [Header("Player Actors")] // UI Elements for Player Actors
         [SerializeField] private GameObject heroInfoArea;
@@ -62,6 +65,9 @@ namespace Assets.Scripts.UI
         private List<GameObject> spawnedTargetButtons = new(); // To manage spawned target buttons
         private List<GameObject> spawnedAttackButtons = new(); // To manage spawned attack buttons
         private AttackDefinition selectedAttackDefinition; // Store attack definition if player selects "Attack"
+        private Dictionary<string, GameObject> _activeIcons = new();
+
+        [SerializeField] ConditionIconLibrary conditionIconLibrary;
 
         void Awake()
         {
@@ -116,6 +122,14 @@ namespace Assets.Scripts.UI
             {
                 healthChangeEvent.OnEventRaised += HandleHealthChanged;
             }
+            if (conditionApplyEvent != null)
+            {
+                conditionApplyEvent.OnEventRaised += HandleConditionApply;
+            }
+            if (conditionClearEvent != null)
+            {
+                conditionClearEvent.OnEventRaised += HandleConditionClear;
+            }
         }
 
         void OnDisable()
@@ -147,6 +161,14 @@ namespace Assets.Scripts.UI
             if (healthChangeEvent != null)
             {
                 healthChangeEvent.OnEventRaised -= HandleHealthChanged;
+            }
+            if (conditionApplyEvent != null)
+            {
+                conditionApplyEvent.OnEventRaised -= HandleConditionApply;
+            }
+            if (conditionClearEvent != null)
+            {
+                conditionClearEvent.OnEventRaised -= HandleConditionClear;
             }
             ClearAttackButtons(); // Clean up buttons on disable
             ClearTargetButtons();
@@ -199,7 +221,6 @@ namespace Assets.Scripts.UI
                 : spawnedEnemyInfos.GetValueOrDefault(payload.actor);
             if (infoPanelGO != null)
             {
-                // Assuming "Health" is a child GameObject with an Image (fill) and a Text (text)
                 Image healthImg = infoPanelGO.transform.Find("Health").GetComponent<Image>();
                 TMP_Text healthText = healthImg.GetComponentInChildren<TMP_Text>();
 
@@ -215,6 +236,54 @@ namespace Assets.Scripts.UI
             else
             {
                 Debug.LogWarning($"Could not find info panel for {payload.actor.DisplayName}");
+            }
+        }
+
+        private void HandleConditionApply((IBattleActor target, ConditionStatsDictionary conditionStats) payload)
+        {
+            Debug.Log($"UI received Condition Apply for {payload.target.DisplayName}: {payload.conditionStats.Keys}");
+
+            GameObject infoPanelGO = payload.target.IsPlayerControlled ? spawnedHeroInfos.GetValueOrDefault(payload.target) : spawnedEnemyInfos.GetValueOrDefault(payload.target);
+            if (infoPanelGO != null)
+            {
+                GridLayoutGroup conditionIcons = infoPanelGO.transform.Find("ConditionIcons").GetComponent<GridLayoutGroup>();
+                foreach (Condition condition in payload.conditionStats.Keys)
+                {
+                    string key = $"{payload.target.ActorID}-{condition}";
+                    if (_activeIcons.ContainsKey(key)) return;
+
+                    // Get the correct sprite from our library.
+                    Sprite iconSprite = conditionIconLibrary.GetIcon(condition);
+                    if (iconSprite == null) return; // No icon configured for this.
+
+                    // Create a new icon from the prefab.
+                    GameObject iconInstance = Instantiate(conditionIconPrefab, conditionIcons.transform);
+
+                    // Set its sprite.
+                    iconInstance.GetComponent<ConditionIconUI>().SetCondition(iconSprite);
+
+                    // Add it to our dictionary to track it.
+                    _activeIcons.Add(key, iconInstance);
+
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Could not find info panel for {payload.target.DisplayName}");
+            }
+        }
+
+        private void HandleConditionClear((IBattleActor target, List<Condition> conditionsCleared) payload)
+        {
+            foreach (Condition condition in payload.conditionsCleared)
+            {
+                string key = $"{payload.target.ActorID}-{condition}";
+                if (_activeIcons.TryGetValue(key, out GameObject iconInstance))
+                {
+                    // ...destroy the UI object and remove it from our tracking dictionary.
+                    Destroy(iconInstance);
+                    _activeIcons.Remove(key);
+                }
             }
         }
 

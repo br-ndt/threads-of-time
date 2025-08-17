@@ -84,7 +84,7 @@ namespace Assets.Scripts.Combat
 
                 Debug.Log($"Base {damageType} Damage: {baseDamage:F2}");
                 Debug.Log($"{damageType} Damage Multi: {multi * 100}%");
-                Debug.Log($"Pre-Resistance {damageType} Damage: {baseDamage * multi}");
+                Debug.Log($"Type-based {damageType} Damage: {baseDamage * multi}");
                 FinalDamage += baseDamage * multi;
             }
             if (IsCriticalHit)
@@ -102,6 +102,7 @@ namespace Assets.Scripts.Combat
             foreach (Condition key in Definition.conditionStats.Keys)
             {
                 float chance = Definition.conditionStats[key].Chance;
+                Debug.Log($"Chance of applying {key}: {chance * 100}%");
                 if (chance >= 0)
                 {
                     float toApply = UnityEngine.Random.value;
@@ -109,7 +110,7 @@ namespace Assets.Scripts.Combat
                     {
                         if (!ConditionsToApply.Keys.Contains(key))
                         {
-                            Debug.Log($"Applying {key} for {Definition.conditionStats[key].Turns}");
+                            Debug.Log($"Applying {key} for {5} damage per turn for {Definition.conditionStats[key].Turns} turns");
 
                             ConditionsToApply[key] = Definition.conditionStats[key];
                         }

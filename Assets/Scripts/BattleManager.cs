@@ -37,6 +37,8 @@ public class BattleManager : MonoBehaviour
     private RecordTriggerEvent recordTriggerEvent; // Raises to record gameplay triggers
     [SerializeField]
     private IntegerGameEvent experienceGainEvent; // Raises when battle is won to assign experience
+    [SerializeField] private ConditionClearEvent conditionClearEvent; // Raises when a condition is removed from an actor
+    [SerializeField] private Condition[] preTurnConditions = { Condition.Burning, Condition.Frozen, Condition.Stunned };
 
     [Header("Battle Elements")]
     public GameObject enemyPrefab; // Assign an enemy prefab for instantiation
@@ -211,72 +213,100 @@ public class BattleManager : MonoBehaviour
             while (CurrentBattleState != BattleState.BattleEnd && turnOrderQueue.Count > 0 && CheckBattleEndConditions() == BattleEndResult.None)
             {
                 bool skipTurn = false;
+                bool hardSkip = false;
                 currentActor = turnOrderQueue.Dequeue();
 
-                // If actor is stunned, skip their turn before ticking down conditions
-                if (currentActor.ActiveConditions.Keys.Contains(Condition.Stunned))
-                {
-                    Debug.Log($"{currentActor.DisplayName} is incapacitated, skipping turn.");
-                    skipTurn = true;
-                }
                 List<Condition> conditionsToClear = new();
                 foreach (KeyValuePair<Condition, ActiveCondition> kvp in currentActor.ActiveConditions)
                 {
-                    // PLACEHOLDER
-                    if (kvp.Key == Condition.Burning)
+                    if (preTurnConditions.Contains(kvp.Key))
                     {
-                        Debug.Log($"<color=red>{currentActor.DisplayName} takes fire damage!</color>");
-                        AttackDefinition burnDamage = new();
-                        burnDamage.baseDamageModifierByType[DamageType.ADDO] = currentActor.ActiveConditions[kvp.Key].Damage;
-                        combatCalculator.PerformAttack(null, currentActor, burnDamage, true);
-                    }
+                        if (kvp.Key == Condition.Burning)
+                        {
+                            Debug.Log($"<color=red>{currentActor.DisplayName} takes fire damage!</color>");
+                            AttackDefinition burnDamage = new();
+                            burnDamage.baseDamageModifierByType[DamageType.ADDO] = (currentActor.ActiveConditions[kvp.Key] as DamageOverTime).Damage;
+                            combatCalculator.PerformAttack(null, currentActor, burnDamage, true);
+                        }
 
+                        if (kvp.Key == Condition.Stunned || kvp.Key == Condition.Frozen)
+                        {
+                            Debug.Log($"<color=orange>{currentActor.DisplayName} is stunned!</color>");
+                            skipTurn = true;
+                            if (kvp.Key == Condition.Frozen)
+                            {
+                                AttackDefinition freezeDamage = new();
+                                freezeDamage.baseDamageModifierByType[DamageType.SQUQ] = (currentActor.ActiveConditions[kvp.Key] as DamageOverTime).Damage;
+                                combatCalculator.PerformAttack(null, currentActor, freezeDamage, true);
+                            }
+                        }
 
-                    kvp.Value.TickTurn();
-                    if (kvp.Value.Turns <= 0)
-                    {
-                        conditionsToClear.Add(kvp.Key);
+                        if (kvp.Value.TickTurn()) // returns true if remaining turns <= 0
+                        {
+                            conditionsToClear.Add(kvp.Key);
+                        }
+
                     }
                 }
-                foreach (Condition condition in conditionsToClear)
-                {
-                    currentActor.ActiveConditions.Remove(condition);
-                }
-                // After ticking conditions, check if actor is alive. If not, skip their turn
+                // After ticking pre-turn conditions, check if actor is alive. If not, skip their turn
                 if (!currentActor.IsAlive)
                 {
                     Debug.Log($"{currentActor.DisplayName} is dead, skipping turn.");
                     skipTurn = true;
+                    hardSkip = true;
                 }
 
-                if (skipTurn)
+                if (!skipTurn)
                 {
-                    continue;
+                    actorTurnEvent.Raise((currentActor, true)); // Notify UI and other systems
+
+                    if (currentActor.IsPlayerControlled)
+                    {
+                        CurrentBattleState = BattleState.PlayerTurn;
+                        Debug.Log($"<color=green>Waiting for {currentActor.DisplayName}'s input...</color>");
+                        availableAttacksEvent.Raise((currentActor as HeroBattleActor).Attacks);
+                        availableTargetsEvent.Raise(enemyActors.Where(e => e.IsAlive).Select(actor => (IBattleActor)actor).ToList());
+                        playerChosenAction = new PlayerAction(PlayerAction.PlayerActionType.None); // Reset action
+
+                        // Wait until player action is chosen (event handler will set playerChosenAction)
+                        yield return new WaitUntil(() => playerChosenAction.ActionType != PlayerAction.PlayerActionType.None);
+
+                        yield return StartCoroutine(PerformPlayerAction(currentActor, playerChosenAction));
+                    }
+                    else // Enemy turn
+                    {
+                        CurrentBattleState = BattleState.EnemyTurn;
+                        yield return StartCoroutine(PerformEnemyAction(currentActor as EnemyBattleActor)); // Cast to EnemyBattleActor for AI logic
+                    }
+
+                    actorTurnEvent.Raise((currentActor, false));
                 }
-
-                actorTurnEvent.Raise((currentActor, true)); // Notify UI and other systems
-
-                if (currentActor.IsPlayerControlled)
+                if (!hardSkip)
                 {
-                    CurrentBattleState = BattleState.PlayerTurn;
-                    Debug.Log($"<color=green>Waiting for {currentActor.DisplayName}'s input...</color>");
-                    availableAttacksEvent.Raise((currentActor as HeroBattleActor).Attacks);
-                    availableTargetsEvent.Raise(enemyActors.Where(e => e.IsAlive).Select(actor => (IBattleActor)actor).ToList());
-                    playerChosenAction = new PlayerAction(PlayerAction.PlayerActionType.None); // Reset action
+                    foreach (KeyValuePair<Condition, ActiveCondition> kvp in currentActor.ActiveConditions)
+                    {
+                        // PLACEHOLDER
+                        if (kvp.Key == Condition.Poisoned)
+                        {
+                            Debug.Log($"<color=red>{currentActor.DisplayName} takes poison damage!</color>");
+                            AttackDefinition poisonDamage = new();
+                            poisonDamage.baseDamageModifierByType[DamageType.ERG] = (currentActor.ActiveConditions[kvp.Key] as DamageOverTime).Damage;
+                            combatCalculator.PerformAttack(null, currentActor, poisonDamage, true);
+                        }
 
-                    // Wait until player action is chosen (event handler will set playerChosenAction)
-                    yield return new WaitUntil(() => playerChosenAction.ActionType != PlayerAction.PlayerActionType.None);
-
-                    yield return StartCoroutine(PerformPlayerAction(currentActor, playerChosenAction));
+                        kvp.Value.TickTurn();
+                        if (kvp.Value.Turns <= 0)
+                        {
+                            conditionsToClear.Add(kvp.Key);
+                        }
+                    }
                 }
-                else // Enemy turn
+
+                foreach (Condition condition in conditionsToClear)
                 {
-                    CurrentBattleState = BattleState.EnemyTurn;
-                    yield return StartCoroutine(PerformEnemyAction(currentActor as EnemyBattleActor)); // Cast to EnemyBattleActor for AI logic
+                    currentActor.ActiveConditions.Remove(condition);
                 }
-
-                actorTurnEvent.Raise((currentActor, false));
-
+                conditionClearEvent.Raise((currentActor, conditionsToClear));
                 // Remove defeated actors from active list
                 activeActors.RemoveAll(actor => !actor.IsAlive);
                 enemyActors.RemoveAll(actor => !actor.IsAlive || actor.IsPlayerControlled);
