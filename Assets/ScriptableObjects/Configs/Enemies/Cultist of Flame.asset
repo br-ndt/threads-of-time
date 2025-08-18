@@ -16,7 +16,7 @@ MonoBehaviour:
   actorName: Cultist of Flame
   avatar: {fileID: -881069322, guid: 9a59cc95632e52b4ca630801f58a4927, type: 3}
   attacks:
-  - {fileID: 11400000, guid: 27faa49bdfe5bbb4a99ba1f68f4929a2, type: 2}
+  - {fileID: 11400000, guid: 696c0b848cc18e54d9b480be61278b07, type: 2}
   animations:
   - {fileID: 11400000, guid: 7b919b9b98ba7e742ad674c70d409bc1, type: 2}
   - {fileID: 11400000, guid: 7d80b1a265ac2d0409413b6d2c2b6fd0, type: 2}
@@ -41,7 +41,13 @@ MonoBehaviour:
     keys: 
     values: []
   resistanceMultipliers:
-    keys: 07000000
+    keys: 02000000
     values:
     - 0.8
+  conditionImmunities:
+    keys: 
+    values: 
+  conditionResistChance:
+    keys: 
+    values: []
   experienceValue: 0

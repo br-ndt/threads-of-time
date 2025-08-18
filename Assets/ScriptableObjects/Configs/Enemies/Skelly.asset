@@ -16,7 +16,7 @@ MonoBehaviour:
   actorName: Skelly
   avatar: {fileID: 257241536, guid: ae193d8a5738e4f448628eee4e96d6e9, type: 3}
   attacks:
-  - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}
+  - {fileID: 11400000, guid: 423e12f6b2a8c9243b26f601ba0c35ba, type: 2}
   animations:
   - {fileID: 11400000, guid: 7f2949b55eb8a7244a8decc1af975e89, type: 2}
   - {fileID: 11400000, guid: 529f86d30cc4147418816f020ad8413d, type: 2}
@@ -31,9 +31,8 @@ MonoBehaviour:
   baseHealth: 2
   baseSpeed: 10
   flatDamageModifiers:
-    keys: 00000000
-    values:
-    - 1
+    keys: 
+    values: []
   damageMultipliers:
     keys: 
     values: []
@@ -41,6 +40,12 @@ MonoBehaviour:
     keys: 
     values: []
   resistanceMultipliers:
+    keys: 
+    values: []
+  conditionImmunities:
+    keys: 
+    values: 
+  conditionResistChance:
     keys: 
     values: []
   experienceValue: 10

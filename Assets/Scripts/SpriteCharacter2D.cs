@@ -39,7 +39,8 @@ public class SpriteCharacter2D : MonoBehaviour
     {
         { BattleSpriteState.Critical, new[] { BattleSpriteState.Attack } },
         { BattleSpriteState.Run,      new[] { BattleSpriteState.Walk, BattleSpriteState.Idle } },
-        { BattleSpriteState.Defend,   new[] { BattleSpriteState.Jump, BattleSpriteState.Idle } }
+        { BattleSpriteState.Defend,   new[] { BattleSpriteState.Jump, BattleSpriteState.Idle } },
+        { BattleSpriteState.Ranged, new[] { BattleSpriteState.Attack } }
     };
 
 
@@ -228,6 +229,7 @@ public class SpriteCharacter2D : MonoBehaviour
             // or go through list of fallbacks
             if (fallbackMap.TryGetValue(currentTry, out var fallbacks) && fallbacks.Length > 0)
             {
+                foundAnimation = true;
                 currentTry = fallbacks[0];
                 fallbackMap[currentTry] = fallbacks.Skip(1).ToArray();
             }

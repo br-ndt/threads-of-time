@@ -55,7 +55,6 @@ public class PartyManager : MonoBehaviour
     {
         if (!AllHeroes.ContainsKey(config.actorID))
         {
-            Debug.Log(config.actorID);
             AllHeroes.Add(config.actorID, new Hero(config));
             if (GetActiveParty().Count < 3)
             {

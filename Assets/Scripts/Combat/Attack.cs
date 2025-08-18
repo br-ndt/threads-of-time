@@ -3,6 +3,8 @@ using Assets.Scripts.Events;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Utility;
+using Assets.Scripts.States;
+using Assets.Scripts.Configs;
 
 namespace Assets.Scripts.Combat
 {
@@ -18,6 +20,7 @@ namespace Assets.Scripts.Combat
         [SerializeField] private DamageRangeDictionary rangeDamageModifiers;
         [SerializeField] private DamageFloatDictionary flatDamageModifiers;
         [SerializeField] private DamageFloatDictionary multDamageModifiers;
+        [SerializeField] private ConditionStatsDictionary conditionModifiers;
         public float overallDamageModifier = 1f; // +1 overall damage after resistances
         public float overallDamageMultiplier = 0.1f; // +10% overall damage
         public float criticalChanceBonus = 0.05f; // +5%
@@ -41,7 +44,7 @@ namespace Assets.Scripts.Combat
         private void ApplyOffensiveMods(CombatCalculationContext context)
         {
             // Ensure this applies only if THIS character is the attacker
-            if (context.Attacker == gameObject)
+            if (context.Attacker != null && context.Attacker.GameObject == gameObject)
             {
                 Debug.Log($"{gameObject.name}: Applying offensive modifiers.");
                 foreach (KeyValuePair<DamageType, FloatRange> rangeEntry in rangeDamageModifiers)
@@ -83,6 +86,17 @@ namespace Assets.Scripts.Combat
                 context.Definition.critChanceBonus += criticalChanceBonus;
                 context.Definition.overallDamageModifier += overallDamageModifier;
                 context.Definition.overallDamageMultiplier += overallDamageMultiplier;
+                foreach (KeyValuePair<Condition, ConditionStats> chanceEntry in conditionModifiers)
+                {
+                    if (context.Definition.conditionStats.Keys.Contains(chanceEntry.Key))
+                    {
+                        context.Definition.conditionStats[chanceEntry.Key].Chance += chanceEntry.Value.Chance;
+                    }
+                    else
+                    {
+                        context.Definition.conditionStats[chanceEntry.Key].Chance = 0 + chanceEntry.Value.Chance;
+                    }
+                }
             }
         }
     }

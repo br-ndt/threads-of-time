@@ -9,6 +9,7 @@ namespace Assets.Scripts.States
         Run,
         Jump,
         Attack,
+        Ranged,
         Critical,
         Hurt,
         Die

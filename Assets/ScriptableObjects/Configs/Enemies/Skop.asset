@@ -16,7 +16,7 @@ MonoBehaviour:
   actorName: Skop
   avatar: {fileID: -2141602299, guid: 99f3fb7546718f84895bca27eff85b81, type: 3}
   attacks:
-  - {fileID: 11400000, guid: 7720062753072af498a5f9af4b60cb78, type: 2}
+  - {fileID: 11400000, guid: 423e12f6b2a8c9243b26f601ba0c35ba, type: 2}
   animations:
   - {fileID: 11400000, guid: b815190219b2856499478f6335ddc169, type: 2}
   - {fileID: 11400000, guid: 76905653d335fcc4c83dd4739d6f9ef9, type: 2}
@@ -41,6 +41,12 @@ MonoBehaviour:
     keys: 
     values: []
   resistanceMultipliers:
+    keys: 
+    values: []
+  conditionImmunities:
+    keys: 
+    values: 
+  conditionResistChance:
     keys: 
     values: []
   experienceValue: 10

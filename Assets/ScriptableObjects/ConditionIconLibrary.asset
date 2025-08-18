@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61433e20555df884e9e3930e6379b0ea, type: 3}
+  m_Name: ConditionIconLibrary
+  m_EditorClassIdentifier: 
+  iconMappings:
+  - condition: 0
+    icon: {fileID: 21300000, guid: 4d035e8a271f9cd4cb2646d2697374ce, type: 3}
+  - condition: 1
+    icon: {fileID: 21300000, guid: 5fb2edf7ee62e684d917526bdb031da1, type: 3}
+  - condition: 2
+    icon: {fileID: 21300000, guid: e6f30c1b33ea3ee4495fbe6aa346a404, type: 3}
+  - condition: 3
+    icon: {fileID: 21300000, guid: 0631cea990dc28d4b96a5d6e60623d3d, type: 3}
+  - condition: 4
+    icon: {fileID: 21300000, guid: 1e3c9286a1d5e5a4fa18d597ed79547f, type: 3}
+  - condition: 5
+    icon: {fileID: 21300000, guid: 975198e527be4cf4ead3b5ff51d5f93f, type: 3}

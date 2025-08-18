@@ -2,7 +2,9 @@ using UnityEngine;
 using Assets.Scripts.Events;
 using System.Collections.Generic;
 using System;
-using System.Linq; // For CombatCalculationEvent
+using System.Linq;
+using Assets.Scripts.States;
+using Assets.Scripts.Configs; // For CombatCalculationEvent
 
 namespace Assets.Scripts.Combat
 {
@@ -17,17 +19,21 @@ namespace Assets.Scripts.Combat
         [Header("Stats")]
         [SerializeField] private DamageFloatDictionary flatResistanceModifiers;
         [SerializeField] private DamageFloatDictionary multResistanceModifiers;
+        [SerializeField] private ConditionBooleanDictionary conditionImmunities;
+        [SerializeField] private ConditionFloatDictionary conditionResistanceModifiers;
         [SerializeField] private float overallResistanceValue = 1f; // -1 damage after type-specific resistances
         [SerializeField] private float overallResistanceMultiplier = 0.1f; // -10% damage
         [SerializeField] private float dodgeChanceModifier = 0.05f;
         private bool initialized = false;
 
-        public void Initialize(DamageFloatDictionary flatResistances, DamageFloatDictionary resistanceMultipliers)
+        public void Initialize(DamageFloatDictionary flatResistances, DamageFloatDictionary resistanceMultipliers, ConditionBooleanDictionary conImmunities, ConditionFloatDictionary conditionResistances)
         {
             if (!initialized)
             {
                 flatResistanceModifiers = flatResistances;
                 multResistanceModifiers = resistanceMultipliers;
+                conditionImmunities = conImmunities;
+                conditionResistanceModifiers = conditionResistances;
                 initialized = true;
             }
         }
@@ -51,7 +57,7 @@ namespace Assets.Scripts.Combat
         private void ApplyDefensiveMods(CombatCalculationContext context)
         {
             // Ensure this applies only if THIS character is the defender
-            if (context.Defender == gameObject)
+            if (context.Defender != null && context.Defender.GameObject == gameObject)
             {
                 Debug.Log($"{gameObject.name}: Applying defensive modifiers.");
                 foreach (KeyValuePair<DamageType, float> modifierEntry in flatResistanceModifiers)
@@ -61,10 +67,11 @@ namespace Assets.Scripts.Combat
                     {
                         context.Definition.baseDamageModifierByType[modifierEntry.Key] -= modifierEntry.Value;
                     }
-                    else
+                    else if (context.Definition.baseDamageRangeByType.Keys.Contains(modifierEntry.Key))
                     {
                         context.Definition.baseDamageModifierByType[modifierEntry.Key] = -modifierEntry.Value;
                     }
+                    // we reach here if the resistance type in question doesn't apply to the attack
                 }
                 foreach (KeyValuePair<DamageType, float> modifierEntry in multResistanceModifiers)
                 {
@@ -81,6 +88,26 @@ namespace Assets.Scripts.Combat
                 context.Definition.dodgeChance += dodgeChanceModifier;
                 context.Definition.overallResistanceModifier += overallResistanceValue;
                 context.Definition.overallResistanceMultiplier += overallResistanceMultiplier;
+                foreach (KeyValuePair<Condition, float> resistanceEntry in conditionResistanceModifiers)
+                {
+                    Debug.Log($"{resistanceEntry.Key} Mult Resistance: {resistanceEntry.Value * 100}%");
+                    if (context.Definition.conditionStats.Keys.Contains(resistanceEntry.Key))
+                    {
+                        context.Definition.conditionStats[resistanceEntry.Key].Chance -= resistanceEntry.Value;
+                    }
+                    else
+                    {
+                        context.Definition.conditionStats[resistanceEntry.Key].Chance = 0 - resistanceEntry.Value;
+                    }
+                }
+                foreach (KeyValuePair<Condition, bool> immunityEntry in conditionImmunities)
+                {
+                    if (context.Definition.conditionStats.Keys.Contains(immunityEntry.Key))
+                    {
+                        Debug.Log($"{immunityEntry.Key} Immunity!");
+                        context.Definition.conditionStats[immunityEntry.Key].Chance = 0;
+                    }
+                }
             }
         }
     }

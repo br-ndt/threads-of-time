@@ -31,3 +31,6 @@ MonoBehaviour:
   baseCritChance: 0.05
   critChanceBonus: 0
   dodgeChance: 0.05
+  conditionStats:
+    keys: 
+    values: []

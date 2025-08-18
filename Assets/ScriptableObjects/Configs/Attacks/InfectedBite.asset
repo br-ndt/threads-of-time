@@ -30,6 +30,14 @@ MonoBehaviour:
   overallDamageMultiplier: 1
   overallResistanceModifier: 0
   overallResistanceMultiplier: 0
+  isMelee: 1
   baseCritChance: 0.05
   critChanceBonus: 0
   dodgeChance: 0.05
+  conditionStats:
+    keys: 0100000004000000
+    values:
+    - _turns: 2
+      _chance: 0.5
+    - _turns: 1
+      _chance: 1

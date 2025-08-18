@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be79fe96923eaf94b9f8d39b39fcbc05, type: 3}
   m_Name: Minotaur_Die
   m_EditorClassIdentifier: 
-  animationType: 9
-  playbackType: 2
+  animationType: 10
   spriteSheet: {fileID: 2800000, guid: e45ceebc31bfa5e4688a49f3c80b5d44, type: 3}
   columns: 5
   rows: 1
