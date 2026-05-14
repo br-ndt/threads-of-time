@@ -35,7 +35,7 @@ namespace Assets.Scripts.Configs
     {
         [SerializeField] float _chance = 1;
 
-        [SerializeField] public float Chance { get { return _chance; } set { _chance = value; } }
+        public float Chance { get { return _chance; } set { _chance = value; } }
 
         public ConditionStats(int turns, float chance) : base(turns)
         {
@@ -55,8 +55,8 @@ namespace Assets.Scripts.Configs
     [Serializable]
     public class DamageOverTime : ActiveCondition
     {
-        int _damage;
-        [SerializeField] public int Damage => _damage;
+        [SerializeField] int _damage;
+        public int Damage => _damage;
 
         public DamageOverTime(int turns, int damage) : base(turns)
         {
